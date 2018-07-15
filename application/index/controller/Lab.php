@@ -2,12 +2,10 @@
 namespace app\index\controller;
 use think\Controller;
 
-class Index extends Controller
+class Lab extends Controller
 {
     public function index()
     {
-        echo "string";
-        die();
         return $this->fetch();
     }
 }
