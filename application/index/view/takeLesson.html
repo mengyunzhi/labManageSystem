@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="zh-hans">
+
+<head>
+    <meta charset="UTF-8">
+    <title>抢课</title>
+     <link href="https://cdn.bootcss.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet">
+</head>
+
+<body class="container">
+
+    <!-- jQuery (Bootstrap 的所有 JavaScript 插件都依赖 jQuery，所以必须放在前边) -->
+    <script src="https://cdn.bootcss.com/jquery/1.12.4/jquery.min.js"></script>
+    <!-- 加载 Bootstrap 的所有 JavaScript 插件。你也可以根据需要只加载单个插件。 -->
+    <script src="https://cdn.bootcss.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+
+
+    <div class="row">
+        <div class="col-md-12">
+            <hr>
+
+            <!-- 选择周次 -->
+            <div class="btn-group">
+              <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                第一周 <span class="caret"></span>
+              </button>
+              <ul class="dropdown-menu">
+                <li>
+                    <div class="radio">
+                        <label>
+                        <input type="radio" name="optionsRadios" id="optionsRadios1" value="option1" checked> 第1周
+                        </label>
+                    </div>
+                </li>
+                <li>
+                    <div class="radio">
+                        <label>
+                        <input type="radio" name="optionsRadios" id="optionsRadios1" value="option1" checked> 第2周
+                        </label>
+                    </div>
+                </li><li>
+                    <div class="radio">
+                        <label>
+                        <input type="radio" name="optionsRadios" id="optionsRadios1" value="option1" checked> 第3周
+                        </label>
+                    </div>
+                </li>
+              </ul>
+            </div>
+
+            <!-- 选择教室  -->
+            <div class="btn-group">
+              <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                A101 <span class="caret"></span>
+              </button>
+              <ul class="dropdown-menu">
+                <li>
+                    <div class="radio">
+                        <label>
+                        <input type="radio" name="optionsRadios" id="optionsRadios1" value="option1" checked> A101
+                        </label>
+                    </div>
+                </li>
+                <li>
+                    <div class="radio">
+                        <label>
+                        <input type="radio" name="optionsRadios" id="optionsRadios1" value="option1" checked> A102
+                        </label>
+                    </div>
+                </li><li>
+                    <div class="radio">
+                        <label>
+                        <input type="radio" name="optionsRadios" id="optionsRadios1" value="option1" checked> A103
+                        </label>
+                    </div>
+                </li>
+              </ul>
+            </div>
+
+            <!-- 选择学科  -->
+            <div class="btn-group">
+              <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                高等数学 <span class="caret"></span>
+              </button>
+              <ul class="dropdown-menu">
+                <li>
+                    <div class="radio">
+                        <label>
+                        <input type="radio" name="optionsRadios" id="optionsRadios1" value="option1" checked> 高等数学
+                        </label>
+                    </div>
+                </li>
+                <li>
+                    <div class="radio">
+                        <label>
+                        <input type="radio" name="optionsRadios" id="optionsRadios1" value="option1" checked> 线性代数
+                        </label>
+                    </div>
+                </li><li>
+                    <div class="radio">
+                        <label>
+                        <input type="radio" name="optionsRadios" id="optionsRadios1" value="option1" checked> 面向对象
+                        </label>
+                    </div>
+                </li>
+              </ul>
+            </div>
+
+            <!-- 选择班级 -->
+            <div class="btn-group">
+              <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                计171 <span class="caret"></span>
+              </button>
+              <ul class="dropdown-menu">
+                <li>
+                    <div class="checkbox">
+                        <label><input type="checkbox" value="">计171</label>
+                    </div>
+                </li>
+               <li>
+                    <div class="checkbox">
+                        <label><input type="checkbox" value="">计172</label>
+                    </div>
+                </li>
+                <li>
+                    <div class="checkbox">
+                        <label><input type="checkbox" value="">软件171</label>
+                    </div>
+                </li>
+              </ul>
+            </div>
+            <hr />
+            <!-- 表格 -->
+            <table class="table table-hover table-bordered">
+                <tr class="info">
+                    <th>星期/节次</th>
+                    <th>星期一</th>
+                    <th>星期二</th>
+                    <th>星期三</th>
+                    <th>星期四</th>
+                    <th>星期五</th>
+                    <th>星期六</th>
+                    <th>星期日</th>
+                </tr>
+                <tr>
+                    <td>第一节</td>
+                    <td><button type="submit" class="btn btn-primary">抢课</button></td>
+                    <td><button type="submit" class="btn btn-primary">抢课</button></td>
+                    <td>有课</td>
+                    <td><button type="submit" class="btn btn-primary">抢课</button></td>
+                    <td>有课</td>
+                    <td>有课</td>
+                    <td><button type="submit" class="btn btn-primary">抢课</button></td>
+                </tr>
+                 <tr>
+                    <td>第二节</td>
+                    <td>有课</td>
+                    <td>有课</td>
+                    <td><button type="submit" class="btn btn-primary">抢课</button></td>
+                    <td>有课</td>
+                    <td>有课</td>
+                    <td>有课</td>
+                    <td><button type="submit" class="btn btn-primary">抢课</button></td>
+                </tr>
+                 <tr>
+                    <td>第三节</td>
+                    <td>有课</td>
+                    <td>有课</td>
+                    <td>有课</td>
+                    <td><button type="submit" class="btn btn-primary">抢课</button></td>
+                    <td>有课</td>
+                    <td>有课</td>
+                    <td>有课</td>
+                </tr>
+                 <tr>
+                    <td>第四节</td>
+                    <td>有课</td>
+                    <td><button type="submit" class="btn btn-primary">抢课</button></td>
+                    <td>有课</td>
+                    <td>有课</td>
+                    <td>有课</td>
+                    <td>有课</td>
+                    <td><button type="submit" class="btn btn-primary">抢课</button></td>
+                </tr>
+                 <tr>
+                    <td>第五节</td>
+                    <td>有课</td>
+                    <td>有课</td>
+                    <td><button type="submit" class="btn btn-primary">抢课</button></td>
+                    <td>有课</td>
+                    <td>有课</td>
+                    <td><button type="submit" class="btn btn-primary">抢课</button></td>
+                    <td>有课</td>
+                </tr>
+            </table>
+            <!-- 分页 -->
+        </div>
+    </div>
+</body>
+
+</html>
