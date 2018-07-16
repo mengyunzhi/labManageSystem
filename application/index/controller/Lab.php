@@ -8,4 +8,8 @@ class Lab extends Controller
     {
         return $this->fetch();
     }
+    public function creatcode()
+    {
+    	return $this->fetch();
+    }
 }
