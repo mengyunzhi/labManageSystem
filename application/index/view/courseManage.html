@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>教室管理</title>
+    <link rel="stylesheet" href="http://cdn.bootcss.com/bootstrap/3.3.0/css/bootstrap.min.css">
+    <!-- jQuery文件。务必在bootstrap.min.js 之前引入 -->
+    <script src="http://cdn.bootcss.com/jquery/1.11.1/jquery.min.js"></script>
+    <!-- 最新的 Bootstrap 核心 JavaScript 文件 -->
+    <script src="http://cdn.bootcss.com/bootstrap/3.3.0/js/bootstrap.min.js"></script>
+</head>
+<body class="container">
+<h1 class="text-center">课程管理</h1>
+<div class="row">
+    <div class="col-md-12">
+        <hr />
+        <div class="row">
+            <div class="col-md-8">
+                <form class="form-inline" action="{:url()}">
+                    <div class="form-group">
+                        <label class="sr-only" for="name">课程管理</label>
+                        <input name="name" type="text" class="form-control" placeholder="名称..." value="">
+                    </div>
+                    <button type="submit" class="btn btn-default"><i class="glyphicon glyphicon-search"></i>&nbsp;查询</button>
+                </form>
+            </div>
+            <div class="col-md-4 text-right">
+                <a href="#" class="btn btn-primary"><i class="glyphicon glyphicon-pencil"></i>编辑</a>&nbsp;&nbsp;
+                <a href="{:url('add')}" class="btn btn-primary"><i class="glyphicon glyphicon-plus"></i>&nbsp;增加</a>
+            </div>
+        </div>
+        <hr />
+        <table class="table" style="margin-bottom: 0">
+            <tr class="info"><td style="text-align: center ">课程名</td></tr>
+        </table>
+        <table class="table table-hover table-bordered" style="margin-top: 0">
+            <tr>
+                <td>
+                    <div class="row">
+                        <div class="col-md-8">计算机网络</div>
+                        <div class="col-md-4 pull-right">
+                            <a href="#" ><i class="glyphicon glyphicon-remove"></i></a>
+                        </div>
+                    </div>
+                </td>
+                <td>
+                    <div class="row">
+                        <div class="col-md-8">计算机网络</div>
+                        <div class="col-md-4 pull-right">
+                            <a href="#" ><i class="glyphicon glyphicon-remove"></i></a>
+                        </div>
+                    </div>
+                </td>
+                <td>
+                    <div class="row">
+                         <div class="col-md-8">计算机网络</div>
+                        <div class="col-md-4 pull-right">
+                            <a href="#" ><i class="glyphicon glyphicon-remove"></i></a>
+                        </div>
+                    </div>
+                 </td>
+                <td>
+                    <div class="row">
+                        <div class="col-md-8">计算机网络</div>
+                        <div class="col-md-4 pull-right">
+                            <a href="#" ><i class="glyphicon glyphicon-remove"></i></a>
+                        </div>
+                    </div>
+                </td>
+                <!--点击小叉号即可删除-->
+            </tr>
+        </table>
+    </div>
+</div>
+</body>
+</html>
