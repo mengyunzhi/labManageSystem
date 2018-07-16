@@ -11,20 +11,20 @@ class Lab extends Controller
 
 
 
-    public function creatcode()
+    public function creatCode()
     {
     	return $this->fetch();
     }
 
-    public function changeclasses()
+    public function changeClasses()
     {
     	return $this->fetch();
     }
-    public function personalinformation()
+    public function personalInformation()
     {
     	return $this->fetch();
     }
-    public function takelesson()
+    public function takeLesson()
     {
     	return $this->fetch();
     }
