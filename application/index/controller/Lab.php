@@ -8,11 +8,25 @@ class Lab extends Controller
     {
         return $this->fetch();
     }
-<<<<<<< HEAD
+
+
+
     public function creatcode()
     {
     	return $this->fetch();
     }
-=======
->>>>>>> b7bdff894516b42df633c70c3f339ac274004415
+
+    public function changeclasses()
+    {
+    	return $this->fetch();
+    }
+    public function personalinformation()
+    {
+    	return $this->fetch();
+    }
+    public function takelesson()
+    {
+    	return $this->fetch();
+    }
+
 }
