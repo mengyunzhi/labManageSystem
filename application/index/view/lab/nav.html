@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>{block name="title"}{/block}</title>
+	<meta charset="utf-8">
+	<link rel="stylesheet" href="http://cdn.bootcss.com/bootstrap/3.3.0/css/bootstrap.min.css">
+    <!-- jQuery文件。务必在bootstrap.min.js 之前引入 -->
+    <script src="http://cdn.bootcss.com/jquery/1.11.1/jquery.min.js"></script>
+    <!-- 最新的 Bootstrap 核心 JavaScript 文件 -->
+    <script src="http://cdn.bootcss.com/bootstrap/3.3.0/js/bootstrap.min.js"></script>
+    <link rel="stylesheet" type="text/css" href="/labManageSystem/public/static/css/index.css">
+</head>
+<body>
+<nav class="navbar navbar-default ">
+  	<div class="container-fluid">
+    <!-- Brand and toggle get grouped for better mobile display -->
+    	<div class="navbar-header">
+      		<a class="navbar-brand" href="{:url('lab/index')}">梦云智</a>
+    	</div>
+
+	    <!-- Collect the nav links, forms, and other content for toggling -->
+	    <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+	      	<ul class="nav navbar-nav navbar-right">
+	      		<li><a href="{:url('lab/personalInformation')}">个人信息</a></li>
+		        <li><a href="{:url('lab/creatcode')}">二维码生成</a></li>
+		        <li class="dropdown">
+	            <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">功能菜单<span class="caret"></span></a>
+	            <ul class="dropdown-menu">
+	            <li><a href="{:url('lab/takelesson')}">点击选课</a></li>
+	            <li><a href="{:url('lab/changeclasses')}">点击换课</a></li>
+	            <li><a href="{:url('lab/changeclasses')}">点击调课</a></li>
+	            </ul>
+	            </li>
+	        </ul>
+	    </div><!-- /.navbar-collapse -->
+  	</div><!-- /.container-fluid -->
+</nav>
+{block name="content"}
+
+{/block}
+</body>
+</html>
