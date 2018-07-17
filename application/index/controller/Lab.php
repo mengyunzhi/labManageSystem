@@ -25,5 +25,20 @@ class Lab extends Controller
     {
     	return $this->fetch("takeLesson");
     }
-
+    public function classroomAdministrate()
+    {
+        return $this->fetch("classroomAdministrate");
+    }
+    public function courseManage()
+    {
+        return $this->fetch("courseManage");
+    }
+    public function semesterAdministrate()
+    {
+        return $this->fetch("semesterAdministrate");
+    }
+    public function classAdministrate()
+    {
+        return $this->fetch("classAdministrate");
+    }
 }

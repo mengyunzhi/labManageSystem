@@ -1,16 +1,6 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>教室管理</title>
-    <link rel="stylesheet" href="http://cdn.bootcss.com/bootstrap/3.3.0/css/bootstrap.min.css">
-    <!-- jQuery文件。务必在bootstrap.min.js 之前引入 -->
-    <script src="http://cdn.bootcss.com/jquery/1.11.1/jquery.min.js"></script>
-    <!-- 最新的 Bootstrap 核心 JavaScript 文件 -->
-    <script src="http://cdn.bootcss.com/bootstrap/3.3.0/js/bootstrap.min.js"></script>
-</head>
-<body class="container">
-<h1 class="text-center">教室管理</h1>
+{extend name="lab/nav"}
+{block name="title"}教室管理{/block}
+{block name="content"}
 <div class="row">
     <div class="col-md-12">
         <hr />
@@ -45,5 +35,4 @@
         </table>
     </div>
 </div>
-</body>
-</html>
+{/block}
