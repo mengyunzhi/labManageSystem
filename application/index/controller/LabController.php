@@ -2,7 +2,7 @@
 namespace app\index\controller;
 use think\Controller;
 
-class Lab extends Controller
+class LabController extends Controller
 {
     public function index()
     {
@@ -36,9 +36,5 @@ class Lab extends Controller
     public function semesterAdministrate()
     {
         return $this->fetch("semesterAdministrate");
-    }
-    public function classAdministrate()
-    {
-        return $this->fetch("classAdministrate");
     }
 }
