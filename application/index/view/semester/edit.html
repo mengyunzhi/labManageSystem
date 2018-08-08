@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="zh-hans">
+<head>
+    <meta charset="UTF-8">
+    <title>编辑数据</title>
+    <link rel="stylesheet" href="http://cdn.bootcss.com/bootstrap/3.3.0/css/bootstrap.min.css">
+</head>
+
+<body>
+    <div class="container">
+        <div class="row">
+            <h1>编辑</h1>
+            <div class="col-md-12">
+                <form action="{:url('semester/update')}" method="post">
+                    <label>学期名称:</label>
+                    <input type="hidden" name="id" value="{$Semester->getData('id')}" />
+                    <input type="text" name="name" value="{$Semester->getData('name')}" />
+                    <button class="btn btn-primary" type="submit">保存</button>
+                </form>
+            </div>
+        </div>
+    </div>  
+</body>
+
+</html>
