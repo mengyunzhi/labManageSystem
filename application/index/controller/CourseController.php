@@ -5,14 +5,14 @@ use think\Controller;
 use think\facade\Request;
 
 
-class Coursem extends Controller
+class CourseController extends Controller
 {
     public function index()
     {
         // 获取查询信息
         $name = Request::instance()->get('name');
 
-        $pageSize = 5; // 每页显示5条数据
+        $pageSize = 7; // 每页显示5条数据
 
         // 实例化Teacher
         $Course = new Course; 
