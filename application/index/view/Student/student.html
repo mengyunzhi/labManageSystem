@@ -1,0 +1,29 @@
+{extend name="lab/nav"}
+{block name="title"}个人信息{/block}
+{block name="content"}
+<div style="
+margin: 200px 600px;">
+    <form class="form-inline" action="{:url('save')}" method="post">
+        <div class="form-group" style="padding-top: 50px">
+            <label for="name">姓名：</label>
+            <input type="text" class="form-control" id="name" placeholder="{Student->getData('name')">
+        </div>
+        <br>
+        <div class="form-group" style="margin-left: 5px;padding: 50px 0">
+            <label for="type">身份</label>
+            <input type="text" class="form-control" readonly="true" id="type" placeholder="学生">
+        </div>
+        <br>
+        <div class="form-group">
+            <label for="class">班级：</label>
+            <select name="class" id="class" class="from-control">
+                {volist name="classes" id="_Classs" }
+                <option value="{_Class->getData('id')}">{_Class->getData('name')</option>
+                {/volist}
+            </select>
+        </div>
+        <br>
+        <button type="submit" class="btn btn-default" style="margin-left: 100px;">保存</button>
+    </form>
+</div>
+{/block}

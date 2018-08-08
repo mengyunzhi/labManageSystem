@@ -2,15 +2,14 @@
 /**
  * Created by PhpStorm.
  * User: ASUS-PC
- * Date: 2018/8/7
- * Time: 9:51
+ * Date: 2018/8/8
+ * Time: 10:31
  */
 
 namespace app\common\model;
 use think\Model;
 
-class Klass extends Model
+class Student extends Model
 {
-    
 
 }

@@ -69,7 +69,8 @@ abstract class Paginator implements ArrayAccess, Countable, IteratorAggregate, J
     protected $options = [
         'var_page' => 'page',
         'path'     => '/',
-        'query'    => [],
+        'query'    => [
+        ],
         'fragment' => '',
     ];
 
