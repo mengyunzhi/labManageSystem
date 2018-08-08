@@ -40,5 +40,4 @@ class LabController extends Controller
     public function classAdministrate()
     {
         return $this->fetch("classAdministrate");
-    }
 }
