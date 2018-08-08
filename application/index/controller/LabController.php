@@ -33,8 +33,12 @@ class LabController extends Controller
     {
         return $this->fetch("courseManage");
     }
-    public function semesterAdministrate()
+    public function semester()
     {
-        return $this->fetch("semesterAdministrate");
+        return $this->fetch("semester");
+    }
+    public function classAdministrate()
+    {
+        return $this->fetch("classAdministrate");
     }
 }
