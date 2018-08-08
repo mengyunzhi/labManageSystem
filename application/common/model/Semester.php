@@ -1,7 +1,7 @@
 <?php
 namespace app\common\model;
-use think\Model;
-class Semester extends Model
+use think\Model;			//引用model
+class Semester extends Model//继承model
 {
     
 }

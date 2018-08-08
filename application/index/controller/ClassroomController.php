@@ -1,9 +1,9 @@
 <?php
 namespace app\index\controller;
-use think\Controller;
-use app\common\model\Semester;  // 学期模型
+use think\Controller;    //引用controller
+use app\common\model\Classroom;  // 教室模型
 use think\facade\Request;			// 引用Request
-class SemesterController extends Controller 
+class ClassroomController extends Controller 
 {
     public function index()
     {
@@ -13,17 +13,17 @@ class SemesterController extends Controller
         // 设置每页大小
         $pageSize = 5;
 
-    	// 实例化Semester
-    	$Semester = new Semester;
+    	// 实例化Classroom
+    	$Classroom = new Classroom;
 		
 		// 按条件查询数据并调用分页
-        $semesters = $Semester->where('name', 'like', '%' . $name . '%')->paginate($pageSize, false, [
+        $classrooms = $Classroom->where('name', 'like', '%' . $name . '%')->paginate($pageSize, false, [
             'query'=>[
                 'name' => $name,
                 ],
-            ]);     	
+            ]);              	
         // 向V层传数据
-        $this->assign('semesters', $semesters);
+        $this->assign('classrooms', $classrooms);
 
         // 取回打包后的数据
         $htmls = $this->fetch();
@@ -35,15 +35,17 @@ class SemesterController extends Controller
     public function insert()
     {
     	// 接收传入数据
-        $postData = Request::instance()->post();        
-    	  // 实例化Semester空对象
-        $Semester = new Semester();
+        $postData = Request::instance()->post();
+
+    	// 实例化Classroom空对象
+        $Classroom = new Classroom();
         
         // 为对象的属性赋值
-        $Semester->name = $postData['name'];     
+        $Classroom->name = $postData['name'];
+
         // 新增对象至数据表
-        $Semester->save();
-        return $this->success('学期' . $Semester->name . '新增成功。', url('index'));
+        $Classroom->save();
+        return $this->success('学期' . $Classroom->name . '新增成功。', url('index'));
 
     }
 
@@ -63,34 +65,34 @@ class SemesterController extends Controller
         }
 
         // 获取要删除的对象
-        $Semester = Semester::get($id);
+        $Classroom = Classroom::get($id);
 
         // 要删除的对象不存在
-        if (is_null($Semester)) {
+        if (is_null($Classroom)) {
             return $this->error('不存在id为' . $id . '的学期，删除失败');
         }
 
         // 删除对象
-        if (!$Semester->delete()) {
-            return $this->error('删除失败:' . $Semester->getError());
+        if (!$Classroom->delete()) {
+            return $this->error('删除失败:' . $Classroom->getError());
         }
 
         // 进行跳转
         return $this->success('删除成功', url('index'));
     }
 
-     public function edit()
+    public function edit()
     {       
-    	 // 获取传入ID
+    	// 获取传入ID
         $id = Request::instance()->param('id/d');
 
-        // 在Semester表模型中获取当前记录
-        if (is_null($Semester = Semester::get($id))) {
+        // 在Classroom表模型中获取当前记录
+        if (is_null($Classroom = Classroom::get($id))) {
             return '系统未找到ID为' . $id . '的记录';
         } 
         
         // 将数据传给V层
-        $this->assign('Semester', $Semester);
+        $this->assign('Classroom', $Classroom);
 
         // 获取封装好的V层内容
         $htmls = $this->fetch();
@@ -105,12 +107,12 @@ class SemesterController extends Controller
         $id = Request::instance()->post('id/d');
 
         // 获取当前对象
-        $Semester = Semester::get($id);
+        $Classroom = Classroom::get($id);
 
         // 写入要更新的数据
-        $Semester->name = input('post.name');
+        $Classroom->name = input('post.name');
         // 更新
-        $Semester->save();
+        $Classroom->save();
         return $this->success('操作成功', url('index'));
     }
 }
