@@ -11,13 +11,11 @@ use app\common\model\Course;
 use app\common\model\Klass;
 use app\common\model\Teacher;
 use think\Controller;
-use think\Exception;
 use think\exception\HttpResponseException;
 use think\facade\Request;
 
 /*
  * 老师选课页面和个人信息页面的功能
- *
  *
  * */
 
