@@ -28,7 +28,7 @@
                                         <label>学生名字：</label>
                                         <input type="text" name="name">
                                         <label>所属班级：</label>
-                                        <input type="text" name="klass">
+                                        <input type="text" name="klass_id">
                                         <button type="submit" class="btn btn-primary">保存</button> 
                                     </form>  
                                 </div>
@@ -49,7 +49,7 @@
                 <tr>
                     <td>{$key}</td>
                     <td>{$student->getData('name')}</td>
-                    <td>{$student->getData('klass')}</td>
+                    <td>{$student->getData('klass_id')}</td>
                     <td><a class="btn btn-sm btn-danger" href="{:url('delete?id=' . $student->getData('id'))}"><i class="glyphicon glyphicon-trash"></i>&nbsp;删除</a>
 
                     <button type="button" class="btn btn-sm btn-primary" data-toggle="modal" data-target=".bs-example-modal-lg{$key}"><i class="glyphicon glyphicon-pencil"></i>&nbsp;编辑</button>
@@ -68,7 +68,7 @@
                                         <input type="hidden" name="id" value="{$student->getData('id')}" />
                                         <input type="text" name="name" id="name" value="{$student->getData('name')}">
                                         <label>所属班级：</label>
-                                        <input type="text" name="klass" id="klass" value="{$student->getData('klass')}">
+                                        <input type="text" name="klass_id" id="klass_id" value="{$student->getData('klass_id')}">
                                         <button type="submit" class="btn btn-primary">保存</button>
                                     </form>
                                 </div>

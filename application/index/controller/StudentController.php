@@ -101,7 +101,7 @@ class StudentController extends Controller
 
         // 为对象赋值
         $Student->name = $postData['name'];
-        $Student->klass = $postData['klass'];
+        $Student->klass_id = $postData['klass_id'];
         
         // 新增对象至数据表
         $Student->save();
@@ -173,7 +173,7 @@ class StudentController extends Controller
 
         // 写入要更新的数据
         $Student->name = input('post.name');
-        $Student->klass = input('post.klass');
+        $Student->klass_id = input('post.klass_id');
         // 更新
         $Student->save();
         return $this->success('操作成功', url('index'));
