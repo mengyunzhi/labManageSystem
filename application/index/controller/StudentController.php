@@ -26,7 +26,7 @@ class StudentController extends Controller
 
         return $this->fetch();
     }
-    public function edit(){
+    public function edit1(){
     	return $this->fetch();
     }
     //保存数据
