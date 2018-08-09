@@ -9,23 +9,22 @@
 namespace app\common\model;
 use think\Model;
 use app\common\model\TeacherClassroom;
-use app\common\model\Teacher;
 
 class Klass extends Model
 {
-    private $Teachers;
+    private $TeachersId;
 
-    //返回与教室关联的教师的数组
-    public function getTeacher(){
-    	$this->Teachers=array();
+    //返回与教室关联的教师id数组
+    public function getTeacherId(){
+    	$this->TeachersId=array();
     	//从中间表取得关联信息
     	$Instance=new TeacherClassroom;
     	$TeacherClassroomes=$Instance->where('classroom_id', 'like', '%' . $this->id .'%')->select();
     	//获得关联教师
     	foreach ($TeacherClassroomes as $TeacherClassroom) {
-    		$Teacher=Teacher::get($TeacherClassroom['teacher_id']);
-    		array_push($this->Teachers, $Teacher);
+    		$TeacherId=$TeacherClassroom['teacher_id'];
+    		array_push($this->TeachersId, $TeacherId);
     	}
-    	return $this->Teachers;
+    	return $this->TeachersId;
     }
 }
