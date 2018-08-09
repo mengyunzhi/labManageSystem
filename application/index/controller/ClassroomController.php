@@ -45,7 +45,7 @@ class ClassroomController extends Controller
 
         // 新增对象至数据表
         $Classroom->save();
-        return $this->success('学期' . $Classroom->name . '新增成功。', url('index'));
+        return $this->success('教室' . $Classroom->name . '新增成功。', url('index'));
 
     }
 
