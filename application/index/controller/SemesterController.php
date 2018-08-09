@@ -7,16 +7,16 @@ class SemesterController extends Controller
 {
     public function index()
     {
-    	// 获取查询信息
+    	  // 获取查询信息
         $name = Request::instance()->get('name');
 
         // 设置每页大小
         $pageSize = 5;
 
-    	// 实例化Semester
-    	$Semester = new Semester;
+    	  // 实例化Semester
+    	  $Semester = new Semester;
 		
-		// 按条件查询数据并调用分页
+		    // 按条件查询数据并调用分页
         $semesters = $Semester->where('name', 'like', '%' . $name . '%')->paginate($pageSize, false, [
             'query'=>[
                 'name' => $name,
@@ -34,7 +34,7 @@ class SemesterController extends Controller
 
     public function insert()
     {
-    	// 接收传入数据
+    	  // 接收传入数据
         $postData = Request::instance()->post();        
     	  // 实例化Semester空对象
         $Semester = new Semester();
@@ -49,13 +49,13 @@ class SemesterController extends Controller
 
     public function add()
     {
-    	$htmls = $this->fetch();
+    	  $htmls = $this->fetch();
         return $htmls;
     }
 
     public function delete()
     {
-    	// 获取pathinfo传入的ID值.
+    	  // 获取pathinfo传入的ID值.
         $id = Request::instance()->param('id/d'); // “/d”表示将数值转化为“整形”
 
         if (is_null($id) || 0 === $id) {
@@ -81,7 +81,7 @@ class SemesterController extends Controller
 
      public function edit()
     {       
-    	 // 获取传入ID
+    	   // 获取传入ID
         $id = Request::instance()->param('id/d');
 
         // 在Semester表模型中获取当前记录
