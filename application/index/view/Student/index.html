@@ -1,0 +1,38 @@
+{extend name="lab/nav"}
+{block name="title"}学生管理{/block}
+{block name="content"}
+<div class="row">
+    <div class="col-md-12">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-8">
+                    <form class="form-inline" action="{:url()}">
+                        <div class="form-group">
+                            <label class="sr-only" for="name">学生管理</label>
+                            <input name="name" type="text" class="form-control" placeholder="名称..." value="">
+                        </div>
+                        <button type="submit" class="btn btn-default"><i class="glyphicon glyphicon-search"></i>&nbsp;查询</button>
+                    </form>
+                </div>
+            </div>
+            <hr />
+            <table class="table table-hover table-bordered" style="margin-bottom: 0">
+                <tr class="info">
+                    <th>ID</th>
+                    <th>姓名</th>
+                    <th>班级</th>
+                </tr>
+                {volist name="students" id="student" key="key"}
+                <tr>
+                    <td>{$key}</td>
+                    <td>{$student->getData('name')}</td>
+                    <td>{$student->klass->name}</td>
+                </tr>  
+             {/volist}
+            </table>
+            {:$students->render()}
+             <!--点击小叉号即可删除-->
+        </div>
+     </div>
+</div>
+{/block}

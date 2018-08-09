@@ -17,7 +17,7 @@ class LabController extends Controller
     {
     	return $this->fetch("changeClasses");
     }
-    public function personalInformation()
+    public function student()
     {
     	return $this->fetch("personalInformation");
     }
