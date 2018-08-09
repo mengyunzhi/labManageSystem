@@ -1,33 +1,6 @@
-<!doctype html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport"
-          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
-    <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>教师选课系统</title>
-    <link rel="stylesheet" href="http://cdn.bootcss.com/bootstrap/3.3.0/css/bootstrap.min.css">
-    <!-- jQuery文件。务必在bootstrap.min.js 之前引入 -->
-    <script src="http://cdn.bootcss.com/jquery/1.11.1/jquery.min.js"></script>
-    <!-- 最新的 Bootstrap 核心 JavaScript 文件 -->
-    <script src="http://cdn.bootcss.com/bootstrap/3.3.0/js/bootstrap.min.js"></script>
-</head>
-<body>
-<!--导航栏-->
-<nav class="navbar navbar-inverse" role="navigation">
-    <div class="container-fluid">
-        <div class="navbar-header">
-            <a class="navbar-brand" href="http://www.mengyunzhi.com/"> 梦云智 </a>
-        </div>
-        <div>
-            <ul class="nav navbar-nav">
-                <li><a href="information.html">个人信息</a></li>
-                <li><a href="index.html">选课</a></li>
-            </ul>
-        </div>
-    </div>
-</nav>
-
+{extend name="Teacher/nav"}
+{block name="title"}梦云智选课系统{/block}
+{block name="content"}
 <!--//主体界面-->
 <div class="container">
     <!-- 搜索功能-->
@@ -220,5 +193,4 @@
         </div>
     </div>
 </div>
-</body>
-</html>
+{/block}

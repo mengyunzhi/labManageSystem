@@ -93,11 +93,8 @@ class TeacherController extends Controller
            //存储
             $courses_ids = Request::instance()->post('course_id');
             $klass_ids = Request::instance()->post('klass_id');
-            var_dump($klass_ids);
             $Teacher->courses()->saveAll($courses_ids);
             $Teacher->klasses()->saveAll($klass_ids);
-
-
 
             //获取到正常的异常，输出异常
         }catch (\Exception $exception)
