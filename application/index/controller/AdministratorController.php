@@ -2,7 +2,7 @@
 namespace app\index\controller;
 use think\Controller;
 
-class LabController extends Controller
+class AdministratorController extends Controller
 {
     public function index()
     {
