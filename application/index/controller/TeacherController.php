@@ -12,13 +12,11 @@ use app\common\model\Course;
 use app\common\model\Klass;
 use app\common\model\Teacher;
 use think\Controller;
-use think\Exception;
 use think\exception\HttpResponseException;
 use think\facade\Request;
 
 /*
  * 老师选课页面和个人信息页面的功能
- *
  *
  * */
 
@@ -94,11 +92,8 @@ class TeacherController extends Controller
            //存储
             $courses_ids = Request::instance()->post('course_id');
             $klass_ids = Request::instance()->post('klass_id');
-            var_dump($klass_ids);
             $Teacher->courses()->saveAll($courses_ids);
             $Teacher->klasses()->saveAll($klass_ids);
-
-
 
             //获取到正常的异常，输出异常
         }catch (\Exception $exception)
