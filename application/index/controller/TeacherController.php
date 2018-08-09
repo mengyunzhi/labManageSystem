@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Created by PhpStorm.
  * User: ASUS-PC
@@ -110,5 +111,6 @@ class TeacherController extends Controller
 
 
     }
+
 
 }
