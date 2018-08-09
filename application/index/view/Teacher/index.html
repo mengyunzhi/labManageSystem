@@ -39,36 +39,32 @@
 	</div>
 	<div class="row	blacknav">
 		<div class="col-md-12">
-			<form>
+			<form action="{:url('index')}" method="post">
 				<div class="row">
 					
 					<div class="col-md-3">
 							<label>学期：</label>
-							<select class="btn btn-default dropdown-toggle">
+							<select class="btn btn-default dropdown-toggle" name="semester">
 								<option>选择学期</option>
-								<option>第一学期</option>
-								<option>第二学期</option>
-								<option>第三学期</option>
+								<option value="1">第一学期</option>
 							</select>
 					</div>
 					<div class="col-md-3">
 							<label>周次：</label>
 							<select class="btn btn-default dropdown-toggle">
 								<option>选择周次</option>
-								<option>第一周</option>
-								<option>第二周</option>
-								<option>第三周</option>
+								<option value="firstweek">第一周</option>
+								<option value="secondweek">第二周</option>
 							</select>
 					</div>
 					<div class="col-md-3">
 							<label>选择教室：</label>
-							<select class="btn btn-default dropdown-toggle">
-								<option>选择教室</option>
-								<option>A171</option>
-								<option>A172</option>
-								<option>A173</option>
+							<select class="btn btn-default dropdown-toggle" name="Klass">
+								<option >选择教室</option>
+                {volist name="AllKlass" id="Klass"}
+                <option value="{$Klass->id}">{$Klass->name}</option>
+                {/volist} 
 							</select>
-						
 					</div>
 					<div class="col-md-1">
 						<button type="submit" class="btn btn-default" >确认</button>
@@ -78,6 +74,7 @@
 		</div>
 	</div>
 	
+  <div class="row"><h6>当前教室{$ChooseKlass->name}</h6></div>
 	<div class="row">
 		
 		<!-- 表格 -->
