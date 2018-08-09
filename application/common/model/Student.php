@@ -6,6 +6,10 @@
  * Time: 10:31
  */
 
+
+/*
+ * 学生的模型
+ * */
 namespace app\common\model;
 use think\Model;
 

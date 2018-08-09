@@ -12,7 +12,9 @@ use app\common\model\Student;
 use think\Controller;
 use think\exception\HttpResponseException;
 use think\facade\Request;
-
+/*
+ * 学生个人信息页面的功能
+ * */
 class StudentController extends Controller
 {
     public function index()
@@ -38,12 +40,16 @@ class StudentController extends Controller
         //渲染数据
         return $this->fetch();
 
-
         //通过扫码得到一个信息，通过这个找到这个学生
         return $this->fetch('student');
        
     }
-   
+
+    public function edit(){
+    	return $this->fetch();
+    }
+
+
 
     //保存数据
     public function save()
@@ -55,6 +61,7 @@ class StudentController extends Controller
             if (is_null($id) || 0 === $id){
                 throw new \Exception('未获取到Id的信息',1);
             }
+
             $Student = Student::get($id);
             if (null === $Student)
             {
@@ -67,7 +74,6 @@ class StudentController extends Controller
 
             if (!$result)
             {
-                return $this->error('操作失败' . $Student->getError());
             }
 
 
