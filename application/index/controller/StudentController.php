@@ -22,9 +22,11 @@ class StudentController extends Controller
 
 
 
-        return $this->fetch('student');
+        return $this->fetch();
     }
-
+    public function edit(){
+    	return $this->fetch();
+    }
     //保存数据
     public function save()
     {
