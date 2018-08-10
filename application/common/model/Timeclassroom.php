@@ -39,5 +39,10 @@ class Timeclassroom extends Model
     }
 
 
-	
+    public function teacher(){
+    	return $this->belongsTo('Teacher');
+    }
+    public function course(){
+    	return $this->belongsTo('Course');
+    }	
 }
