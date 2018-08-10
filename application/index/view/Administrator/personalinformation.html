@@ -1,19 +1,20 @@
-{extend name="Administrator/nav"} {block name="title"}个人信息{/block} {block name="content"}
-<div class="container " style="padding: 0 400px">
-    <header class="text-center">
-        <h3>管理员个人信息修改</h3>
-    </header>
-    <br>
-    <form action="{:url('save')}" method="post">
-        <input type="hidden" name="id" value="{$Administrator->getData('id')}" />
-        <div class="form-group">
-            <input type="name" name="name" placeholder="{$Administrator->getData('name')}" class="form-control  input-lg text-center no-border">
-        </div>
-        <div class="form-group">
-            <input type="password" name="password" placeholder="密码" class="form-control  input-lg text-center no-border">
-        </div>
-        <button type="submit" class="btn btn-lg btn-danger lt b-white b-2x btn-block" id="submit">
-            保存</button>
-    </form>
-</div>
+{extend name="Administrator/nav"}
+{block name="title"}个人信息{/block}
+{block name="content"}
+    <div class="container " style="padding: 0 400px">       
+            <header class="text-center">
+                <strong>管理员个人信息</strong>
+            </header>
+            <br>
+            <form action="" method="post">
+                <div class="form-group" >
+                    <input type="username" name="username" placeholder="用户名" class="form-control  input-lg text-center no-border">
+                </div>
+                <div class="form-group">
+                    <input type="password" name="password" placeholder="密码" class="form-control  input-lg text-center no-border">
+                </div>
+                <button type="submit" class="btn btn-lg btn-danger lt b-white b-2x btn-block" id="submit">
+                    保存</button>
+            </form>     
+    </div>
 {/block}
