@@ -1,10 +1,4 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: ASUS-PC
- * Date: 2018/8/8
- * Time: 10:31
- */
 
 
 /*
