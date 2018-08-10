@@ -28,18 +28,43 @@ class TeacherController extends Controller
     //index页面
     public function index()
     {
+
+        //初始化设置
+        $onWeekly=1;
+        $onClassroom=1;
+        //获得登录老师及其信息
+        $Teacher=Teacher::get(1);
+        $Courses=Course::select();
+        $Klasses=Klass::select();
+
+
+
         $postData=Request::instance()->post();
         //查询条件
         if (!empty($postData)) {
                 $this->timeclassroom=Timeclassroom::where('semester','=','2018/01');
                 $this->timeclassroom=$this->timeclassroom->where('weekly','=',(int)$postData['weekly']);
+
+                $onWeekly=(int)$postData['weekly'];
                 $this->timeclassroom=$this->timeclassroom->where('classroom_num','=',(int)$postData['classroom_num']);
+                $onClassroom=(int)$postData['classroom_num'];
+
+                $this->timeclassroom=$this->timeclassroom->where('classroom_num','=',(int)$postData['classroom_num']);
+
         }
         $weekList=$this->editTimeClassroom();
 
         $this->assign('weekList',$weekList);
         $allClassroom=Classroom::select();
         $this->assign('allClassroom',$allClassroom);
+
+        //像v层传送老师数据
+        $this->assign('Klasses',$Klasses);
+        $this->assign('Courses',$Courses);
+        $this->assign('Teacher',$Teacher);
+        $this->assign('onWeekly',$onWeekly);
+        $this->assign('onClassroom',$onClassroom);
+
         return $this->fetch();
 
     }
@@ -60,6 +85,7 @@ class TeacherController extends Controller
         }
         return $weekList;
     }
+
 
     //进入老师的信息页面
     public function information()
@@ -156,9 +182,11 @@ class TeacherController extends Controller
     }
 
     //抢课功能
+
     public function takeLesson()
     {
         
     }
+
 
 }
