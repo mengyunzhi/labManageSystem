@@ -48,6 +48,9 @@ class TeacherController extends Controller
                 $onWeekly=(int)$postData['weekly'];
                 $this->timeclassroom=$this->timeclassroom->where('classroom_num','=',(int)$postData['classroom_num']);
                 $onClassroom=(int)$postData['classroom_num'];
+
+                $this->timeclassroom=$this->timeclassroom->where('classroom_num','=',(int)$postData['classroom_num']);
+
         }
         $weekList=$this->editTimeClassroom();
 
@@ -203,6 +206,7 @@ class TeacherController extends Controller
     }
 
     //抢课功能
+
     public function takeLesson()
     {
 
@@ -220,6 +224,7 @@ class TeacherController extends Controller
 
             //得到timeClassroom对象
             $TimeClassroom = TimeClassroom::get($timeClassroomId);
+
 
             if (is_null($TimeClassroom))
             {
