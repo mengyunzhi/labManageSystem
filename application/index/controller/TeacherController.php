@@ -1,21 +1,14 @@
 <?php
 
-/**
- * Created by PhpStorm.
- * User: ASUS-PC
- * Date: 2018/8/9
- * Time: 9:27
- */
 
 namespace app\index\controller;
+use app\common\model\Classroom;
 use app\common\model\Course;
 use app\common\model\Klass;
-use app\common\model\Classroom;
 use app\common\model\Teacher;
-use think\Controller;
-use think\exception\HttpResponseException;
-use think\facade\Request;
 use app\common\model\Timeclassroom;
+use think\Controller;
+use think\facade\Request;
 
 /*
  * 老师选课页面和个人信息页面的功能
@@ -162,5 +155,7 @@ class TeacherController extends Controller
 
     }
 
+    //抢课功能
+    
 
 }

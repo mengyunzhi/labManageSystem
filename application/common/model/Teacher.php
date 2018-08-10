@@ -1,10 +1,4 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: ASUS-PC
- * Date: 2018/8/9
- * Time: 9:27
- */
 
 /*
  * 教师的模型

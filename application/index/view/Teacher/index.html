@@ -1,6 +1,7 @@
 {extend name="Teacher/nav"}
 {block name="title"}梦云智选课系统{/block}
 {block name="content"}
+
 <div class="row"><div class="col-md-12 header">当前周次:第一周</div></div>
 <div class="container">
     <!-- 搜索功能-->
@@ -123,8 +124,13 @@
         ...
       </div>
       <div class="modal-footer">
-        <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
-        <button type="button" class="btn btn-primary">确认</button>
+          <form action="{:url('takeLesson')}" methoed="post">
+              <button type="submit" class="btn btn-primary">确认</button>
+              <input type="hidden" name="teacherId" value="{$Teacher->id}">
+              <input type="hidden" name="timeClassroomId" value="{$TimeClassroom->id">
+              <input type="hidden" name="courseId">
+              <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+          </form>
       </div>
     </div>
   </div>

@@ -7,6 +7,12 @@ use think\Model;
  */
 class Timeclassroom extends Model
 {
-	
+    //
+	public function klasses()
+    {
+        return $this->belongsToMany('Klass');
+    }
+
+
 	
 }
