@@ -1,9 +1,14 @@
-
+<!DOCTYPE html>
+<html>
+<head>
+  <title>修改教师个人信息</title>
+  <meta charset="utf-8">
+  <link rel="stylesheet" href="http://cdn.bootcss.com/bootstrap/3.3.0/css/bootstrap.min.css">
     <!-- jQuery文件。务必在bootstrap.min.js 之前引入 -->
     <script src="http://cdn.bootcss.com/jquery/1.11.1/jquery.min.js"></script>
     <!-- 最新的 Bootstrap 核心 JavaScript 文件 -->
     <script src="http://cdn.bootcss.com/bootstrap/3.3.0/js/bootstrap.min.js"></script>
-
+    <link rel="stylesheet" type="text/css" href="/labManageSystem/public/static/css/index.css">
 </head>
 <body>
   
@@ -35,48 +40,38 @@
     </div>
     <div class="row	blacknav">
         <div class="col-md-12">
-            <form action="">
+            <form action="{:url('index')}" method="post">
                 <div class="row">
-                    <div class="col-md-4">
-                        <label>班级：</label>
+                    <div class="col-md-3">
+                        <label>学期:</label>
                         <select class="btn btn-default dropdown-toggle">
-                            {volist name="klasses" id="Klass"}
-                            <option value="{$Klass->id}">{$Klass->name}</option>
-                            {/volist}
+                         
                         </select>
                     </div>
-                    <div class="col-md-4">
+                    <div class="col-md-3">
                         <label>周次：</label>
-                        <select class="btn btn-default dropdown-toggle">
-                            {volist name="times" id="Time"}
-                            <option value="{Time->id}">{$Time->weekly}</option>
-                            {/volist}
+                        <select class="btn btn-default dropdown-toggle" name="weekly">
+                          <option value="1">选择周次</option>
+                          <option value="1">第一周</option>
+                          <option value="2">第二周</option>
+                          <option value="3">第三周</option>
                         </select>
                     </div>
-                    <div class="col-md-1">
+                    <div class="col-md-3">
+                    <label>选择教室：</label>
+                    <select class="btn btn-default dropdown-toggle" name="classroom_num">
+                        <option value="1">选择教室</option>
+                        {volist name="allClassroom" id="classroom"}
+                        <option value="{$classroom->id}">{$classroom->name}</option>
+                        {/volist}
+                    </select>
+                    </div>
+                    <div class="col-md-3">
                         <button type="submit" class="btn btn-default">搜索</button>
                     </div>
                 </div>
             </form>
         </div>
-    </div>
-    <div class="row">
-    <h1>当前周次:第一周</h1>
-    </div>
-    <div class="col-md-12">
-        <form>
-            <div class="row">
-                <div class="col-md-3">
-                    <label>选择教室：</label>
-                    <select class="btn btn-default dropdown-toggle">
-                        <option>选择教室</option>
-                    </select>
-                </div>
-                <div class="col-md-1">
-                    <button type="submit" class="btn btn-default">确认</button>
-                </div>
-            </div>
-        </form>
     </div>
     <div class="row">
 
@@ -95,66 +90,14 @@
                     <th>星期六</th>
                     <th>星期日</th>
                 </tr>
+                {volist name="weekList" id="nodeList" key="key"}
                 <tr>
-                    <td>第一节</td>
-
-                   <td style="text-align: center;">已经有课了<br><span style="margin-right: 10px;">张三老师 软件173班</span><br><span class="glyphicon glyphicon-circle-arrow-right" aria-hidden="true"><a style="margin-left: 10px;" data-toggle="modal" data-target="#ChangeLessons" >换课</a></span></td>
-                   <td style="text-align: center;">已经有课了<br><span style="margin-right: 10px;">张三老师 软件173班</span><br><span class="glyphicon glyphicon-circle-arrow-right" aria-hidden="true"><a style="margin-left: 10px;" data-toggle="modal" data-target="#ChangeLessons" >换课</a></span></td>
-                    <td style="text-align: center;">还没有课<br><span>赶紧点击</span><br><a data-toggle="modal" data-target="#TakeLessons" >抢课</a><span class="glyphicon glyphicon-resize-horizontal" aria-hidden="true"></span><a data-toggle="modal" data-target="#AdjustLessons" >调课</a></td>
-                   <td style="text-align: center;">已经有课了<br><span style="margin-right: 10px;">张三老师 软件173班</span><br><span class="glyphicon glyphicon-circle-arrow-right" aria-hidden="true"><a style="margin-left: 10px;" data-toggle="modal" data-target="#ChangeLessons" >换课</a></span></td>
-                     <td style="text-align: center;">还没有课<br><span>赶紧点击</span><br><a href="#" >抢课</a><span class="glyphicon glyphicon-resize-horizontal" aria-hidden="true"></span><a href="#" >调课</a></td>
-                    <td style="text-align: center;">还没有课<br><span>赶紧点击</span><br><a href="#" >抢课</a><span class="glyphicon glyphicon-resize-horizontal" aria-hidden="true"></span><a href="#" >调课</a></td>
-                    <td style="text-align: center;">还没有课<br><span>赶紧点击</span><br><a href="#" >抢课</a><span class="glyphicon glyphicon-resize-horizontal" aria-hidden="true"></span><a href="#" >调课</a></td>
-
+                <td>第{$key}节</td>
+                {volist name="nodeList" id="weekly"}
+                <td style="text-align: center;">{eq name="weekly->teacher_id" value="0"}还没有课<br><span>赶紧点击</span><br><a data-toggle="modal" data-target="#TakeLessons" >抢课</a><span class="glyphicon glyphicon-resize-horizontal" aria-hidden="true"></span><a data-toggle="modal" data-target="#AdjustLessons" >调课</a>{else/}已经有课了<br><span style="margin-right: 10px;">张三老师 软件173班</span><br><span class="glyphicon glyphicon-circle-arrow-right" aria-hidden="true"><a style="margin-left: 10px;" data-toggle="modal" data-target="#ChangeLessons" >换课</a></span>{/eq}</td>
+                {/volist}
                 </tr>
-                <tr>
-                    <td>第二节</td>
-
-                   <td style="text-align: center;">已经有课了<br><span style="margin-right: 10px;">张三老师 软件173班</span><br><span class="glyphicon glyphicon-circle-arrow-right" aria-hidden="true"><a style="margin-left: 10px;" data-toggle="modal" data-target="#ChangeLessons" >换课</a></span></td>
-                   <td style="text-align: center;">已经有课了<br><span style="margin-right: 10px;">张三老师 软件173班</span><br><span class="glyphicon glyphicon-circle-arrow-right" aria-hidden="true"><a style="margin-left: 10px;" data-toggle="modal" data-target="#ChangeLessons" >换课</a></span></td>
-                    <td style="text-align: center;">还没有课<br><span>赶紧点击</span><br><a data-toggle="modal" data-target="#TakeLessons" >抢课</a><span class="glyphicon glyphicon-resize-horizontal" aria-hidden="true"></span><a data-toggle="modal" data-target="#AdjustLessons" >调课</a></td>
-                   <td style="text-align: center;">已经有课了<br><span style="margin-right: 10px;">张三老师 软件173班</span><br><span class="glyphicon glyphicon-circle-arrow-right" aria-hidden="true"><a style="margin-left: 10px;" data-toggle="modal" data-target="#ChangeLessons" >换课</a></span></td>
-                     <td style="text-align: center;">还没有课<br><span>赶紧点击</span><br><a href="#" >抢课</a><span class="glyphicon glyphicon-resize-horizontal" aria-hidden="true"></span><a href="#" >调课</a></td>
-                    <td style="text-align: center;">还没有课<br><span>赶紧点击</span><br><a href="#" >抢课</a><span class="glyphicon glyphicon-resize-horizontal" aria-hidden="true"></span><a href="#" >调课</a></td>
-                    <td style="text-align: center;">还没有课<br><span>赶紧点击</span><br><a href="#" >抢课</a><span class="glyphicon glyphicon-resize-horizontal" aria-hidden="true"></span><a href="#" >调课</a></td>
-
-                </tr>
-                <tr>
-                    <td>第三节</td>
-
-                <td style="text-align: center;">已经有课了<br><span style="margin-right: 10px;">张三老师 软件173班</span><br><span class="glyphicon glyphicon-circle-arrow-right" aria-hidden="true"><a style="margin-left: 10px;" data-toggle="modal" data-target="#ChangeLessons" >换课</a></span></td>
-                   <td style="text-align: center;">已经有课了<br><span style="margin-right: 10px;">张三老师 软件173班</span><br><span class="glyphicon glyphicon-circle-arrow-right" aria-hidden="true"><a style="margin-left: 10px;" data-toggle="modal" data-target="#ChangeLessons" >换课</a></span></td>
-                    <td style="text-align: center;">还没有课<br><span>赶紧点击</span><br><a data-toggle="modal" data-target="#TakeLessons" >抢课</a><span class="glyphicon glyphicon-resize-horizontal" aria-hidden="true"></span><a data-toggle="modal" data-target="#AdjustLessons" >调课</a></td>
-                   <td style="text-align: center;">已经有课了<br><span style="margin-right: 10px;">张三老师 软件173班</span><br><span class="glyphicon glyphicon-circle-arrow-right" aria-hidden="true"><a style="margin-left: 10px;" data-toggle="modal" data-target="#ChangeLessons" >换课</a></span></td>
-                     <td style="text-align: center;">还没有课<br><span>赶紧点击</span><br><a href="#" >抢课</a><span class="glyphicon glyphicon-resize-horizontal" aria-hidden="true"></span><a href="#" >调课</a></td>
-                    <td style="text-align: center;">还没有课<br><span>赶紧点击</span><br><a href="#" >抢课</a><span class="glyphicon glyphicon-resize-horizontal" aria-hidden="true"></span><a href="#" >调课</a></td>
-                    <td style="text-align: center;">还没有课<br><span>赶紧点击</span><br><a href="#" >抢课</a><span class="glyphicon glyphicon-resize-horizontal" aria-hidden="true"></span><a href="#" >调课</a></td>
-
-                </tr>
-                <tr>
-                    <td>第四节</td>
-
-                    <td style="text-align: center;">已经有课了<br><span style="margin-right: 10px;">张三老师 软件173班</span><br><span class="glyphicon glyphicon-circle-arrow-right" aria-hidden="true"><a style="margin-left: 10px;" data-toggle="modal" data-target="#ChangeLessons" >换课</a></span></td>
-                   <td style="text-align: center;">已经有课了<br><span style="margin-right: 10px;">张三老师 软件173班</span><br><span class="glyphicon glyphicon-circle-arrow-right" aria-hidden="true"><a style="margin-left: 10px;" data-toggle="modal" data-target="#ChangeLessons" >换课</a></span></td>
-                    <td style="text-align: center;">还没有课<br><span>赶紧点击</span><br><a data-toggle="modal" data-target="#TakeLessons" >抢课</a><span class="glyphicon glyphicon-resize-horizontal" aria-hidden="true"></span><a data-toggle="modal" data-target="#AdjustLessons" >调课</a></td>
-                   <td style="text-align: center;">已经有课了<br><span style="margin-right: 10px;">张三老师 软件173班</span><br><span class="glyphicon glyphicon-circle-arrow-right" aria-hidden="true"><a style="margin-left: 10px;" data-toggle="modal" data-target="#ChangeLessons" >换课</a></span></td>
-                     <td style="text-align: center;">还没有课<br><span>赶紧点击</span><br><a href="#" >抢课</a><span class="glyphicon glyphicon-resize-horizontal" aria-hidden="true"></span><a href="#" >调课</a></td>
-                    <td style="text-align: center;">还没有课<br><span>赶紧点击</span><br><a href="#" >抢课</a><span class="glyphicon glyphicon-resize-horizontal" aria-hidden="true"></span><a href="#" >调课</a></td>
-                    <td style="text-align: center;">还没有课<br><span>赶紧点击</span><br><a href="#" >抢课</a><span class="glyphicon glyphicon-resize-horizontal" aria-hidden="true"></span><a href="#" >调课</a></td>
-
-                </tr>
-                <tr>
-                    <td>第五节</td>
-                <td style="text-align: center;">已经有课了<br><span style="margin-right: 10px;">张三老师 软件173班</span><br><span class="glyphicon glyphicon-circle-arrow-right" aria-hidden="true"><a style="margin-left: 10px;" data-toggle="modal" data-target="#ChangeLessons" >换课</a></span></td>
-                   <td style="text-align: center;">已经有课了<br><span style="margin-right: 10px;">张三老师 软件173班</span><br><span class="glyphicon glyphicon-circle-arrow-right" aria-hidden="true"><a style="margin-left: 10px;" data-toggle="modal" data-target="#ChangeLessons" >换课</a></span></td>
-                    <td style="text-align: center;">还没有课<br><span>赶紧点击</span><br><a data-toggle="modal" data-target="#TakeLessons" >抢课</a><span class="glyphicon glyphicon-resize-horizontal" aria-hidden="true"></span><a data-toggle="modal" data-target="#AdjustLessons" >调课</a></td>
-                   <td style="text-align: center;">已经有课了<br><span style="margin-right: 10px;">张三老师 软件173班</span><br><span class="glyphicon glyphicon-circle-arrow-right" aria-hidden="true"><a style="margin-left: 10px;" data-toggle="modal" data-target="#ChangeLessons" >换课</a></span></td>
-                     <td style="text-align: center;">还没有课<br><span>赶紧点击</span><br><a href="#" >抢课</a><span class="glyphicon glyphicon-resize-horizontal" aria-hidden="true"></span><a href="#" >调课</a></td>
-                    <td style="text-align: center;">还没有课<br><span>赶紧点击</span><br><a href="#" >抢课</a><span class="glyphicon glyphicon-resize-horizontal" aria-hidden="true"></span><a href="#" >调课</a></td>
-                    <td style="text-align: center;">还没有课<br><span>赶紧点击</span><br><a href="#" >抢课</a><span class="glyphicon glyphicon-resize-horizontal" aria-hidden="true"></span><a href="#" >调课</a></td>
-
-
-                </tr>
+                {/volist}
             </table>
         </div>
     </div>
