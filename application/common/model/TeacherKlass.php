@@ -3,8 +3,7 @@
 namespace app\common\model;
 use think\Model;
 
-class Klass extends Model
+class TeacherKlass extends Model
 {
-    
 
 }
