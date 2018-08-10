@@ -92,5 +92,21 @@ class Teacher extends Model
         return $this->belongsToMany('Time','teacher_time');
     }
 
+    /*
+     * 老师与老师班级中间表的一对多关联
+     * */
+    public function teacherKlass()
+    {
+        return $this->hasMany('TeacherKlass');
+    }
+
+    /*
+     * 老师与课程中间表的一对多关联
+     * */
+    public function teacherCourse()
+    {
+        return $this->hasMany('TeacherCourse');
+    }
+
 
 }
