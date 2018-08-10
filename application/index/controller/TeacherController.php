@@ -156,6 +156,9 @@ class TeacherController extends Controller
     }
 
     //抢课功能
-    
+    public function takeLesson()
+    {
+        
+    }
 
 }
