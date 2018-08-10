@@ -19,7 +19,6 @@
                           <option>第一学期</option>
 
 
-
                         </select>
                     </div>
                     <div class="col-md-3">
@@ -35,7 +34,6 @@
                     <div class="col-md-3">
                     <label>选择教室：</label>
                     <select class="btn btn-default dropdown-toggle" name="classroom_num">
-                        <option value="1">选择教室</option>
                         {volist name="allClassroom" id="classroom"}
 
                         <option value="{$classroom->id}" {eq name="onClassroom" value="$classroom->id" } selected="selected"{/eq}>{$classroom->name}</option>
@@ -73,7 +71,10 @@
 
                 <td style="text-align: center;">{eq name="weekly->teacher_id" value="0"}还没有课<br><span>赶紧点击</span><br><a data-toggle="modal" data-target="#TakeLessons" data-whatever="{$weekly->id}" >抢课</a>
                 <span class="glyphicon glyphicon-resize-horizontal" aria-hidden="true"></span><a data-toggle="modal" data-target="#AdjustLessons" >调课</a>
-                {else/}已经有课了<br><span style="margin-right: 10px;">{$weekly->teacher->name}</span><span>课程{$weekly->course->name}<br>软件173班</span><br><span class="glyphicon glyphicon-circle-arrow-right" aria-hidden="true">
+                {else/}已经有课了<br><span style="margin-right: 10px;">{$weekly->teacher->name}</span><span>课程{$weekly->course->name}<br>{volist name="Klasses" id="Klass"}
+                  {eq name="$weekly->getKlassesIsChecked($Klass)" value="true"}<span>{$Klass->name}</span>{else/}{/eq}
+                  {/volist}
+                </span><br><span class="glyphicon glyphicon-circle-arrow-right" aria-hidden="true">
                 <a style="margin-left: 10px;" data-toggle="modal" data-target="#ChangeLessons" >换课</a></span>{/eq}</td>
 
                 {/volist}
@@ -96,7 +97,7 @@
         <h4 class="modal-title" id="exampleModalLabel">抢课</h4>
       </div>
       <div class="modal-body">
-        <form action="{:url('test')}" method="post">
+        <form action="{:url('takeLesson')}" method="post">
           <div class="form-group">
             <input type="hidden" class="form-control" id="recipient-name" name="timeClassroomId">
           </div>
@@ -136,14 +137,14 @@
         ...
       </div>
       <div class="modal-footer">
+
         <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
         <button type="button" class="btn btn-primary">确认</button>
+
       </div>
     </div>
   </div>
 </div>
-
-
 
 
 
