@@ -1,7 +1,7 @@
 {extend name="Teacher/nav"}
 {block name="title"}梦云智选课系统{/block}
 {block name="content"}
-<div class="row"><div class="col-md-12 header">当前周次:第一周</div></div>
+<div class="row"><div class="col-md-12 header">当前周次:第{$onWeekly}周</div></div>
 <div class="container">
     <!-- 搜索功能-->
     <div class="row">
@@ -14,16 +14,15 @@
                     <div class="col-md-3">
                         <label>学期:</label>
                         <select class="btn btn-default dropdown-toggle">
-
+                          <option>第一学期</option>
                         </select>
                     </div>
                     <div class="col-md-3">
                         <label>周次：</label>
                         <select class="btn btn-default dropdown-toggle" name="weekly">
-                          <option value="1">选择周次</option>
-                          <option value="1">第一周</option>
-                          <option value="2">第二周</option>
-                          <option value="3">第三周</option>
+                          <option value="1" {eq name="onWeekly" value="1" } selected="selected"{/eq}>第一周</option>
+                          <option value="2" {eq name="onWeekly" value="2" } selected="selected"{/eq}>第二周</option>
+                          <option value="3" {eq name="onWeekly" value="3" } selected="selected"{/eq}>第三周</option>
                         </select>
                     </div>
                     <div class="col-md-3">
@@ -31,7 +30,7 @@
                     <select class="btn btn-default dropdown-toggle" name="classroom_num">
                         <option value="1">选择教室</option>
                         {volist name="allClassroom" id="classroom"}
-                        <option value="{$classroom->id}">{$classroom->name}</option>
+                        <option value="{$classroom->id}" {eq name="onClassroom" value="$classroom->id" } selected="selected"{/eq}>{$classroom->name}</option>
                         {/volist}
                     </select>
                     </div>
@@ -60,13 +59,12 @@
                 </tr>
                 {volist name="weekList" id="nodeList" key="key"}
                 <tr>
-
                 <td>第{$key}节</td>
                 {volist name="nodeList" id="weekly"}
-                <td style="text-align: center;">{eq name="weekly->teacher_id" value="0"}还没有课<br><span>赶紧点击</span><br><a data-toggle="modal" data-target="#TakeLessons" >抢课</a>
-                    <span class="glyphicon glyphicon-resize-horizontal" aria-hidden="true"></span><a data-toggle="modal" data-target="#AdjustLessons" >调课</a>
-                    {else/}已经有课了<br><span style="margin-right: 10px;">张三老师 软件173班</span><br><span class="glyphicon glyphicon-circle-arrow-right" aria-hidden="true">
-                        <a style="margin-left: 10px;" data-toggle="modal" data-target="#ChangeLessons" >换课</a></span>{/eq}</td>
+                <td style="text-align: center;">{eq name="weekly->teacher_id" value="0"}还没有课<br><span>赶紧点击</span><br><a data-toggle="modal" data-target="#TakeLessons" data-whatever="{$weekly->id}" >抢课</a>
+                <span class="glyphicon glyphicon-resize-horizontal" aria-hidden="true"></span><a data-toggle="modal" data-target="#AdjustLessons" >调课</a>
+                {else/}已经有课了<br><span style="margin-right: 10px;">{$weekly->teacher->name}</span><span>课程{$weekly->course->name}<br>软件173班</span><br><span class="glyphicon glyphicon-circle-arrow-right" aria-hidden="true">
+                <a style="margin-left: 10px;" data-toggle="modal" data-target="#ChangeLessons" >换课</a></span>{/eq}</td>
                 {/volist}
                 </tr>
                 {/volist}
@@ -75,7 +73,38 @@
     </div>
 </div>
 <!-- Button trigger modal -->
-
+<!-- 抢课信息的表单 -->
+<div class="modal fade" id="TakeLessons" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title" id="exampleModalLabel">抢课</h4>
+      </div>
+      <div class="modal-body">
+        <form action="{:url('test')}" method="post">
+          <div class="form-group">
+            <input type="hidden" class="form-control" id="recipient-name" name="timeClassroomId">
+          </div>
+           <input type="hidden" name="teacherId" value="{$Teacher->id}">
+            <label>选择班级:</label>
+            {volist name="Klasses" id="Klass"}
+            {eq name="$Teacher->getKlassesIsChecked($Klass)" value="true"}<input type="checkbox" name="KlassIds[]" value="{$Klass->id}"><label>{$Klass->name}</label>{else/}{/eq}
+            {/volist}
+            <hr>
+            <label>选择课程:</label>
+            {volist name="Courses" id="Course"}
+            {eq name="$Teacher->getCoursesIsChecked($Course)" value="true"}<input type="radio" name="courseId" value="{$Course->id}"><label>{$Course->name}</label>{else/}{/eq}
+            {/volist}
+          <div class="modal-footer">
+          <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+          <button type="submit" class="btn btn-primary">确定抢课</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
 <!-- Modal -->
 <div class="modal fade" id="ChangeLessons" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
   <div class="modal-dialog" role="document">
@@ -95,23 +124,7 @@
   </div>
 </div>
 
-<div class="modal fade" id="TakeLessons" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
-  <div class="modal-dialog" role="document">
-    <div class="modal-content">
-      <div class="modal-header">
-        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-        <h4 class="modal-title" id="myModalLabel">抢课</h4>
-      </div>
-      <div class="modal-body">
-        ...
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
-        <button type="button" class="btn btn-primary">确认</button>
-      </div>
-    </div>
-  </div>
-</div>
+
 
 <div class="modal fade" id="AdjustLessons" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
   <div class="modal-dialog" role="document">
@@ -131,5 +144,13 @@
   </div>
 </div>
 
+<script type="text/javascript">
+  $('#TakeLessons').on('show.bs.modal', function (event) {
+  var button = $(event.relatedTarget) 
+  var recipient = button.data('whatever') 
+  var modal = $(this)
+  modal.find('#recipient-name').val(recipient)
+})
+</script>
 {/block}
 
