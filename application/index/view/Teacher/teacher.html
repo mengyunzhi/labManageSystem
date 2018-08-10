@@ -1,0 +1,46 @@
+{extend name="Administrator/nav"}
+{block name="title"}个人信息{/block}
+{block name="content"}
+<div  style="
+background: #eee;
+margin: 250px 600px;" >
+<form class="form-inline" >
+        <div class="form-group" style="padding-top: 50px">
+            <label for="username">姓名</label>
+            <input type="text" class="form-control" id="username">
+        </div>
+
+        <br>
+        <div class="form-group" style="margin-left: 0px;padding-top: 50px">
+            <label for="exampleInputEmail2">微信号</label>
+            <input type="email" class="form-control" id="exampleInputEmail2" >
+        </div>
+        <br>
+        <div class="form-group" style="margin-left: 5px;padding: 50px 0">
+            <label for="type">身份</label>
+            <input type="text" class="form-control"  readonly="true" id="type" placeholder="身份"  >
+        </div>
+        <br>
+        <select style="height: 30px ;width:100px;margin-left: 80px; ">
+            <option value ="1">1班</option>
+            <option value ="2">2班</option>
+            <option value ="3">3班</option>
+            <option value ="4">4班</option>
+        </select>
+        <br>
+        <label for="name">课程</label>
+    <div>
+        <label class="checkbox-inline">
+            <input type="checkbox" id="inlineCheckbox1" value="option1"> 选项 1
+        </label>
+        <label class="checkbox-inline">
+            <input type="checkbox" id="inlineCheckbox2" value="option2"> 选项 2
+        </label>
+        <label class="checkbox-inline">
+            <input type="checkbox" id="inlineCheckbox3" value="option3"> 选项 3
+            </label>
+        </div>
+        <button type="submit" class="btn btn-default" style="margin-left: 100px;">保存</button>
+    </form>
+</div>
+{/block}
