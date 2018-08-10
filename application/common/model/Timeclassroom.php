@@ -13,6 +13,7 @@ class Timeclassroom extends Model
         return $this->belongsToMany('Klass');
     }
 
+
     public function teacher(){
     	return $this->belongsTo('Teacher');
     }
