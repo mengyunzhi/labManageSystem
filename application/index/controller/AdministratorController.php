@@ -17,7 +17,7 @@ class AdministratorController extends Controller
     {
     	return $this->fetch("changeClasses");
     }
-    public function student()
+    public function personalInformation()
     {
     	return $this->fetch("personalInformation");
     }
