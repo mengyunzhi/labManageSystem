@@ -106,8 +106,15 @@
         ...
       </div>
       <div class="modal-footer">
-        <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
-        <button type="button" class="btn btn-primary">确认</button>
+          <form action="{:url('takeLesson')}" method="post">
+              <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+              <button type="submit" class="btn btn-primary">确认</button>
+              <input type="hidden" name="teacherId" value="1">
+              <input type="hidden" name="timeClassroomId" value="2">
+              <input type="hidden" name="courseId" value="1">
+              <input type="hidden" name="klassIds" value="1">
+          </form>
+
       </div>
     </div>
   </div>
@@ -124,11 +131,8 @@
         ...
       </div>
       <div class="modal-footer">
-          <form action="{:url('takeLesson')}" methoed="post">
+          <form >
               <button type="submit" class="btn btn-primary">确认</button>
-              <input type="hidden" name="teacherId" value="{$Teacher->id}">
-              <input type="hidden" name="timeClassroomId" value="{$TimeClassroom->id">
-              <input type="hidden" name="courseId">
               <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
           </form>
       </div>

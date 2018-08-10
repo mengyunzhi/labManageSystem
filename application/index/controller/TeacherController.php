@@ -158,7 +158,52 @@ class TeacherController extends Controller
     //抢课功能
     public function takeLesson()
     {
-        
+
+            //接收数据
+            $teacherId = Request::instance()->post('teacherId/d');
+            $timeClassroomId = Request::instance()->post('timeClassroomId/d');
+            $courseId = Request::instance()->post('courseId/d');
+            $klassIds = (array)Request::instance()->post('klassIds');
+
+            var_dump($klassIds);
+            if (($teacherId === 0 && $timeClassroomId === 0 && is_null($klassIds) && $courseId === 0))
+            {
+                throw new \Exception('id有误',1);
+            }
+
+            //得到timeClassroom对象
+            $TimeClassroom = TimeClassroom::get($timeClassroomId);
+
+            if (is_null($TimeClassroom))
+            {
+                throw new \Exception('不存在处于这个时间段的这个教室',1);
+            }
+
+            //存数据
+            $TimeClassroom->teacher_id = $teacherId;
+            $TimeClassroom->course_id = $courseId;
+
+
+        //判断添加的关联是否重复
+            foreach ($klassIds as $id)
+            {
+                $Klass = Klass::get($id);
+                var_dump($Klass);
+                if (!$TimeClassroom->getKlassesIsChecked($Klass))
+                {
+
+                    $TimeClassroom->klasses()->save($id);
+
+                }
+
+            }
+
+            $TimeClassroom->save();
+
+
+        //成功返回提示
+        return $this->success('恭喜，抢课成功','index');
+
     }
 
 }
