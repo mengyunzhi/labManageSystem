@@ -210,9 +210,9 @@ class TeacherController extends Controller
             $teacherId = Request::instance()->post('teacherId/d');
             $timeClassroomId = Request::instance()->post('timeClassroomId/d');
             $courseId = Request::instance()->post('courseId/d');
-            $klassIds = (array)Request::instance()->post('klassIds');
+            $klassIds = (array)Request::instance()->post('KlassIds');
 
-            var_dump($klassIds);
+           
             if (($teacherId === 0 && $timeClassroomId === 0 && is_null($klassIds) && $courseId === 0))
             {
                 throw new \Exception('id有误',1);
@@ -235,53 +235,12 @@ class TeacherController extends Controller
             foreach ($klassIds as $id)
             {
                 $Klass = Klass::get($id);
-                var_dump($Klass);
                 if (!$TimeClassroom->getKlassesIsChecked($Klass))
                 {
 
                     $TimeClassroom->klasses()->save($id);
-
-
-
-               //删除原有信息
-               $map = ['teacher_id'=>$id];
-               //执行删除操作，由于可能存在删除0条记录，故使用flase来进行判断
-               if (false === $Teacher->teacherCourse()->where($map)->delete())
-               {
-                   return $this->error('删除老师课程关联信息发生错误' . $Teacher->TeacherCourse()->getError());
-               }
-               $coursesIds = Request::instance()->post('course_id/a');
-
-               //对老师班级关联信息执行以上操作
-               if (!is_null($coursesIds)){
-                   if (!$Teacher->courses()->saveAll($coursesIds)){
-                       return $this->error('老师课程信息保存错误',$Teacher->courses()->getError());
-                   }
-               }
-
-               if (false === $Teacher->teacherKlass()->where($map)->delete())
-               {
-                   return $this->error('删除老师班级关联信息失败' . $Teacher->teacherKlass()->getError());
-               }
-
-               //增加数据
-               $klassIds = Request::instance()->post('klass_id/a');
-
-               if (!is_null($klassIds))
-               {
-                   if (!$Teacher->klasses()->saveAll($klassIds))
-                   {
-                       return $this->error('老师班级信息保存错误' . $Teacher->klasses()->getError());
-                   }
-               }
-
-               //成功返回提示
-               return $this->success('更新成功',url('index'));
-
-               //获取到正常的异常，输出异常
-
-                }
-
+              
+                 }
             }
 
             $TimeClassroom->save();
@@ -292,5 +251,4 @@ class TeacherController extends Controller
         return $this->success('恭喜，抢课成功','index');
 
     }
-
-}
+  }
