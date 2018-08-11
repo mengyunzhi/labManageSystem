@@ -64,18 +64,25 @@
                 </tr>
                 {volist name="weekList" id="nodeList" key="key"}
                 <tr>
-                <td>第{$key}节</td>
-                {volist name="nodeList" id="weekly"}
-
-                <td style="text-align: center;">{eq name="weekly->teacher_id" value="0"}还没有课<br><span>赶紧点击</span><br><a data-toggle="modal" data-target="#TakeLessons" data-whatever="{$weekly->id}" >抢课</a>
-                <span class="glyphicon glyphicon-resize-horizontal" aria-hidden="true"></span><a data-toggle="modal" data-target="#AdjustLessons" >调课</a>
-                {else/}已经有课了<br><span style="margin-right: 10px;">{$weekly->teacher->name}</span><span>课程{$weekly->course->name}<br>{volist name="Klasses" id="Klass"}
-                  {eq name="$weekly->getKlassesIsChecked($Klass)" value="true"}<span>{$Klass->name}</span>{else/}{/eq}
-                  {/volist}
-                </span><br><span class="glyphicon glyphicon-circle-arrow-right" aria-hidden="true">
-                <a style="margin-left: 10px;" data-toggle="modal" data-target="#ChangeLessons" >换课</a></span>{/eq}</td>
-
-                {/volist}
+                    <td>第{$key}节</td>
+                    {volist name="nodeList" id="weekly"}
+                    <td style="text-align: center;">
+                        {eq name="weekly->teacher_id" value="0"}
+                        还没有课<br><span class="glyphicon glyphicon-circle-arrow-right" aria-hidden="true"></span><a data-toggle="modal" data-target="#TakeLessons" data-whatever="{$weekly->id}" >抢课</a>
+                        {else/}
+                        <span style="margin-right: 10px;">{$weekly->teacher->name}</span><span>课程{$weekly->course->name}<br>
+                            {volist name="Klasses" id="Klass"}
+                              {eq name="$weekly->getKlassesIsChecked($Klass)" value="true"}<span>{$Klass->name}</span>{else/}{/eq}
+                            {/volist}
+                        </span><br>
+                            {eq name="$weekly->teacher_id" value="$Teacher->id"}
+                              <span class="glyphicon glyphicon-circle-arrow-right" aria-hidden="true"></span>
+                              <a  data-toggle="modal" data-target="#ChangeLessons" >换课</a>
+                            {else/}
+                            {/eq} 
+                        {/eq}
+                    </td>
+                    {/volist}
                 </tr>
                 {/volist}
             </table>
@@ -143,29 +150,6 @@
     </div>
   </div>
 </div>
-
-
-<div class="modal fade" id="AdjustLessons" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
-  <div class="modal-dialog" role="document">
-    <div class="modal-content">
-      <div class="modal-header">
-        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-        <h4 class="modal-title" id="myModalLabel">调课</h4>
-      </div>
-      <div class="modal-body">
-        ...
-      </div>
-      <div class="modal-footer">
-
-        <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
-        <button type="button" class="btn btn-primary">确认</button>
-
-      </div>
-    </div>
-  </div>
-</div>
-
-
 <script type="text/javascript">
   $('#TakeLessons').on('show.bs.modal', function (event) {
   var button = $(event.relatedTarget) 
