@@ -33,7 +33,7 @@ class TeacherController extends Controller
         $onWeekly=1;
         $onClassroom=1;
         //获得登录老师及其信息
-        $Teacher=Teacher::get(2);
+        $Teacher=Teacher::get(1);
         $Courses=Course::select();
         $Klasses=Klass::select();
 
