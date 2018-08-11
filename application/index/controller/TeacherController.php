@@ -215,8 +215,8 @@ class TeacherController extends Controller
             $timeClassroomId = Request::instance()->post('timeClassroomId/d');
             $courseId = Request::instance()->post('courseId/d');
             $klassIds = (array)Request::instance()->post('KlassIds');
+       
 
-           
             if (($teacherId === 0 && $timeClassroomId === 0 && is_null($klassIds) && $courseId === 0))
             {
                 throw new \Exception('id有误',1);
@@ -240,16 +240,19 @@ class TeacherController extends Controller
             foreach ($klassIds as $id)
             {
                 $Klass = Klass::get($id);
+
+
                 if (!$TimeClassroom->getKlassesIsChecked($Klass))
                 {
 
                     $TimeClassroom->klasses()->save($id);
+
               
                  }
+
             }
 
             $TimeClassroom->save();
-
 
 
         //成功返回提示
