@@ -118,6 +118,30 @@ class TeacherController extends Controller
 
                $id = Request::instance()->post('id/d');
 
+
+               //判断Id存不存在
+               if (is_null($id) || $id === 0)
+               {
+                   throw new \Exception('未获取到id信息',1);
+               }
+
+               $Teacher = Teacher::get($id);
+
+               //判断对象是否存在
+               if (null === $Teacher)
+               {
+                   return $this->error('未找到id为'. $id .'的对象');
+               }
+
+
+               //存储姓名
+               $Teacher->name = Request::instance()->post('name');
+               if (is_null($Teacher->save()))
+               {
+                   return $this->error('姓名更新失败' . $Teacher->getError());
+               }
+
+
                //判断Id存不存在
                if (is_null($id) || $id === 0)
                {
@@ -190,9 +214,9 @@ class TeacherController extends Controller
             $teacherId = Request::instance()->post('teacherId/d');
             $timeClassroomId = Request::instance()->post('timeClassroomId/d');
             $courseId = Request::instance()->post('courseId/d');
-            $klassIds = (array)Request::instance()->post('klassIds');
+            $klassIds = (array)Request::instance()->post('KlassIds');
+       
 
-            var_dump($klassIds);
             if (($teacherId === 0 && $timeClassroomId === 0 && is_null($klassIds) && $courseId === 0))
             {
                 throw new \Exception('id有误',1);
@@ -200,6 +224,7 @@ class TeacherController extends Controller
 
             //得到timeClassroom对象
             $TimeClassroom = TimeClassroom::get($timeClassroomId);
+
 
             if (is_null($TimeClassroom))
             {
@@ -215,13 +240,15 @@ class TeacherController extends Controller
             foreach ($klassIds as $id)
             {
                 $Klass = Klass::get($id);
-                var_dump($Klass);
+
+
                 if (!$TimeClassroom->getKlassesIsChecked($Klass))
                 {
 
                     $TimeClassroom->klasses()->save($id);
 
-                }
+              
+                 }
 
             }
 
@@ -232,6 +259,4 @@ class TeacherController extends Controller
         return $this->success('恭喜，抢课成功','index');
 
     }
-
-
-}
+  }
