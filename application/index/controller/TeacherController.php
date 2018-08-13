@@ -33,7 +33,7 @@ class TeacherController extends Controller
         $onWeekly=1;
         $onClassroom=1;
         //获得登录老师及其信息
-        $Teacher=Teacher::get(2);
+        $Teacher=Teacher::get(1);
         $Courses=Course::select();
         $Klasses=Klass::select();
 
@@ -250,5 +250,52 @@ class TeacherController extends Controller
         //成功返回提示
         return $this->success('恭喜，抢课成功','index');
 
+    }
+
+    //换课功能
+    public function changeLesson()
+    {
+      //接收要换的课
+      $id = Request::instance()->post('id');
+      $ChangeLesson = TimeClassroom::get($id);
+      $ChangeKlass = $ChangeLesson ->getKlasses();
+      $count = count($ChangeKlass);   
+      var_dump($ChangeLesson);
+      //接收要换到哪
+      $targetid = 7;
+      $TargetLesson = TimeClassroom::get($targetid);
+      var_dump($TargetLesson);
+      //新建中间变量,用于交换
+      $Trans = new TimeClassroom();
+      //交换教师
+      $Trans ->teacher_id= $ChangeLesson ->teacher_id;
+      $ChangeLesson ->teacher_id= $TargetLesson ->teacher_id;
+      $TargetLesson ->teacher_id= $Trans ->teacher_id;
+      //交换课程
+      $Trans ->course_id= $ChangeLesson ->course_id;    
+      $ChangeLesson ->course_id= $TargetLesson ->course_id;     
+      $TargetLesson ->course_id= $Trans ->course_id;
+      //交换班级
+      $TargetKlass = $TargetLesson ->getKlasses();
+      $t = $TargetKlass[0]['timeclassroom_id'];
+      for ($i=0; $i < count($TargetKlass); $i++) {        
+         $TargetKlass[$i]['timeclassroom_id'] = $ChangeKlass[0]['timeclassroom_id'];
+         $TargetKlass[$i] ->save();       
+       }     
+      for ($i=0; $i < $count; $i++) {        
+         $ChangeKlass[$i]['timeclassroom_id'] = $t;
+         $ChangeKlass[$i] ->save();      
+       }
+      
+      //$TargetLesson = TimeClassroom::get($targetid);
+      //$TargetKlass = $TargetLesson ->getKlasses();
+      
+      $ChangeLesson ->save();
+      $TargetLesson ->save();
+      var_dump($ChangeKlass);
+      var_dump($TargetKlass);
+
+
+      return ;
     }
   }
