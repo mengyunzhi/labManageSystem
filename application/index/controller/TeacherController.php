@@ -28,18 +28,40 @@ class TeacherController extends Controller
     //index页面
     public function index()
     {
+
+        //初始化设置
+        $onWeekly=1;
+        $onClassroom=1;
+        //获得登录老师及其信息
+        $Teacher=Teacher::get(2);
+        $Courses=Course::select();
+        $Klasses=Klass::select();
+
+
+
         $postData=Request::instance()->post();
         //查询条件
         if (!empty($postData)) {
                 $this->timeclassroom=Timeclassroom::where('semester','=','2018/01');
                 $this->timeclassroom=$this->timeclassroom->where('weekly','=',(int)$postData['weekly']);
+
+                $onWeekly=(int)$postData['weekly'];
                 $this->timeclassroom=$this->timeclassroom->where('classroom_num','=',(int)$postData['classroom_num']);
+                $onClassroom=(int)$postData['classroom_num'];
         }
         $weekList=$this->editTimeClassroom();
 
         $this->assign('weekList',$weekList);
         $allClassroom=Classroom::select();
         $this->assign('allClassroom',$allClassroom);
+
+        //像v层传送老师数据
+        $this->assign('Klasses',$Klasses);
+        $this->assign('Courses',$Courses);
+        $this->assign('Teacher',$Teacher);
+        $this->assign('onWeekly',$onWeekly);
+        $this->assign('onClassroom',$onClassroom);
+
         return $this->fetch();
 
     }
@@ -60,6 +82,7 @@ class TeacherController extends Controller
         }
         return $weekList;
     }
+
 
     //进入老师的信息页面
     public function information()
@@ -91,6 +114,30 @@ class TeacherController extends Controller
     {
 
                $id = Request::instance()->post('id/d');
+
+
+               //判断Id存不存在
+               if (is_null($id) || $id === 0)
+               {
+                   throw new \Exception('未获取到id信息',1);
+               }
+
+               $Teacher = Teacher::get($id);
+
+               //判断对象是否存在
+               if (null === $Teacher)
+               {
+                   return $this->error('未找到id为'. $id .'的对象');
+               }
+
+
+               //存储姓名
+               $Teacher->name = Request::instance()->post('name');
+               if (is_null($Teacher->save()))
+               {
+                   return $this->error('姓名更新失败' . $Teacher->getError());
+               }
+
 
                //判断Id存不存在
                if (is_null($id) || $id === 0)
@@ -158,7 +205,50 @@ class TeacherController extends Controller
     //抢课功能
     public function takeLesson()
     {
-        
-    }
 
-}
+            //接收数据
+            $teacherId = Request::instance()->post('teacherId/d');
+            $timeClassroomId = Request::instance()->post('timeClassroomId/d');
+            $courseId = Request::instance()->post('courseId/d');
+            $klassIds = (array)Request::instance()->post('KlassIds');
+
+           
+            if (($teacherId === 0 && $timeClassroomId === 0 && is_null($klassIds) && $courseId === 0))
+            {
+                throw new \Exception('id有误',1);
+            }
+
+            //得到timeClassroom对象
+            $TimeClassroom = TimeClassroom::get($timeClassroomId);
+
+            if (is_null($TimeClassroom))
+            {
+                throw new \Exception('不存在处于这个时间段的这个教室',1);
+            }
+
+            //存数据
+            $TimeClassroom->teacher_id = $teacherId;
+            $TimeClassroom->course_id = $courseId;
+
+
+        //判断添加的关联是否重复
+            foreach ($klassIds as $id)
+            {
+                $Klass = Klass::get($id);
+                if (!$TimeClassroom->getKlassesIsChecked($Klass))
+                {
+
+                    $TimeClassroom->klasses()->save($id);
+              
+                 }
+            }
+
+            $TimeClassroom->save();
+
+
+
+        //成功返回提示
+        return $this->success('恭喜，抢课成功','index');
+
+    }
+  }
