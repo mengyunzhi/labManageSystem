@@ -24,6 +24,8 @@ class TeacherController extends Controller
         $this->timeclassroom=Timeclassroom::where('semester','=','2018/01');
         $this->timeclassroom=$this->timeclassroom->where('weekly','=',1);
         $this->timeclassroom=$this->timeclassroom->where('classroom_num','=',1);
+        $this->timeclassroom=$this->timeclassroom->where('week','=',1);
+        $this->timeclassroom=$this->timeclassroom->where('node','=',1);
     }
     //index页面
     public function index()
@@ -33,7 +35,7 @@ class TeacherController extends Controller
         $onWeekly=1;
         $onClassroom=1;
         //获得登录老师及其信息
-        $Teacher=Teacher::get(2);
+        $Teacher=Teacher::get(1);
         $Courses=Course::select();
         $Klasses=Klass::select();
 
@@ -63,8 +65,8 @@ class TeacherController extends Controller
         $this->assign('onClassroom',$onClassroom);
 
         return $this->fetch();
-
     }
+
 
     public function editTimeClassroom(){
         $weekList=array();
@@ -251,4 +253,17 @@ class TeacherController extends Controller
         return $this->success('恭喜，抢课成功','index');
 
     }
+
+     public function ChangeLessons()
+    {
+        //获取当前的信息
+        $id=Request::instance()->post();
+
+        var_dump($id);
+
+    
+
+    
+
   }
+}
