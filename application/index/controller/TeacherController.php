@@ -24,6 +24,8 @@ class TeacherController extends Controller
         $this->timeclassroom=Timeclassroom::where('semester','=','2018/01');
         $this->timeclassroom=$this->timeclassroom->where('weekly','=',1);
         $this->timeclassroom=$this->timeclassroom->where('classroom_num','=',1);
+        $this->timeclassroom=$this->timeclassroom->where('week','=',1);
+        $this->timeclassroom=$this->timeclassroom->where('node','=',1);
     }
     //index页面
     public function index()
@@ -63,8 +65,8 @@ class TeacherController extends Controller
         $this->assign('onClassroom',$onClassroom);
 
         return $this->fetch();
-
     }
+
 
     public function editTimeClassroom(){
         $weekList=array();
@@ -299,3 +301,4 @@ class TeacherController extends Controller
       return ;
     }
   }
+}
