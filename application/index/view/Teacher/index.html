@@ -65,15 +65,11 @@
                         <br><span class="glyphicon glyphicon-circle-arrow-right" aria-hidden="true"></span><a data-toggle="modal" data-target="#TakeLessons" data-whatever="{$weekly->id}">抢课</a> {else/}
                         <span style="margin-right: 10px;">{$weekly->teacher->name}</span><span>课程{$weekly->course->name}<br>
                             {volist name="Klasses" id="Klass"}
-                              {eq name="$weekly->getKlassesIsChecked($Klass)" value="true"}<span>{$Klass->name}</span>{else/}{/eq}
-                            {/volist}
-                        </span><br>
-                            {eq name="$weekly->teacher_id" value="$Teacher->id"}
-                              <span class="glyphicon glyphicon-circle-arrow-right" aria-hidden="true"></span>
-                              <a  data-toggle="modal" data-target="#ChangeLessons" data-whatever="{$weekly->id}" >换课</a>
-                            {else/}
-                            {/eq} 
-                        {/eq}
+                              {eq name="$weekly->getKlassesIsChecked($Klass)" value="true"}<span>{$Klass->name}</span>{else/}{/eq} {/volist}
+                        </span>
+                        <br> {eq name="$weekly->teacher_id" value="$Teacher->id"}
+                        <span class="glyphicon glyphicon-circle-arrow-right" aria-hidden="true"></span>
+                        <a data-toggle="modal" data-target="#ChangeLessons" data-whatever="{$weekly->id}">换课</a> {else/} {/eq} {/eq}
                     </td>
                     {/volist}
                 </tr>
@@ -115,8 +111,6 @@
         </div>
     </div>
 </div>
-
-
 <script type="text/javascript">
 $('#ChangeLessons').on('show.bs.modal', function(event) {
     var button = $(event.relatedTarget)
@@ -125,20 +119,27 @@ $('#ChangeLessons').on('show.bs.modal', function(event) {
     modal.find('.modal-body input').val(recipient)
 })
 </script>
-
 <div class="modal fade" id="ChangeLessons" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
     <div class="modal-dialog" role="document">
         <div class="modal-content">
             <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                <h4 class="modal-title" id="myModalLabel">换课</h4>                   
+                <h4 class="modal-title" id="myModalLabel">换课</h4>
             </div>
             <div class="modal-body">
-                <form action="{:url('ChangeLessons')}" method="post">
+                <form action="{:url('changeLesson')}" method="post">
                     <div class="form-group">
-                        <input type="hidden" class="form-control" id="recipient-name" name="timeClassroomId">
+                        <input type="hidden" class="form-control" id="recipient-name" name="id">
                         <label>周次：</label>
-                       <select  class="btn btn-default dropdown-toggle" name="week">                     
+                        <select class="btn btn-default dropdown-toggle" name="weekly">
+                            <option value="1">第一周</option>
+                            <option value="2">第二周</option>
+                            <option value="3">第二周</option>
+                            <option value="4">第四周</option>
+                        </select>
+                        &nbsp;
+                        <label>星期：</label>
+                        <select class="btn btn-default dropdown-toggle" name="week">
                             <option value="1">Monday</option>
                             <option value="2">Tuesday</option>
                             <option value="3">Wednesday</option>
@@ -148,8 +149,8 @@ $('#ChangeLessons').on('show.bs.modal', function(event) {
                             <option value="7">sunday</option>
                         </select>
                         &nbsp;
-                         <label>节次：</label>
-                        <select  class="btn btn-default dropdown-toggle" name="node">
+                        <label>节次：</label>
+                        <select class="btn btn-default dropdown-toggle" name="node">
                             <option value="1">第一节</option>
                             <option value="2">第二节</option>
                             <option value="3">第三节</option>
@@ -158,13 +159,10 @@ $('#ChangeLessons').on('show.bs.modal', function(event) {
                         </select>
                         &nbsp;
                         <label>教室：</label>
-                        <select  class="btn btn-default dropdown-toggle" name="classroom_num">
-                          {volist name="allClassroom" id="classroom"}
-
-                          <option value="{$classroom->id}" {eq name="onClassroom" value="$classroom->id" } selected="selected"{/eq}>{$classroom->name}</option>
-
-                          {/volist}
-                            
+                        <select class="btn btn-default dropdown-toggle" name="classroom_num">
+                            {volist name="allClassroom" id="classroom"}
+                            <option value="{$classroom->id}" {eq name="onClassroom" value="$classroom->id" } selected="selected" {/eq}>{$classroom->name}</option>
+                            {/volist}
                         </select>
                     </div>
                     <div class="modal-footer">
@@ -175,8 +173,8 @@ $('#ChangeLessons').on('show.bs.modal', function(event) {
         </div>
     </div>
 </div>
-<script  type="text/javascript">
-    $('#ChangeLessons').on('show.bs.modal', function (event) {
+<script type="text/javascript">
+$('#ChangeLessons').on('show.bs.modal', function(event) {
     var button = $(event.relatedTarget) // Button that triggered the modal
     var recipient = button.data('whatever') // Extract info from data-* attributes
     var modal = $(this)
@@ -184,5 +182,3 @@ $('#ChangeLessons').on('show.bs.modal', function(event) {
 })
 </script>
 {/block}
-
-
