@@ -12,7 +12,7 @@ class CourseController extends Controller
         // 获取查询信息
         $name = Request::instance()->get('name');
 
-        $pageSize = 7; // 每页显示5条数据
+        $pageSize = 7; // 每页显示7条数据
 
         // 实例化Teacher
         $Course = new Course; 
