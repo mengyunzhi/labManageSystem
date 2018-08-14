@@ -24,8 +24,7 @@ class TeacherController extends Controller
         $this->timeclassroom=Timeclassroom::where('semester','=','2018/01');
         $this->timeclassroom=$this->timeclassroom->where('weekly','=',1);
         $this->timeclassroom=$this->timeclassroom->where('classroom_num','=',1);
-        $this->timeclassroom=$this->timeclassroom->where('week','=',1);
-        $this->timeclassroom=$this->timeclassroom->where('node','=',1);
+       
     }
     //index页面
     public function index()
@@ -254,16 +253,57 @@ class TeacherController extends Controller
 
     }
 
-     public function ChangeLessons()
+    //换课功能
+    public function changeLesson()
     {
-        //获取当前的信息
-        $id=Request::instance()->post();
-
-        var_dump($id);
-
-    
-
-    
-
-  }
+      //接收要换的课
+      $id = Request::instance()->post('id');
+      $ChangeLesson = TimeClassroom::get($id);
+      $ChangeKlass = $ChangeLesson ->getKlasses();
+      $count = count($ChangeKlass);
+      //接收要换到哪
+      $week = Request::instance()->post('week');
+      $node = Request::instance()->post('node');
+      $classroom_num = Request::instance()->post('classroom_num');
+      $weekly = Request::instance()->post('weekly');
+      //通过查询，找到目标教室时间
+      $target = Timeclassroom::where([
+          ['weekly','=',$weekly],
+          ['week','=',$week],
+          ['node','=',$node],
+          ['classroom_num','=',$classroom_num]
+      ])->select();
+      $targetid = $target[0]['id'];
+      $TargetLesson = TimeClassroom::get($targetid);
+      //判断是否是同一教室时间
+      if ($id == $targetid) {
+          return $this->error('换课失败','index');
+      }
+      //新建中间变量,用于交换
+      $Trans = new TimeClassroom();
+      //交换教师
+      $Trans ->teacher_id= $ChangeLesson ->teacher_id;
+      $ChangeLesson ->teacher_id= $TargetLesson ->teacher_id;
+      $TargetLesson ->teacher_id= $Trans ->teacher_id;
+      //交换课程
+      $Trans ->course_id= $ChangeLesson ->course_id;    
+      $ChangeLesson ->course_id= $TargetLesson ->course_id;     
+      $TargetLesson ->course_id= $Trans ->course_id;
+      //交换班级
+      $TargetKlass = $TargetLesson ->getKlasses();
+      $t = $TargetKlass[0]['timeclassroom_id'];
+       //var_dump($TargetKlass);
+      //return;
+      for ($i=0; $i < count($TargetKlass); $i++) {        
+         $TargetKlass[$i]['timeclassroom_id'] = $ChangeKlass[0]['timeclassroom_id'];
+         $TargetKlass[$i] ->save();       
+       }     
+      for ($i=0; $i < $count; $i++) {        
+         $ChangeKlass[$i]['timeclassroom_id'] = $t;
+         $ChangeKlass[$i] ->save();      
+       }
+      $ChangeLesson ->save();
+      $TargetLesson ->save();
+      return $this->success('换课成功','index');
+    }
 }

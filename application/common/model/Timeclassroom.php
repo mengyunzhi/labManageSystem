@@ -1,6 +1,7 @@
 <?php
 namespace app\common\model;
 use think\Model;
+use app\common\model\TimeclassroomKlass;
 
 /**
  * 时间教室表
@@ -44,5 +45,8 @@ class Timeclassroom extends Model
           return true;
         }
 
+    }
+    public function getKlasses(){
+        return TimeclassroomKlass::where('timeclassroom_id','=',$this->id)->select();
     }
 }
