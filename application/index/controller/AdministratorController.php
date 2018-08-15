@@ -1,15 +1,80 @@
 <?php
 namespace app\index\controller;
-use think\Controller;
-use think\facade\Request;           // 引用Request
+use app\common\model\Classroom;
+use app\common\model\Course;
+use app\common\model\Klass;
+use app\common\model\Teacher;
+use app\common\model\Timeclassroom;
 use app\common\model\Administrator;
-
+use think\Controller;
+use think\facade\Request;
+/*
+ * 管理员页面和个人信息页面的功能
+ *
+ * */
 class AdministratorController extends Controller
 {
-    //管理员首页
+    private $timeclassroom;
+    public function __construct(){
+        parent::__construct();
+        $this->timeclassroom=Timeclassroom::where('semester','=','2018/01');
+        $this->timeclassroom=$this->timeclassroom->where('weekly','=',1);
+        $this->timeclassroom=$this->timeclassroom->where('classroom_num','=',1);
+       
+    }
+    //index页面
     public function index()
     {
+
+        //初始化设置
+        $onWeekly=1;
+        $onClassroom=1;
+        $Courses=Course::select();
+        $Klasses=Klass::select();
+
+
+
+        $postData=Request::instance()->post();
+        //查询条件
+        if (!empty($postData)) {
+                $this->timeclassroom=Timeclassroom::where('semester','=','2018/01');
+                $this->timeclassroom=$this->timeclassroom->where('weekly','=',(int)$postData['weekly']);
+
+                $onWeekly=(int)$postData['weekly'];
+                $this->timeclassroom=$this->timeclassroom->where('classroom_num','=',(int)$postData['classroom_num']);
+                $onClassroom=(int)$postData['classroom_num'];
+        }
+        $weekList=$this->editTimeClassroom();
+
+        $this->assign('weekList',$weekList);
+        $allClassroom=Classroom::select();
+        $this->assign('allClassroom',$allClassroom);
+
+        //向v层传送数据
+        $this->assign('Klasses',$Klasses);
+        $this->assign('Courses',$Courses);
+        //$this->assign('Teacher',$Teacher);
+        $this->assign('onWeekly',$onWeekly);
+        $this->assign('onClassroom',$onClassroom);
+
         return $this->fetch();
+    }
+
+    public function editTimeClassroom(){
+        $weekList=array();
+        for($i=1;$i<=5;$i++){
+            $nodeList=array();//节数组
+            //划定每节范围
+            $temp=clone $this->timeclassroom;
+            $temp=$temp->where('node','=',$i);
+            $weeklyList=$temp->select();
+            foreach($weeklyList as $weekly){
+            $nodeList[$weekly['week']]=$weekly;
+            }
+            ksort($nodeList);
+            array_push($weekList, $nodeList);
+        }
+        return $weekList;
     }
     //管理员个人信息界面
     public function personalinformation()

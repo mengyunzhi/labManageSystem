@@ -65,7 +65,8 @@
                         <br><span class="glyphicon glyphicon-circle-arrow-right" aria-hidden="true"></span><a data-toggle="modal" data-target="#TakeLessons" data-whatever="{$weekly->id}">抢课</a> {else/}
                         <span style="margin-right: 10px;">{$weekly->teacher->name}</span><span>课程{$weekly->course->name}<br>
                             {volist name="Klasses" id="Klass"}
-                              {eq name="$weekly->getKlassesIsChecked($Klass)" value="true"}<span>{$Klass->name}</span>{else/}{/eq} {/volist}
+                              {eq name="$weekly->getKlassesIsChecked($Klass)" value="true"}<span>{$Klass->name}</span>{else/}{/eq}
+                            {/volist}
                         </span>
                         <br> {eq name="$weekly->teacher_id" value="$Teacher->id"}
                         <span class="glyphicon glyphicon-circle-arrow-right" aria-hidden="true"></span>
