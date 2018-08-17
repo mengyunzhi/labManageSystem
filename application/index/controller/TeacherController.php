@@ -254,54 +254,33 @@ class TeacherController extends Controller
     //换课功能
     public function changeLesson()
     {
-      //接收要换的课
+      //接收要换课的id
       $id = Request::instance()->post('id');
-      $ChangeLesson = TimeClassroom::get($id);
-      $ChangeKlass = $ChangeLesson ->getKlasses();
-      $count = count($ChangeKlass);
-      //接收要换到哪
+
+      //通过周次，星期，节次，教室找到目标课的id
+      $weekly = Request::instance()->post('weekly');
       $week = Request::instance()->post('week');
       $node = Request::instance()->post('node');
-      $classroom_num = Request::instance()->post('classroom_num');
-      $weekly = Request::instance()->post('weekly');
-      //通过查询，找到目标教室时间
-      $target = Timeclassroom::where([
-          ['weekly','=',$weekly],
-          ['week','=',$week],
-          ['node','=',$node],
-          ['classroom_num','=',$classroom_num]
-      ])->select();
-      $targetid = $target[0]['id'];
-      $TargetLesson = TimeClassroom::get($targetid);
+      $classroom_num = Request::instance()->post('classroom_num');     
+      $targetid = Timeclassroom::findtarget($weekly,$week,$node,$classroom_num);
+
       //判断是否是同一教室时间
       if ($id == $targetid) {
-          return $this->error('换课失败','index');
+        return $this->error('换课失败，目标课不能为同一节课','index');
       }
-      //新建中间变量,用于交换
-      $Trans = new TimeClassroom();
-      //交换教师
-      $Trans ->teacher_id= $ChangeLesson ->teacher_id;
-      $ChangeLesson ->teacher_id= $TargetLesson ->teacher_id;
-      $TargetLesson ->teacher_id= $Trans ->teacher_id;
-      //交换课程
-      $Trans ->course_id= $ChangeLesson ->course_id;    
-      $ChangeLesson ->course_id= $TargetLesson ->course_id;     
-      $TargetLesson ->course_id= $Trans ->course_id;
-      //交换班级
-      $TargetKlass = $TargetLesson ->getKlasses();
-      $t = $TargetKlass[0]['timeclassroom_id'];
-       //var_dump($TargetKlass);
-      //return;
-      for ($i=0; $i < count($TargetKlass); $i++) {        
-         $TargetKlass[$i]['timeclassroom_id'] = $ChangeKlass[0]['timeclassroom_id'];
-         $TargetKlass[$i] ->save();       
-       }     
-      for ($i=0; $i < $count; $i++) {        
-         $ChangeKlass[$i]['timeclassroom_id'] = $t;
-         $ChangeKlass[$i] ->save();      
-       }
-      $ChangeLesson ->save();
-      $TargetLesson ->save();
-      return $this->success('换课成功','index');
+
+      //实例化目标课对象
+      $TargetLesson = TimeClassroom::get($targetid);
+
+      //判断目标教室时间是否有课，如果没课，直接调换
+      if ($TargetLesson->teacher_id == 0) {
+        Timeclassroom::exchange($id,$targetid);
+        return $this->success('换课成功','index');
+      }
+      
+      //如果有课，则向目标课程的教师发送消息，取得同意后再向管理员发送请求，通过后进行交换(此功能待完善)
+      else {
+        return '发送消息';
+      }
     }
 }
