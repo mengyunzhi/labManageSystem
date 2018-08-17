@@ -80,33 +80,14 @@ class KlassController extends Controller
         return $this->success('删除成功',url("index"));
     }
 
-    //新增班级信息页面
-    public function  add()
-    {
-        try{
-            //实例化$Klass
-            $Klass = new Klass();
-
-            //设置默认值
-            $Klass->id = 0;
-            $Klass->name = null;
-            $this->assign('Klass', $Klass);
-            return $this->fetch('edit');
-
-        }catch (\Exception $exception){
-            return '系统错误'.$exception->getMessage();
-        }
-    }
 
     //对数据进行保存或更新
     private function  saveKlass(Klass &$Klass, $isUpdate = false)
     {
         //数据更新
-
-         $Klass->name = Request::instance()->post('name');
-         var_dump($Klass);
-          $result =  $Klass->save();
-         return $result;
+        $Klass->name = Request::instance()->post('name');
+        $result =  $Klass->save();
+        return $result;
 
     }
 
@@ -140,40 +121,7 @@ class KlassController extends Controller
 
         return $this->error($message);
     }
-
-    public function  edit()
-    {
-        try{
-            //获取传入的id
-            $id = Request::instance()->param('id/d');
-
-            //判断是否接收成功
-            if(is_null($id) || 0 === $id){
-                throw new \Exception('未获取到ID信息',1);
-            }
-
-            //获取用户操作的班级信息
-            if (null === $Klass =Klass::get($id))
-            {
-                return $this->error('系统未找到ID为' . $id . '的记录');
-            }
-
-            //将Klass数据传给V层
-            $this->assign('Klass',$Klass);
-
-            return $this->fetch('edit');
-        //获取到ThinkPHP的内置异常时，直接向上抛出，交给ThinkPHP处理
-        }catch (\HttpResponseException $exception){
-            throw  $exception;
-
-            //获取到正常异常时输出异常
-        }catch (\Exception $exception)
-        {
-            return $exception->getMessage();
-        }
-
-    }
-
+    
     //执行更新操作
     public function update()
     {
