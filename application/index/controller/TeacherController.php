@@ -89,10 +89,8 @@ class TeacherController extends Controller
     public function information()
     {
 
-
-       $Teacher = new Teacher();
-        $Teacher->id = 1;
-
+        //得到老师信息，由于无法扫码登录，暂时以这个代替
+        $Teacher = Teacher::get(1);
 
         //得到课程和班级的信息
         $klasses = Klass::all();
