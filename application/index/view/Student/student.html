@@ -5,9 +5,9 @@
 margin: 200px 600px;">
     <form class="form-inline" action="{:url('save')}" method="post">
         <div class="form-group" style="padding-top: 50px">
-            <label for="name">姓名：</label>
-            <input type="hidden" name="id" value="{$student->getData('id')}">
-            <input type="text" class="form-control" id="name" placeholder="{Student->getData('name')}">
+            <label>姓名：</label>
+            <input type="hidden" name="id" value="{$Student->getData('id')}">
+            <input type="text" class="form-control" name="name" value="{$Student->getData('name')}">
         </div>
         <br>
         <div class="form-group" style="margin-left: 5px;padding: 50px 0">
@@ -18,8 +18,12 @@ margin: 200px 600px;">
         <div class="form-group">
             <label for="class">班级：</label>
             <select name="class" id="class" class="from-control">
-                {volist name="classes" id="_Classs" }
-                <option value="{_Class->getData('id')}">{_Class->getData('name')</option>
+                {volist name="classes" id="_Class" }
+                <option name="klassId" value="{$_Class->getData('id')}"
+                         {eq name="$_Class->id" value="$Student->klass_id"}
+                        selected="selected" {/eq}>
+                    {$_Class->name}
+                </option>
                 {/volist}
             </select>
         </div>
