@@ -52,9 +52,11 @@ class StudentController extends Controller
         //向v层传送数据
         $this->assign('Klasses',$Klasses);
         $this->assign('Courses',$Courses);
-        //$this->assign('Teacher',$Teacher);
         $this->assign('onWeekly',$onWeekly);
         $this->assign('onClassroom',$onClassroom);
+        //没有扫码，因此直接得到学生信息
+        $Student = Student::get('1');
+ $this->assign('Student',$Student);
 
         return $this->fetch();
     }
@@ -125,10 +127,6 @@ class StudentController extends Controller
     }
 
 
-    public function index()
-    {
-        return $this->fetch();
-    }
     public function administrate()
     {
         // 获取查询信息
