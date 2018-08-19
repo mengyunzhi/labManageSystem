@@ -1,12 +1,11 @@
 <?php
 namespace app\common\model;
 use think\Model;
-use app\common\model\TimeclassroomKlass;
 
 /**
  * 时间教室表
  */
-class Timeclassroom extends Model
+class Sechedule extends Model
 {
     //
 	public function klasses()

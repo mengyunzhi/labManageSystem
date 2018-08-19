@@ -1,6 +1,6 @@
 {extend name="Teacher/nav"} {block name="title"}梦云智选课系统{/block} {block name="content"}
 <div class="row">
-    <div class="col-md-12 header">当前周次:第{$onWeekly}周</div>
+    <div class="col-md-12 header">当前时间:{$currentSemester->name}第{$currentSemester->getWeekorder()}周</div>
 </div>
 <div class="container">
     <!-- 搜索功能-->
@@ -14,15 +14,17 @@
                     <div class="col-md-3">
                         <label>学期:</label>
                         <select class="btn btn-default dropdown-toggle">
-                            <option>第一学期</option>
+                            {volist name="allSemester" id="semester"}
+                                <option {eq name="$semester->isCurrent()" value="true"} selected="selected"{/eq}>{$semester->name}</option>
+                            {/volist}
                         </select>
                     </div>
                     <div class="col-md-3">
                         <label>周次：</label>
                         <select class="btn btn-default dropdown-toggle" name="weekly">
-                            <option value="1" {eq name="onWeekly" value="1" } selected="selected" {/eq}>第一周</option>
-                            <option value="2" {eq name="onWeekly" value="2" } selected="selected" {/eq}>第二周</option>
-                            <option value="3" {eq name="onWeekly" value="3" } selected="selected" {/eq}>第三周</option>
+                            {for start="1" end="$currentSemester->totalweek+1" }
+                                <option value="{$i}" {eq name="$currentSemester->getWeekorder()" value="$i"} selected="selected" {/eq}>第{$i}周</option>
+                            {/for}
                         </select>
                     </div>
                     <div class="col-md-3">
@@ -56,25 +58,7 @@
                     <th>星期六</th>
                     <th>星期日</th>
                 </tr>
-                {volist name="weekList" id="nodeList" key="key"}
-                <tr>
-                    <td>第{$key}节</td>
-                    {volist name="nodeList" id="weekly"}
-                    <td style="text-align: center;">
-                        {eq name="weekly->teacher_id" value="0"} 还没有课
-                        <br><span class="glyphicon glyphicon-circle-arrow-right" aria-hidden="true"></span><a data-toggle="modal" data-target="#TakeLessons" data-whatever="{$weekly->id}">抢课</a> {else/}
-                        <span style="margin-right: 10px;">{$weekly->teacher->name}</span><span>课程{$weekly->course->name}<br>
-                            {volist name="Klasses" id="Klass"}
-                              {eq name="$weekly->getKlassesIsChecked($Klass)" value="true"}<span>{$Klass->name}</span>{else/}{/eq}
-                            {/volist}
-                        </span>
-                        <br> {eq name="$weekly->teacher_id" value="$Teacher->id"}
-                        <span class="glyphicon glyphicon-circle-arrow-right" aria-hidden="true"></span>
-                        <a data-toggle="modal" data-target="#ChangeLessons" data-whatever="{$weekly->id}">换课</a> {else/} {/eq} {/eq}
-                    </td>
-                    {/volist}
-                </tr>
-                {/volist}
+                
             </table>
         </div>
     </div>
@@ -99,10 +83,7 @@
                     <input type="checkbox" name="KlassIds[]" value="{$Klass->id}">
                     <label>{$Klass->name}</label>{else/}{/eq} {/volist}
                     <hr>
-                    <label>选择课程:</label>
-                    {volist name="Courses" id="Course"} {eq name="$Teacher->getCoursesIsChecked($Course)" value="true"}
-                    <input type="radio" name="courseId" value="{$Course->id}">
-                    <label>{$Course->name}</label>{else/}{/eq} {/volist}
+                    
                     <div class="modal-footer">
                         <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
                         <button type="submit" class="btn btn-primary">确定抢课</button>

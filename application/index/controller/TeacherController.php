@@ -3,10 +3,11 @@
 
 namespace app\index\controller;
 use app\common\model\Classroom;
+use app\common\model\Semester;
 use app\common\model\Course;
 use app\common\model\Klass;
 use app\common\model\Teacher;
-use app\common\model\Timeclassroom;
+use app\common\model\Sechedule;
 use think\Controller;
 use think\facade\Request;
 
@@ -18,12 +19,10 @@ use think\facade\Request;
 class TeacherController extends Controller
 {
 
-    private $timeclassroom;
+    private $sechedule;
     public function __construct(){
         parent::__construct();
-        $this->timeclassroom=Timeclassroom::where('semester','=','2018/01');
-        $this->timeclassroom=$this->timeclassroom->where('weekly','=',1);
-        $this->timeclassroom=$this->timeclassroom->where('classroom_num','=',1);
+        
        
     }
     //index页面
@@ -31,38 +30,28 @@ class TeacherController extends Controller
     {
 
         //初始化设置
-        $onWeekly=1;
         $onClassroom=1;
         //获得登录老师及其信息
         $Teacher=Teacher::get(1);
-        $Courses=Course::select();
-        $Klasses=Klass::select();
-
 
 
         $postData=Request::instance()->post();
         //查询条件
-        if (!empty($postData)) {
-                $this->timeclassroom=Timeclassroom::where('semester','=','2018/01');
-                $this->timeclassroom=$this->timeclassroom->where('weekly','=',(int)$postData['weekly']);
+       
 
-                $onWeekly=(int)$postData['weekly'];
-                $this->timeclassroom=$this->timeclassroom->where('classroom_num','=',(int)$postData['classroom_num']);
-                $onClassroom=(int)$postData['classroom_num'];
-        }
-        $weekList=$this->editTimeClassroom();
-
-        $this->assign('weekList',$weekList);
+        
         $allClassroom=Classroom::select();
         $this->assign('allClassroom',$allClassroom);
 
         //像v层传送老师数据
-        $this->assign('Klasses',$Klasses);
-        $this->assign('Courses',$Courses);
-        $this->assign('Teacher',$Teacher);
-        $this->assign('onWeekly',$onWeekly);
-        $this->assign('onClassroom',$onClassroom);
-
+        $this->assign([
+          'Klasses'=>Klass::select(),
+          'Courses'=>Course::select(),
+          'Teacher'=>$Teacher,
+          'currentSemester'=>Semester::currentSemester(Semester::select()),
+          'allSemester'=>Semester::select(),
+          'onClassroom'=>$onClassroom,
+        ]);
         return $this->fetch();
     }
 
@@ -72,7 +61,7 @@ class TeacherController extends Controller
         for($i=1;$i<=5;$i++){
             $nodeList=array();//节数组
             //划定每节范围
-            $temp=clone $this->timeclassroom;
+            $temp=clone $this->Sechedule;
             $temp=$temp->where('node','=',$i);
             $weeklyList=$temp->select();
             foreach($weeklyList as $weekly){
@@ -218,31 +207,31 @@ class TeacherController extends Controller
             }
 
             //得到timeClassroom对象
-            $TimeClassroom = TimeClassroom::get($timeClassroomId);
+            $Sechedule = Sechedule::get($timeClassroomId);
 
-            if (is_null($TimeClassroom))
+            if (is_null($Sechedule))
             {
                 throw new \Exception('不存在处于这个时间段的这个教室',1);
             }
 
             //存数据
-            $TimeClassroom->teacher_id = $teacherId;
-            $TimeClassroom->course_id = $courseId;
+            $Sechedule->teacher_id = $teacherId;
+            $Sechedule->course_id = $courseId;
 
 
         //判断添加的关联是否重复
             foreach ($klassIds as $id)
             {
                 $Klass = Klass::get($id);
-                if (!$TimeClassroom->getKlassesIsChecked($Klass))
+                if (!$Sechedule->getKlassesIsChecked($Klass))
                 {
 
-                    $TimeClassroom->klasses()->save($id);
+                    $Sechedule->klasses()->save($id);
               
                  }
             }
 
-            $TimeClassroom->save();
+            $Sechedule->save();
 
 
 
@@ -262,7 +251,7 @@ class TeacherController extends Controller
       $week = Request::instance()->post('week');
       $node = Request::instance()->post('node');
       $classroom_num = Request::instance()->post('classroom_num');     
-      $targetid = Timeclassroom::findtarget($weekly,$week,$node,$classroom_num);
+      $targetid = Sechedule::findtarget($weekly,$week,$node,$classroom_num);
 
       //判断是否是同一教室时间
       if ($id == $targetid) {
@@ -270,11 +259,11 @@ class TeacherController extends Controller
       }
 
       //实例化目标课对象
-      $TargetLesson = TimeClassroom::get($targetid);
+      $TargetLesson = Sechedule::get($targetid);
 
       //判断目标教室时间是否有课，如果没课，直接调换
       if ($TargetLesson->teacher_id == 0) {
-        Timeclassroom::exchange($id,$targetid);
+        Sechedule::exchange($id,$targetid);
         return $this->success('换课成功','index');
       }
       
