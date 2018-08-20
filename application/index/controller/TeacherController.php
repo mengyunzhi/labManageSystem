@@ -286,7 +286,7 @@ class TeacherController extends Controller
     {
       //接收要换课的id
       $id = Request::instance()->post('id');
-
+      $ChangeLesson = TimeClassroom::get($id);//通过id，找到timeclassroom表里对应的对象
       //通过周次，星期，节次，教室找到目标课的id
       $weekly = Request::instance()->post('weekly');
       $week = Request::instance()->post('week');
@@ -302,15 +302,17 @@ class TeacherController extends Controller
       //实例化目标课对象
       $TargetLesson = Sechedule::get($targetid);
 
-      //判断目标教室时间是否有课，如果没课，直接调换
-      if ($TargetLesson->teacher_id == 0) {
-        Sechedule::exchange($id,$targetid);
+
+      //判断目标教室时间是否有课，如果没课或者为同一老师的·课，直接调换
+      if ($TargetLesson->teacher_id == 0 or $TargetLesson->teacher_id == $ChangeLesson->teacher_id) 
+      {
+        Timeclassroom::exchange($id,$targetid);
         return $this->success('换课成功','index');
       }
       
-      //如果有课，则向目标课程的教师发送消息，取得同意后再向管理员发送请求，通过后进行交换(此功能待完善)
+      //向目标课程的教师发送消息，取得同意后再向管理员发送请求，通过后进行交换(此功能待完善)
       else {
-        return '发送消息';
+        return '向目标课程的教师发送消息，取得同意后再向管理员发送请求，通过后进行交换(此功能待完善)';
       }
     }
 }
