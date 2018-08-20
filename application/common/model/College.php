@@ -1,10 +1,10 @@
 <?php
+
+//学院的模型
 namespace app\common\model;
 use think\Model;
-/**
- * 课程
- */
-class Course extends Model
+
+class College extends Model
 {
-	
+
 }
