@@ -20,6 +20,20 @@ class Sechedule extends Model
     public function course(){
     	return $this->belongsTo('Course');
     }	
+    /**
+    *判断行程是否在换课中
+    *@return boolean
+    */
+    public function isChangeLesson()
+    {
+        $applySechedule=Changelesson::get(['applysechedule_id'=>$this->id]);
+        $targetSechedule=Changelesson::get(['targetsechedule_id'=>$this->id]);
+        if(isset($applySechedule)||isset($targetSechedule)){
+            return true;
+        }else{
+            return false;
+        }
+    }
 
     //判断中间表中是否存在该关联
     public function getKlassesIsChecked(Klass &$Klass)

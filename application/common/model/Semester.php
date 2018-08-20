@@ -85,4 +85,17 @@ class Semester extends Model//继承model
         $time=time();
         return (intval(($time-$this->getData('begintime'))/604800)+1);
     }
+    /**
+    *返回当前开放抢课的周次
+    *@param Semester $allSemester 所有的学期
+    *@return Semester
+    */
+    public static function getOpenSemester($allSemester)
+    {
+        foreach ($allSemester as $key => $semester) {
+            if ($semester->istakesemester=="true") {
+                return $semester;
+            }
+        }
+    }
 }

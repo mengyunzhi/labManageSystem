@@ -71,7 +71,7 @@ class SemesterController extends Controller
     */
     public function delete()
     {
-    	  // 获取pathinfo传入的ID值.
+          // 获取pathinfo传入的ID值.
         $id = Request::instance()->param('id/d'); // “/d”表示将数值转化为“整形”
 
         if (is_null($id) || 0 === $id) {
@@ -169,5 +169,24 @@ class SemesterController extends Controller
         }else{
             return ;
         }
+    }
+    /**
+    *设置开放选课的学期
+    */
+    public function setTakeSemester()
+    {
+        $id = Request::instance()->param('id/d');
+        if (is_null(Semester::get($id))) {
+            return $this->error("没有这个学期");
+        }
+        foreach (Semester::select() as $key => $semester) {
+            if ($semester->id==$id) {
+                $semester->istakesemester="true";
+            }else{
+                $semester->istakesemester="false";
+            }
+            $semester->save();
+        }
+        return $this->success("设置成功");
     }
 }
