@@ -31,12 +31,6 @@ class CourseController extends Controller
         return $this->fetch();
     }
 
-    //添加
-    public function add()
-    {
-    	return $this->fetch();
-    }
-
     public function save()
     {
     	// 实例化请求信息
@@ -56,22 +50,6 @@ class CourseController extends Controller
    
     }
 
-    //编辑
-    public function edit()
-    {
-         //获取ID
-        $id = Request::instance()->param('id/d');
-
-        $Course = Course::get($id);
-
-        if (is_null($Course)) {
-            return $this->error('不存在ID为' . $id . '的记录');
-        }
-        // 将数据传给V层
-        $this->assign('Course', $Course);
-        return $this->fetch();
-
-    }
     public function update()
     {
         //获取ID

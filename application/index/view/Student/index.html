@@ -15,72 +15,65 @@
   	<div class="container-fluid">
     <!-- Brand and toggle get grouped for better mobile display -->
     	<div class="navbar-header">
-      		<a class="navbar-brand" href="">梦云智</a>
+      		<a class="navbar-brand" href="{:url('index')}">梦云智</a>
     	</div>
 
 	    <!-- Collect the nav links, forms, and other content for toggling -->
 	    <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
 	      	<ul class="nav navbar-nav navbar-right">
-	      		<li><a href="#">李四学生</a></li>
-		       	<li><a href="{:url('edit')}">个人信息修改</a></li>
+	      		<li><a href="#">{$Student->name}同学</a></li>
+		       	<li><a href="{:url('student')}">个人信息修改</a></li>
 		       	<li><a href="#">注销登录</a></li>
 	        </ul>
 	    </div><!-- /.navbar-collapse -->
   	</div><!-- /.container-fluid -->
 </nav>
-<div class="row"><div class="col-md-12 header">当前周次:第一周</div></div>
+<div class="row">
+    <div class="col-md-12 header">当前周次:第{$onWeekly}周</div>
+</div>
 <div class="container">
-	<!-- 搜索框 -->
-	<div class="row">
-		<div class="col-md-12 search">按条件查询</div>
-	</div>
-	<div class="row	blacknav">
-		<div class="col-md-12">
-			<form>
-				<div class="row">
-					
-					<div class="col-md-3">
-							<label>学期：</label>
-							<select class="btn btn-default dropdown-toggle">
-								<option>选择学期</option>
-								<option>第一学期</option>
-								<option>第二学期</option>
-								<option>第三学期</option>
-							</select>
-					</div>
-					<div class="col-md-3">
-							<label>周次：</label>
-							<select class="btn btn-default dropdown-toggle">
-								<option>选择周次</option>
-								<option>第一周</option>
-								<option>第二周</option>
-								<option>第三周</option>
-							</select>
-					</div>
-					<div class="col-md-3">
-							<label>选择教室：</label>
-							<select class="btn btn-default dropdown-toggle">
-								<option>选择教室</option>
-								<option>A171</option>
-								<option>A172</option>
-								<option>A173</option>
-							</select>
-						
-					</div>
-					<div class="col-md-1">
-						<button type="submit" class="btn btn-default" >确认</button>
-					</div>					
-				</div>		
-			</form>
-		</div>
-	</div>
-	
-	<div class="row">
-		
-		<!-- 表格 -->
-		<div class="col-md-12">
-			<!-- 显示信息表格 -->
-		 <!-- 表格 -->
+    <!-- 搜索功能-->
+    <div class="row">
+        <h3>按条件查询:</h3>
+    </div>
+    <div class="row blacknav">
+        <div class="col-md-12">
+            <form action="{:url('index')}" method="post">
+                <div class="row">
+                    <div class="col-md-3">
+                        <label>学期:</label>
+                        <select class="btn btn-default dropdown-toggle">
+                            <option>第一学期</option>
+                        </select>
+                    </div>
+                    <div class="col-md-3">
+                        <label>周次：</label>
+                        <select class="btn btn-default dropdown-toggle" name="weekly">
+                            <option value="1" {eq name="onWeekly" value="1" } selected="selected" {/eq}>第一周</option>
+                            <option value="2" {eq name="onWeekly" value="2" } selected="selected" {/eq}>第二周</option>
+                            <option value="3" {eq name="onWeekly" value="3" } selected="selected" {/eq}>第三周</option>
+                        </select>
+                    </div>
+                    <div class="col-md-3">
+                        <label>选择教室：</label>
+                        <select class="btn btn-default dropdown-toggle" name="classroom_num">
+                            {volist name="allClassroom" id="classroom"}
+                            <option value="{$classroom->id}" {eq name="onClassroom" value="$classroom->id" } selected="selected" {/eq}>{$classroom->name}</option>
+                            {/volist}
+                        </select>
+                    </div>
+                    <div class="col-md-3">
+                        <button type="submit" class="btn btn-default">搜索</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+    <div class="row">
+        <!-- 表格 -->
+        <div class="col-md-12">
+            <!-- 显示信息表格 -->
+            <!-- 表格 -->
             <table class="table table-hover table-bordered">
                 <tr class="info">
                     <th>星期/节次</th>
@@ -92,59 +85,25 @@
                     <th>星期六</th>
                     <th>星期日</th>
                 </tr>
+                {volist name="weekList" id="nodeList" key="key"}
                 <tr>
-                    <td>第一节</td>
-                   <td style="text-align: center;">还没有课</td>
-                   <td style="text-align: center;">还没有课</td>
-                    <td style="text-align: center;">已经有课了<br><span>张三老师 软件173班</span></td>
-                  <td style="text-align: center;">还没有课</td>
-                     <td style="text-align: center;">已经有课了<br><span>张三老师 软件173班</span></td>
-                     <td style="text-align: center;">已经有课了<br><span>张三老师 软件173班</span></td>
-                    <td style="text-align: center;">还没有课</td>
+                    <td>第{$key}节</td>
+                    {volist name="nodeList" id="weekly"}
+                    <td style="text-align: center;">
+                        {eq name="weekly->teacher_id" value="0"} 还没有课{else/}
+                        <span style="margin-right: 10px;">{$weekly->teacher->name}</span><span>课程{$weekly->course->name}<br>
+                            {volist name="Klasses" id="Klass"}
+                              {eq name="$weekly->getKlassesIsChecked($Klass)" value="true"}<span>{$Klass->name}</span>{else/}{/eq} 
+                            {/volist}
+                        </span>
+                        {/eq}
+                    </td>
+                    {/volist}
                 </tr>
-                  <tr>
-                    <td>第二节</td>
-                   <td style="text-align: center;">还没有课</td>
-                   <td style="text-align: center;">还没有课</td>
-                    <td style="text-align: center;">已经有课了<br><span>张三老师 软件173班</span></td>
-                  <td style="text-align: center;">还没有课</td>
-                     <td style="text-align: center;">已经有课了<br><span>张三老师 软件173班</span></td>
-                     <td style="text-align: center;">已经有课了<br><span>张三老师 软件173班</span></td>
-                    <td style="text-align: center;">还没有课</td>
-                </tr>
-                 <tr>
-                    <td>第三节</td>
-                   <td style="text-align: center;">还没有课</td>
-                   <td style="text-align: center;">还没有课</td>
-                    <td style="text-align: center;">已经有课了<br><span>张三老师 软件173班</span></td>
-                  <td style="text-align: center;">还没有课</td>
-                     <td style="text-align: center;">已经有课了<br><span>张三老师 软件173班</span></td>
-                     <td style="text-align: center;">已经有课了<br><span>张三老师 软件173班</span></td>
-                    <td style="text-align: center;">还没有课</td>
-                </tr>
-                  <tr>
-                    <td>第四节</td>
-                   <td style="text-align: center;">还没有课</td>
-                   <td style="text-align: center;">还没有课</td>
-                    <td style="text-align: center;">已经有课了<br><span>张三老师 软件173班</span></td>
-                  <td style="text-align: center;">还没有课</td>
-                     <td style="text-align: center;">已经有课了<br><span>张三老师 软件173班</span></td>
-                     <td style="text-align: center;">已经有课了<br><span>张三老师 软件173班</span></td>
-                    <td style="text-align: center;">还没有课</td>
-                </tr>
-                  <tr>
-                    <td>第五节</td>
-                   <td style="text-align: center;">还没有课</td>
-                   <td style="text-align: center;">还没有课</td>
-                    <td style="text-align: center;">已经有课了<br><span>张三老师 软件173班</span></td>
-                  <td style="text-align: center;">还没有课</td>
-                     <td style="text-align: center;">已经有课了<br><span>张三老师 软件173班</span></td>
-                     <td style="text-align: center;">已经有课了<br><span>张三老师 软件173班</span></td>
-                    <td style="text-align: center;">还没有课</td>
-                </tr>
+                {/volist}
             </table>
-		</div>
-	</div>	
+        </div>
+    </div>
 </div>
 </body>
 </html>

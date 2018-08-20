@@ -6,5 +6,6 @@ use think\Model;    // 使用model
  */
 class  Administrator extends Model
 {
+	
     
 }
