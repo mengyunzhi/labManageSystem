@@ -1,0 +1,84 @@
+{extend name="Teacher/nav"} {block name="title"}梦云智选课系统{/block} {block name="content"}
+<div class="row">
+    <div class="col-md-12 header">当前时间:{$currentSemester->name}第{$currentWeekorder}周</div>
+</div>
+<div class="container">
+    <div class="row blacknav">
+        <div class="col-md-12">
+            <form action="{:url('takelessonInterface')}" method="post">
+                <div class="row">
+                	<div class="col-md-12"><input type="hidden" name="semester_id"></div>
+                    <div class="col-md-4">
+                        <label>周次：</label>
+                        <select class="btn btn-default dropdown-toggle" name="weekorder">
+                            {for start="$startweekorder" end="$endweekorder+1" }
+                                <option value="{$i}" {eq name="$i" value="$currentWeekorder"} selected="selected" {/eq}>第{$i}周</option>
+                            {/for}
+                        </select>
+                    </div>
+                    <div class="col-md-4">
+                        <label>选择教室：</label>
+                        <select class="btn btn-default dropdown-toggle" name="classroom_id">
+                            {volist name="allClassroom" id="classroom"}
+                            <option value="{$classroom->id}" {eq name="$currentClassroom->id" value="$classroom->id" } selected="selected" {/eq}>{$classroom->name}</option>
+                            {/volist}
+                        </select>
+                    </div>
+                    <div class="col-md-4">
+                        <button type="submit" class="btn btn-default">搜索</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+
+	<div class="row">
+        <!-- 表格 -->
+        <div class="col-md-12">
+            <!-- 显示信息表格 -->
+            <!-- 表格 -->
+            <table class="table table-hover table-bordered">
+                <tr class="info">
+                    <th>星期/节次</th>
+                    <th>星期一</th>
+                    <th>星期二</th>
+                    <th>星期三</th>
+                    <th>星期四</th>
+                    <th>星期五</th>
+                    <th>星期六</th>
+                    <th>星期日</th>
+                </tr>
+                {volist name="secheduleList" id="sechedules" key="key"}
+                <tr>
+                    <td>第{$key}节</td>
+                    {volist name="sechedules" id="sechedule"}
+                        <td>
+                        	{eq name="sechedule->teacher_id" value="$null"}
+                            	<div style="text-align: center;">
+                            		<span>无课 可以<span class="glyphicon glyphicon-circle-arrow-right" aria-hidden="true"></span><a data-toggle="modal" data-target="#TakeLessons" data-whatever="{$sechedule->id}">抢课</a></span>
+                            	</div>
+                            {else/}
+                            <span>上课信息:{$sechedule->teacher->name}</span>  
+                            <span>{$sechedule->course->name}</span>
+                            <br>
+                            <span>所上班级:</span>
+                            {volist name="Klasses" id="Klass"}
+                              {eq name="$sechedule->getKlassesIsChecked($Klass)" value="true"}<span>{$Klass->name}</span>{else/}{/eq}
+                            {/volist}
+                            <br>
+                             	{eq name="$sechedule->teacher_id" value="$teacher->id"}
+			                        <div style="text-align: center;">
+			                        	<span class="glyphicon glyphicon-circle-arrow-right" aria-hidden="true"></span>
+			                        	<a data-toggle="modal" data-target="#ChangeLessons" data-whatever="{$sechedule->id}">换课</a>
+			                        </div> 
+                        		{/eq}
+                            {/eq}
+                        </td>
+                    {/volist}
+                </tr>
+                {/volist}
+            </table>
+        </div>
+    </div>
+</div>
+{/block}

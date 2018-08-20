@@ -1,10 +1,10 @@
 <?php
-
-
 namespace app\index\controller;
-
-use app\common\model\Klass;
 use app\common\model\Student;
+use app\common\model\Klass;
+use app\common\model\Timeclassroom;
+use app\common\model\Course;
+use app\common\model\Classroom;
 use think\Controller;
 use think\exception\HttpResponseException;
 use think\facade\Request;
@@ -13,6 +13,71 @@ use think\facade\Request;
  * */
 class StudentController extends Controller
 {
+    private $timeclassroom;
+    public function __construct(){
+        parent::__construct();
+        $this->timeclassroom=Timeclassroom::where('semester','=','2018/01');
+        $this->timeclassroom=$this->timeclassroom->where('weekly','=',1);
+        $this->timeclassroom=$this->timeclassroom->where('classroom_num','=',1);
+       
+    }
+    //index页面
+    public function index()
+    {
+
+        //初始化设置
+        $onWeekly=1;
+        $onClassroom=1;
+        $Courses=Course::select();
+        $Klasses=Klass::select();
+
+
+
+        $postData=Request::instance()->post();
+        //查询条件
+        if (!empty($postData)) {
+                $this->timeclassroom=Timeclassroom::where('semester','=','2018/01');
+                $this->timeclassroom=$this->timeclassroom->where('weekly','=',(int)$postData['weekly']);
+
+                $onWeekly=(int)$postData['weekly'];
+                $this->timeclassroom=$this->timeclassroom->where('classroom_num','=',(int)$postData['classroom_num']);
+                $onClassroom=(int)$postData['classroom_num'];
+        }
+        $weekList=$this->editTimeClassroom();
+
+        $this->assign('weekList',$weekList);
+        $allClassroom=Classroom::select();
+        $this->assign('allClassroom',$allClassroom);
+
+        //向v层传送数据
+        $this->assign('Klasses',$Klasses);
+        $this->assign('Courses',$Courses);
+        $this->assign('onWeekly',$onWeekly);
+        $this->assign('onClassroom',$onClassroom);
+        //没有扫码，因此直接得到学生信息
+        $Student = Student::get('1');
+ $this->assign('Student',$Student);
+
+        return $this->fetch();
+    }
+
+    public function editTimeClassroom(){
+        $weekList=array();
+        for($i=1;$i<=5;$i++){
+            $nodeList=array();//节数组
+            //划定每节范围
+            $temp=clone $this->timeclassroom;
+            $temp=$temp->where('node','=',$i);
+            $weeklyList=$temp->select();
+            foreach($weeklyList as $weekly){
+            $nodeList[$weekly['week']]=$weekly;
+            }
+            ksort($nodeList);
+            array_push($weekList, $nodeList);
+        }
+        return $weekList;
+    }
+
     public function student()
     {
         //没有扫码，因此直接得到学生信息
@@ -61,10 +126,6 @@ class StudentController extends Controller
 
     }
 
-    public function index()
-    {
-        return $this->fetch();
-    }
 
     public function administrate()
     {
@@ -82,9 +143,13 @@ class StudentController extends Controller
             'query'=>[
                 'name' => $name,
                 ],
-            ]);         
+            ]);     
+        //获取所有班级
+        $allklass=Klass::select();
+                
         // 向V层传数据
         $this->assign('students', $students);
+        $this->assign('allklass',$allklass);
 
         // 取回打包后的数据
         $htmls = $this->fetch();
@@ -96,14 +161,15 @@ class StudentController extends Controller
     public function insert()
     {
         // 接收传入数据
-        $postData = Request::instance()->post();    
-
+        $postData = Request::instance()->post();
+       
         // 实例化Teacher空对象
         $Student = new Student();
 
+
         // 为对象赋值
         $Student->name = $postData['name'];
-        $Student->klass = $postData['klass'];
+        $Student->klass_id = $postData['klass_id'];
         
         // 新增对象至数据表
         $Student->save();
@@ -112,12 +178,6 @@ class StudentController extends Controller
         return $this->success('学生' . $Student->name . '新增成功。', url('administrate'));
     }
 
-
-    public function add()
-    {
-        $htmls = $this->fetch();
-        return $htmls;
-    }
 
     public function delete()
     {
@@ -145,26 +205,7 @@ class StudentController extends Controller
         return $this->success('删除成功', url('administrate'));
     }
 
-    public function edit()
-    {       
-        // 获取传入ID
-        $id = Request::instance()->param('id/d');
-
-        // 在Student表模型中获取当前记录
-        if (is_null($Student = Student::get($id))) {
-            return '系统未找到ID为' . $id . '的记录';
-        } 
-        
-        // 将数据传给V层
-        $this->assign('Student', $Student);
-
-        // 获取封装好的V层内容
-        $htmls = $this->fetch();
-
-        // 将封装好的V层内容返回给用户
-        return $htmls;
-    }
-
+   
     public function update()
     {
         // 接收数据，获取要更新的关键字信息
@@ -175,7 +216,7 @@ class StudentController extends Controller
 
         // 写入要更新的数据
         $Student->name = input('post.name');
-        $Student->klass = input('post.klass');
+        $Student->klass_id = input('post.klass_id');
         // 更新
         $Student->save();
         return $this->success('操作成功', url('administrate'));

@@ -38,29 +38,31 @@
             <hr />
             <table class="table table-hover table-bordered">
                 <tr class="info">
-                    <th>ID</th>
-                    <th>学期</th>
+                    <th>序号</th>
+                    <th>名称</th>
                     <th>操作</th>
                 </tr>
                 {volist name="classrooms" id="classroom" key="key"}
                 <tr>
                     <td>{$key}</td>
                     <td>{$classroom->getData('name')}</td>
-                    <td><a class="btn btn-sm btn-danger" href="{:url('delete?id=' . $classroom->getData('id'))}"><i class="glyphicon glyphicon-trash"></i>&nbsp;删除</a>
+                    <td>
+                        <button type="button" class="btn btn-sm btn-primary" data-toggle="modal" data-target=".bs-example-modal-lg{$key}"><i class="glyphicon glyphicon-pencil"></i>&nbsp;编辑</button>
+                        <a class="btn btn-sm btn-danger" href="{:url('delete?id=' . $classroom->getData('id'))}"><i class="glyphicon glyphicon-trash"></i>&nbsp;删除</a>
 
-                    <button type="button" class="btn btn-sm btn-primary" data-toggle="modal" data-target=".bs-example-modal-lg{$key}"><i class="glyphicon glyphicon-pencil"></i>&nbsp;编辑</button>
+                    
                      
                     <div class="modal fade bs-example-modal-lg{$key}" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel">
                         <div class="modal-dialog modal-lg{$key}" role="document">
                             <div class="modal-content">
                                 <div class="modal-header">
                                     <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
-                                    <h4 class="modal-title">编辑学期</h4>
+                                    <h4 class="modal-title">编辑教室</h4>
                                 </div>
 
                                 <div class="modal-body">
                                     <form action="{:url('update')}" method="post">
-                                        <label>学期名称：</label>
+                                        <label>教室名称：</label>
                                         <input type="hidden" name="id" value="{$classroom->getData('id')}" />
                                         <input type="text" name="name" id="name" value="{$classroom->getData('name')}">
                                         <button type="submit" class="btn btn-primary">保存</button>
