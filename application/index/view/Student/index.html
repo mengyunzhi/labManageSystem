@@ -15,13 +15,13 @@
   	<div class="container-fluid">
     <!-- Brand and toggle get grouped for better mobile display -->
     	<div class="navbar-header">
-      		<a class="navbar-brand" href="">梦云智</a>
+      		<a class="navbar-brand" href="{:url('index')}">梦云智</a>
     	</div>
 
 	    <!-- Collect the nav links, forms, and other content for toggling -->
 	    <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
 	      	<ul class="nav navbar-nav navbar-right">
-	      		<li><a href="#">李四学生</a></li>
+	      		<li><a href="#">{$Student->name}同学</a></li>
 		       	<li><a href="{:url('student')}">个人信息修改</a></li>
 		       	<li><a href="#">注销登录</a></li>
 	        </ul>
