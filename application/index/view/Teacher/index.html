@@ -101,8 +101,13 @@
                     <label>选择课程:</label>
                     {volist name="Courses" id="Course"} {eq name="$Teacher->getCoursesIsChecked($Course)" value="true"}
                     <input type="radio" name="courseId" value="{$Course->id}">
-                    <label>{$Course->name}</label>{else/}{/eq} {/volist}
+                    <label>{$Course->name}</label>{else/}{/eq}
+                    {/volist}
                     <div class="modal-footer">
+                        <!--//添加课程的按钮-->
+                        <button type="button" class="btn btn-primary btn-lg" data-toggle="modal" data-target="#addCourse">
+                            添加课程
+                        </button>
                         <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
                         <button type="submit" class="btn btn-primary">确定抢课</button>
                     </div>
@@ -111,6 +116,26 @@
         </div>
     </div>
 </div>
+
+<!--//添加课程的表单-->
+<form action="{:url('addCourse')}">
+    <div class="modal fade" id="addCourse" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-body">
+                    <label>课程名称:</label>
+                    <input name="newCourseName" placeholder="请输入要增加的课程名">
+                    <input type="hidden" name="teacherID" value="{$Teacher->id}">
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+                    <button type="submit" class="btn btn-primary">保存</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</form>
+
 <script type="text/javascript">
 $('#ChangeLessons').on('show.bs.modal', function(event) {
     var button = $(event.relatedTarget)
