@@ -32,10 +32,10 @@ class Sechedule extends Model
         //定制查询条件
         $map = array();
         $map['klass_id'] = $klassId;
-        $map['timeclassroom_id'] = $timeClassroomId;
+        $map['sechedule_id'] = $timeClassroomId;
 
         //从关联表中取信息
-        $TimeClassroomKlass = TimeclassroomKlass::get($map);
+        $TimeClassroomKlass = SecheduleKlass::get($map);
 
         //判断是否存在
         if (is_null($TimeClassroomKlass)) {

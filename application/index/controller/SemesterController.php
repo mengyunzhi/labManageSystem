@@ -42,6 +42,8 @@ class SemesterController extends Controller
         $Semester = new Semester();
         // 为对象的属性赋值
         $Semester->name = $postData['name'];
+        $Semester->starttaketime=$postData['starttaketime'];
+        $Semester->endtaketime=$postData['endtaketime'];
         $Semester->totalweek=(int)$postData['totalweek'];
         $Semester->begintime=strtotime($postData['begintime']);
         $Semester->closetime=strtotime($postData['closetime']);
@@ -83,6 +85,8 @@ class SemesterController extends Controller
         // 为对象的属性赋值
         $oldtotalweek=$Semester->totalweek;
         $Semester->name = $postData['name'];
+        $Semester->starttaketime=$postData['starttaketime'];
+        $Semester->endtaketime=$postData['endtaketime'];
         $Semester->totalweek=(int)$postData['totalweek'];
         $Semester->begintime=strtotime($postData['begintime']);
         $Semester->closetime=strtotime($postData['closetime']);

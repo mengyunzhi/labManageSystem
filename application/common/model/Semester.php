@@ -49,7 +49,6 @@ class Semester extends Model//继承model
     public function getWeekorder()
     {
         $time=time();
-        
-        return intval((($time-$this->getData('begintime'))/604800));   
+        return (intval(($time-$this->getData('begintime'))/604800)+1);
     }
 }

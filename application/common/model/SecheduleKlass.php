@@ -6,7 +6,7 @@
 namespace app\common\model;
 use think\Model;
 
-class TimeclassroomKlass extends Model
+class SecheduleKlass extends Model
 {
 
 }

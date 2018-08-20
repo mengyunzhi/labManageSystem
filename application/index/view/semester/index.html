@@ -41,6 +41,13 @@
                                         </div>
                                         <hr>
                                         <div class="form-group">
+                                            <label>开始抢课时间(周):</label>
+                                            <input type="number" min="0" max="20" name="starttaketime" class="form-control">
+                                            <label>结束抢课时间(周):</label>
+                                            <input type="number" min="0" max="20" name="endtaketime" class="form-control">
+                                        </div>
+                                        <hr>
+                                        <div class="form-group">
                                             <button type="submit" class="btn btn-primary" style="margin-left: 500px;">保存</button> 
                                         </div>
                                     </form>  
@@ -58,6 +65,8 @@
                     <th>学期周次</th>
                     <th>开始时间</th>
                     <th>结束时间</th>
+                    <th>开始抢课时间</th>
+                    <th>结束抢课时间</th>
                     <th>操作</th>
                 </tr>
                 {volist name="semesters" id="semester" key="key"}
@@ -67,6 +76,8 @@
                     <td>{$semester->totalweek}周</td>
                     <td>{$semester->begintime}</td>
                     <td>{$semester->closetime}</td>
+                    <td>第{$semester->starttaketime}周</td>
+                    <td>第{$semester->endtaketime}周</td>
                     <td>
                          <button class="btn btn-primary" data-toggle="modal" data-target="#editSemester{$key}"><i class="glyphicon glyphicon-plus"></i>&nbsp;编辑</button>
                          <a class="btn btn-sm btn-danger" href="{:url('delete?id=' . $semester->getData('id'))}"><i class="glyphicon glyphicon-trash"></i>&nbsp;删除</a>
@@ -97,6 +108,12 @@
                                             <input type="date" name="closetime" class="form-control" value="{$semester->closetime}">
                                         </div>
                                         <hr>
+                                        <div class="form-group">
+                                            <label>开始抢课时间(周):</label>
+                                            <input type="number" min="0" max="20" name="starttaketime" class="form-control">
+                                            <label>结束抢课时间(周):</label>
+                                            <input type="number" min="0" max="20" name="endtaketime" class="form-control">
+                                        </div>
                                         <div class="form-group">
                                             <button type="submit" class="btn btn-primary" style="margin-left: 500px;">保存</button> 
                                         </div>
