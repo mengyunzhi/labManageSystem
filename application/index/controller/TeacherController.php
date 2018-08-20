@@ -38,7 +38,11 @@ class TeacherController extends Controller
     *@param Classroom
     */
     private $currentClassroom;
-
+    /**
+    *登录的教师
+    *@param Teacher
+    */
+    private $teacher;
     /**
     *构造函数 初始化查询条件
     */
@@ -47,16 +51,14 @@ class TeacherController extends Controller
         $this->currentSemester=Semester::currentSemester(Semester::select());
         $this->currentWeekorder=$this->currentSemester->getWeekorder();
         $this->currentClassroom=Classroom::get(1);
+        $this->teacher=Teacher::get(1);
         $this->setRange($this->currentSemester->id,$this->currentWeekorder,$this->currentClassroom->id);
     }
     /*
     *显示查询首页
     */
     public function index()
-    {
-       
-        //获得登录老师及其信息
-        $Teacher=Teacher::get(1);
+    { 
         $postData=Request::instance()->post();
         if (!empty($postData)) {
           $this->setRange((int)$postData['semester_id'],(int)$postData['weekorder'],(int)$postData['classroom_id']);
@@ -67,7 +69,6 @@ class TeacherController extends Controller
           'secheduleList'=>$secheduleList,
           'Klasses'=>Klass::select(),
           'Courses'=>Course::select(),
-          'Teacher'=>$Teacher,
           'currentSemester'=>Semester::currentSemester(Semester::select()),
           'allSemester'=>Semester::select(),
           'currentClassroom'=>$this->currentClassroom,
@@ -113,7 +114,37 @@ class TeacherController extends Controller
         }
         return $weekList;
     }
-
+    /**
+    *显示换课抢课界面
+    */
+    public function takelessonInterface()
+    {
+      // 判断是否为选课系统开放时间
+      $time=time();
+      if ($time>=$this->currentSemester->getData('starttaketime')&&$time<=$this->currentSemester->getData('endtaketime')){
+        $postData=Request::instance()->post();
+        if (!empty($postData)) {
+          $this->setRange($this->currentSemester->id,(int)$postData['weekorder'],(int)$postData['classroom_id']);
+        }
+        $secheduleList=$this->editSechedule();
+        $this->assign([
+          'currentSemester'=>$this->currentSemester,
+          'currentWeekorder'=>$this->currentWeekorder,
+          'startweekorder'=>$this->currentSemester->startweekorder,
+          'endweekorder'=>$this->currentSemester->endweekorder,
+          'currentClassroom'=>$this->currentClassroom,
+          'allClassroom'=>Classroom::select(),
+          'Klasses'=>Klass::select(),
+          'teacher'=>$this->teacher,
+          'null'=>null,
+          'secheduleList'=>$secheduleList,
+        ]);
+        return $this->fetch('takelessonInterface');
+      }else{
+        return $this->error("未到开放的时间");
+      }
+      
+    }
 
     //进入老师的信息页面
     public function information()

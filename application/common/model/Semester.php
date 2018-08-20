@@ -11,9 +11,20 @@ class Semester extends Model//继承model
     {
     	return date("Y年m月d日",$value);
     }
-
+    public function getstarttaketimeAttr($value)
+    {
+        return date("Y年m月d日",$value);
+    }
+    public function getendtaketimeAttr($value)
+    {
+        return date("Y年m月d日",$value);
+    }
+    public function getDate($date)
+    {
+        return date("Y-m-d",$date);
+    }
     /**
-	*获取当前学期 ( 暂时没有用到)
+	*获取当前学期 
  	*@param Semester $allSemester 所有的学期
 	*@return Semester
     */

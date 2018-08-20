@@ -42,11 +42,13 @@ class SemesterController extends Controller
         $Semester = new Semester();
         // 为对象的属性赋值
         $Semester->name = $postData['name'];
-        $Semester->starttaketime=$postData['starttaketime'];
-        $Semester->endtaketime=$postData['endtaketime'];
+        $Semester->starttaketime=strtotime($postData['starttaketime']);
+        $Semester->endtaketime=strtotime($postData['endtaketime']);
         $Semester->totalweek=(int)$postData['totalweek'];
         $Semester->begintime=strtotime($postData['begintime']);
         $Semester->closetime=strtotime($postData['closetime']);
+        $Semester->startweekorder=$postData['startweekorder'];
+        $Semester->endweekorder=$postData['endweekorder'];
         // 新增对象至数据表
        if ($Semester->save()){
             $this->newsechedule($Semester->id,$Semester->totalweek,1);
@@ -80,16 +82,18 @@ class SemesterController extends Controller
 
     public function update()
     {
-        $postData = Request::instance()->post();        
+        $postData = Request::instance()->post();    
         $Semester = Semester::get((int)$postData['id']);
         // 为对象的属性赋值
         $oldtotalweek=$Semester->totalweek;
         $Semester->name = $postData['name'];
-        $Semester->starttaketime=$postData['starttaketime'];
-        $Semester->endtaketime=$postData['endtaketime'];
+        $Semester->starttaketime=strtotime($postData['starttaketime']);
+        $Semester->endtaketime=strtotime($postData['endtaketime']);
         $Semester->totalweek=(int)$postData['totalweek'];
         $Semester->begintime=strtotime($postData['begintime']);
         $Semester->closetime=strtotime($postData['closetime']);
+        $Semester->startweekorder=(int)$postData['startweekorder'];
+        $Semester->endweekorder=(int)$postData['endweekorder'];
         $this->editsechedule($Semester->id,$oldtotalweek,$Semester->totalweek);
         // 更新
         $Semester->save();
