@@ -1,6 +1,4 @@
 <?php
-
-
 namespace app\index\controller;
 use app\common\model\Classroom;
 use app\common\model\Semester;
@@ -11,38 +9,22 @@ use app\common\model\Sechedule;
 use think\Controller;
 use think\facade\Request;
 
-/*
- * 老师选课页面和个人信息页面的功能
- *
- * */
+/**
+ * 老师选课页面和个人信息页面的功能 
+ */
 
 class TeacherController extends Controller
 {
-    /**
-    *行程范围
-    *@param where查询后返回值
-    */
-    private $sechedule;
-    /**
-    *当前查询学期 默认为本学期
-    *@param Semester
-    */
-    private $currentSemester;
-    /**
-    *当前查询周次 默认本周次
-    *@param int
-    */
-    private $currentWeekorder;
-    /**
-    *当前查询教室
-    *@param Classroom
-    */
-    private $currentClassroom;
-    /**
-    *登录的教师
-    *@param Teacher
-    */
-    private $teacher;
+    private $sechedule;/*行程范围 @param where查询后返回值*/
+
+    private $currentSemester;/*当前查询学期 默认为本学期 @param Semester*/
+    
+    private $currentWeekorder;/*当前查询周次 默认本周次 @param int*/
+    
+    private $currentClassroom;/*当前查询教室 @param Classroom*/
+    
+    private $teacher;/*登录的教师 @param Teacher*/
+    
     /**
     *构造函数 初始化查询条件
     */

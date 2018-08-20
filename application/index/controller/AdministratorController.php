@@ -8,10 +8,9 @@ use app\common\model\Timeclassroom;
 use app\common\model\Administrator;
 use think\Controller;
 use think\facade\Request;
-/*
- * 管理员页面和个人信息页面的功能
- *
- * */
+/**
+ * 管理员页面和个人信息页面的功能 
+ */
 class AdministratorController extends Controller
 {
     // private $timeclassroom;

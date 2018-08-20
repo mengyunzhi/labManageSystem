@@ -7,6 +7,10 @@ use app\common\model\Classroom;
 use think\facade\Request;		// 引用Request
 class SemesterController extends Controller 
 {
+    /**
+    *显示学期管理的界面
+    *@param string
+    */
     public function index()
     {
     	  // 获取查询信息
@@ -33,7 +37,9 @@ class SemesterController extends Controller
         // 将数据返回给用户
         return $htmls;       
     }
-
+    /**
+    *新增学期的方法
+    */
     public function insert()
     {
     	
@@ -60,7 +66,9 @@ class SemesterController extends Controller
 
     }
 
-
+    /**
+    *删除学期的方法
+    */
     public function delete()
     {
     	  // 获取pathinfo传入的ID值.
@@ -79,7 +87,9 @@ class SemesterController extends Controller
         }
         return $this->success('删除成功', url('index'));
     }
-
+    /**
+    *更新学期的方法
+    */
     public function update()
     {
         $postData = Request::instance()->post();    
