@@ -22,12 +22,17 @@ class AdministratorController extends Controller
     
     private $currentClassroom;/*当前查询教室 @param Classroom*/
     
-    private $administrator;/*登录的管理员 @param Teacher*/
+    private $administrator;/*登录的管理员 @param Administrator*/
     /**
     *构造函数 初始化查询条件
     */
     public function __construct(){
         parent::__construct();
+        $userId = session('userId');
+        $this->administrator=Administrator::get(['user_id'=>$userId]);
+        if (is_null($this->administrator)) {
+          return $this->error("请先登录",url('Login/index'));
+        }
         $this->currentSemester=Semester::currentSemester(Semester::select());
         $this->currentWeekorder=$this->currentSemester->getWeekorder();
         $this->currentClassroom=Classroom::get(1);
@@ -87,6 +92,14 @@ class AdministratorController extends Controller
             array_push($weekList, $nodeList);
         }
         return $weekList;
+    }
+    /**
+    *注销登录
+    */
+    public function logout()
+    {
+      session('userId',null);
+      return $this->success('注销成功',url('Login/index'));
     }
     //管理员个人信息界面
     public function personalinformation()

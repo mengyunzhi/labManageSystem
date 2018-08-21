@@ -26,14 +26,19 @@ class TeacherController extends Controller
     private $teacher;/*登录的教师 @param Teacher*/
     
     /**
-    *构造函数 初始化查询条件
+    *构造函数 初始化查询条件 取得登录信息
     */
     public function __construct(){
         parent::__construct();
+        $userId = session('userId');
+        $this->teacher=Teacher::get(['user_id'=>$userId]);
+        if (is_null($this->teacher)) {
+          return $this->error("请先登录",url('Login/index'));
+        }
         $this->currentSemester=Semester::currentSemester(Semester::select());
         $this->currentWeekorder=$this->currentSemester->getWeekorder();
         $this->currentClassroom=Classroom::get(1);
-        $this->teacher=Teacher::get(2);
+       
         $this->setRange($this->currentSemester->id,$this->currentWeekorder);
     }
     /*
@@ -149,6 +154,14 @@ class TeacherController extends Controller
           return $this->error("未到开放的时间");
       }
       
+    }
+    /**
+    *注销登录
+    */
+    public function logout()
+    {
+      session('userId',null);
+      return $this->success('注销成功',url('Login/index'));
     }
 
     //进入老师的信息页面
