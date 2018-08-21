@@ -148,34 +148,7 @@ class TeacherController extends Controller
      */
     public function takelessonInterface()
     {
-      // 判断是否为选课系统开放时间
-      $time=time();
-      if($time>=$this->currentSemester->getData('starttaketime')&&$time<=$this->currentSemester->getData('endtaketime')){
-          $this->setRange($this->currentSemester->id,$this->currentWeekorder,1);
-          $this->currentSemester=Semester::getOpenSemester(Semester::select());
-          $postData=Request::instance()->post();
-          if (!empty($postData)) {
-              $this->setRange($this->currentSemester->id,(int)$postData['weekorder'],(int)$postData['classroom_id']);
-          }
-          $secheduleList=$this->editSechedule();
-          $this->assign([
-              'currentSemester'=>$this->currentSemester,
-              'currentWeekorder'=>$this->currentWeekorder,
-              'startweekorder'=>$this->currentSemester->startweekorder,
-              'endweekorder'=>$this->currentSemester->endweekorder,
-              'currentClassroom'=>$this->currentClassroom,
-              'allClassroom'=>Classroom::select(),
-              'Klasses'=>Klass::select(),
-              'teacher'=>$this->teacher,
-              'null'=>null,
-              'secheduleList'=>$secheduleList,
-          ]);
-          return $this->fetch('takelessonInterface');
-      }else{
-          return $this->error("未到开放的时间");
-      }
-      
-    }
+
         // 判断是否为选课系统开放时间
         $time = time();
         if ($time >= $this->currentSemester->getData('starttaketime') && $time <= $this->currentSemester->getData('endtaketime')) {
@@ -197,7 +170,6 @@ class TeacherController extends Controller
             if (is_null($tklasses)) {
                 $tklasses = 0;
             }
-
 
             //得到老师教的专业
             $tmajors = array();
@@ -407,8 +379,8 @@ class TeacherController extends Controller
 
     }
           
-    }
- //老师删除课程
+
+    //老师删除课程
     public function deleteCourse()
     {
         try {
@@ -437,6 +409,19 @@ class TeacherController extends Controller
         return $this->success('删除成功', url('index'));
     }
 
+    //老师增加课程的方法
+    public function addCourse()
+    {
+        //得到一个新Course对象
+        $NewCourse = new Course();
+        //保存数据
+        $NewCourse->name = Request::instance()->param('newCourseName');
+        $NewCourse->teacher_id = Request::instance()->param('teacherId');
+        $NewCourse->save();
+
+        //成功返回结果
+        return $this->success('课程增加成功', url('index'));
+    }
 
     //老师增加班级
     public function addKlass()
@@ -466,11 +451,50 @@ class TeacherController extends Controller
                 }
             }
             //获取到tp内置异常是，直接向上抛出
+
         } catch (HttpException $exception) {
             throw $exception;
             //获取到正常的异常时输出异常
         } catch (\Exception $exception) {
             return $exception->getMessage();
         }
+
+        //成功进行跳转
+        return $this->success('删除成功', url('index'));
+    }
+
+    //换课功能
+    public function changeLesson()
+    {
+      //接收要换课的id
+      $id = Request::instance()->post('id');
+      $ChangeLesson = TimeClassroom::get($id);//通过id，找到timeclassroom表里对应的对象
+      //通过周次，星期，节次，教室找到目标课的id
+      $weekly = Request::instance()->post('weekly');
+      $week = Request::instance()->post('week');
+      $node = Request::instance()->post('node');
+      $classroom_num = Request::instance()->post('classroom_num');     
+      $targetid = Timeclassroom::findtarget($weekly,$week,$node,$classroom_num);
+
+      //判断是否是同一教室时间
+      if ($id == $targetid) {
+        return $this->error('换课失败，目标课不能为同一节课','index');
+      }
+
+      //实例化目标课对象
+      $TargetLesson = TimeClassroom::get($targetid);
+
+      //判断目标教室时间是否有课，如果没课或者为同一老师的·课，直接调换
+      if ($TargetLesson->teacher_id == 0 or $TargetLesson->teacher_id == $ChangeLesson->teacher_id) 
+      {
+        Timeclassroom::exchange($id,$targetid);
+        return $this->success('换课成功','index');
+      }
+      
+      //向目标课程的教师发送消息，取得同意后再向管理员发送请求，通过后进行交换(此功能待完善)
+      else {
+        return '向目标课程的教师发送消息，取得同意后再向管理员发送请求，通过后进行交换(此功能待完善)';
+      }
+    }
 
 }

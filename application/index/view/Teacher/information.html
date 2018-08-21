@@ -6,14 +6,13 @@
         <div class="form-group" style="padding-top: 50px">
             <label >姓名：</label>
             <input type="hidden" name="id" value="{$Teacher->getData('id')}">
-            <input type="text" name="name" value="{$Teacher->name}">
+            <input type="text" class="form-control" id="name" value="{$Teacher->name}">
         </div>
         <br>
-        <div class="form-group" style="margin-left: 5px;padding: 50px 0">
-            <label >身份:</label>
-            <input type="text" class="form-control" readonly="true" id="type" placeholder="老师">
-        </div>
-        <br>
+        <div class="form-group" style="   margin-left: 5px;padding: 50px 0">
+            <label>身份:</label>
+            <label>老师</label>
+        <hr>
 
         <!--选择所教的班级-->
         <div class="form-group">
@@ -217,6 +216,5 @@
         <br><br><br>
         <button type="submit" class="btn btn-default" style="margin-left: 100px;">保存</button>
     </form>
-
 </div>
 {/block}
