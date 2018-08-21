@@ -1,8 +1,9 @@
 <?php
 namespace app\index\controller;
 use app\common\model\Student;
+use app\common\model\Sechedule;
 use app\common\model\Klass;
-use app\common\model\Timeclassroom;
+use app\common\model\Semester;
 use app\common\model\Course;
 use app\common\model\Classroom;
 use think\Controller;
@@ -13,69 +14,79 @@ use think\facade\Request;
  * */
 class StudentController extends Controller
 {
-    private $timeclassroom;
+    private $sechedule;/*行程范围 @param where查询后返回值*/
+
+    private $currentSemester;/*当前查询学期 默认为本学期 @param Semester*/
+    
+    private $currentWeekorder;/*当前查询周次 默认本周次 @param int*/
+
+    private $student;/*登录的教师 @param Teacher*/
+    /**
+    *构造函数 初始化查询条件
+    */
     public function __construct(){
         parent::__construct();
-        $this->timeclassroom=Timeclassroom::where('semester','=','2018/01');
-        $this->timeclassroom=$this->timeclassroom->where('weekly','=',1);
-        $this->timeclassroom=$this->timeclassroom->where('classroom_num','=',1);
-       
+        $this->currentSemester=Semester::currentSemester(Semester::select());
+        $this->currentWeekorder=$this->currentSemester->getWeekorder();
+        $this->student=Student::get(1);
+        $this->setRange($this->currentSemester->id,$this->currentWeekorder);
     }
-    //index页面
+    /*
+    *显示学生课表
+    */
     public function index()
-    {
-
-        //初始化设置
-        $onWeekly=1;
-        $onClassroom=1;
-        $Courses=Course::select();
-        $Klasses=Klass::select();
-
-
-
+    { 
         $postData=Request::instance()->post();
-        //查询条件
         if (!empty($postData)) {
-                $this->timeclassroom=Timeclassroom::where('semester','=','2018/01');
-                $this->timeclassroom=$this->timeclassroom->where('weekly','=',(int)$postData['weekly']);
-
-                $onWeekly=(int)$postData['weekly'];
-                $this->timeclassroom=$this->timeclassroom->where('classroom_num','=',(int)$postData['classroom_num']);
-                $onClassroom=(int)$postData['classroom_num'];
+          $this->setRange((int)$postData['semester_id'],(int)$postData['weekorder']);
         }
-        $weekList=$this->editTimeClassroom();
-
-        $this->assign('weekList',$weekList);
-        $allClassroom=Classroom::select();
-        $this->assign('allClassroom',$allClassroom);
-
-        //向v层传送数据
-        $this->assign('Klasses',$Klasses);
-        $this->assign('Courses',$Courses);
-        $this->assign('onWeekly',$onWeekly);
-        $this->assign('onClassroom',$onClassroom);
-        //没有扫码，因此直接得到学生信息
-        $Student = Student::get('1');
- $this->assign('Student',$Student);
-
+        $secheduleList=$this->editIndexSechedule();
+        //像v层传送老师数据
+        $this->assign([
+          'secheduleList'=>$secheduleList,
+          'Klasses'=>Klass::select(),
+          'Courses'=>Course::select(),
+          'currentSemester'=>$this->currentSemester,
+          'currentWeekorder'=>$this->currentWeekorder,
+          'allSemester'=>Semester::select(),
+          'null'=>null,
+          'student'=>$this->student,
+        ]);
         return $this->fetch();
     }
 
-    public function editTimeClassroom(){
-        $weekList=array();
+    /**
+    *根据查询条件设置范围
+    *@param int $semesterId 查询的学期id
+    *@param int $weekorder 查询的周次
+    *@param int $classroomId 查询的教室id
+    */
+    public function setRange($semesterId,$weekorder,$classroomId=null)
+    {
+      $this->currentSemester=Semester::get($semesterId);
+      $this->currentWeekorder=$weekorder;
+      $this->sechedule=Sechedule::where('semester_id','=',$semesterId)->where('weekorder','=',$weekorder);
+    }
+    /**
+    *编辑首页课表行程格式
+    *@return array
+    */
+    public function editIndexSechedule()
+    {
+      $secheduleList=array();
         for($i=1;$i<=5;$i++){
-            $nodeList=array();//节数组
-            //划定每节范围
-            $temp=clone $this->timeclassroom;
-            $temp=$temp->where('node','=',$i);
-            $weeklyList=$temp->select();
-            foreach($weeklyList as $weekly){
-            $nodeList[$weekly['week']]=$weekly;
+            $nodeList=array();
+            $temp1=clone $this->sechedule;
+            $temp1=$temp1->where('node','=',$i);
+            for ($j=1; $j<=7 ;$j++) {
+                $temp2=clone $temp1; 
+                $temp2=$temp2->where('week','=',$j)->select();       
+                $nodeList[$j]=$this->student->getSelfSechedule($temp2);
             }
             ksort($nodeList);
-            array_push($weekList, $nodeList);
+            array_push($secheduleList, $nodeList);
         }
-        return $weekList;
+        return $secheduleList;
     }
 
     public function student()
@@ -92,10 +103,7 @@ class StudentController extends Controller
         $this->assign('classes',$klasses);
         $this->assign('Student',$Student);
 
-        return $this->fetch('student');
-
-
-       
+        return $this->fetch('student');       
     }
 
     //保存数据

@@ -12,14 +12,33 @@ class Sechedule extends Model
     {
         return $this->belongsToMany('Klass');
     }
-
-
     public function teacher(){
     	return $this->belongsTo('Teacher');
     }
     public function course(){
     	return $this->belongsTo('Course');
-    }	
+    }
+    /**
+    *行程与教室一对多关联
+    */	
+    public function classroom()
+    {
+        return $this->belongsTo('Classroom');
+    }
+    /**
+    *判断行程是否在换课中
+    *@return boolean
+    */
+    public function isChangeLesson()
+    {
+        $applySechedule=Changelesson::get(['applysechedule_id'=>$this->id]);
+        $targetSechedule=Changelesson::get(['targetsechedule_id'=>$this->id]);
+        if(isset($applySechedule)||isset($targetSechedule)){
+            return true;
+        }else{
+            return false;
+        }
+    }
 
     //判断中间表中是否存在该关联
     public function getKlassesIsChecked(Klass &$Klass)

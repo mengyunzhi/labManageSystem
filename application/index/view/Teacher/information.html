@@ -6,17 +6,15 @@
         <div class="form-group" style="padding-top: 50px">
             <label >姓名：</label>
             <input type="hidden" name="id" value="{$Teacher->getData('id')}">
-
-            <input type="text" class="form-control" id="name" value="{$Teacher->name}">
+            <input type="text" name="name" value="{$Teacher->name}">
         </div>
         <br>
-        <div class="form-group" style="   margin-left: 5px;padding: 50px 0">
-            <label>身份:</label>
-            <label>老师</label>
+        <div class="form-group" style="margin-left: 5px;padding: 50px 0">
+            <label >身份:</label>
+            <input type="text" class="form-control" readonly="true" id="type" placeholder="老师">
         </div>
         <br>
 
-        <hr>
         <!--选择所教的班级-->
         <div class="form-group">
             <label>所教班级：</label><br>
@@ -196,7 +194,29 @@
     </div>
 </form>
 
+            <label>班级：</label><br>
+            {volist name="klasses" id="Klass"}
+            <input type="checkbox" name="klass_id[]" id="klass_id_{$Klass->id}"
+                   value="{$Klass->id}" {eq name="Teacher->getKlassesIsChecked($Klass)"
+            value="true"} checked="checked" {/eq}/>
 
+            <label for="klass_id_{$Klass->id}">{$Klass->name}</label><br>
+            {/volist}
+        </div>
+        <br>
+
+        <!--选择所教的课程-->
+        <div class="form-group">
+            <label>课程：</label><br>
+                {volist name="courses" id="Course"}
+                <input type="checkbox" name="course_id[]" id="course_id_{$Course->id}" value="{$Course->id}"
+                {eq name="Teacher->getCoursesIsChecked($Course)" value = "true"} checked="checked" {/eq}>
+                <label for="course_id_{$Course->id}">{$Course->name}</label><br>
+                {/volist}
+        </div>
+        <br><br><br>
+        <button type="submit" class="btn btn-default" style="margin-left: 100px;">保存</button>
+    </form>
 
 </div>
 {/block}
