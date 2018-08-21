@@ -46,7 +46,6 @@ class StudentController extends Controller
           'secheduleList'=>$secheduleList,
           'Klasses'=>Klass::select(),
           'Courses'=>Course::select(),
-          'currentSemester'=>Semester::currentSemester(Semester::select()),
           'currentSemester'=>$this->currentSemester,
           'currentWeekorder'=>$this->currentWeekorder,
           'allSemester'=>Semester::select(),

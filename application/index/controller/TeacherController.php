@@ -50,7 +50,6 @@ class TeacherController extends Controller
         $this->assign([
           'secheduleList'=>$secheduleList,
           'Klasses'=>Klass::select(),
-          'currentSemester'=>Semester::currentSemester(Semester::select()),
           'allSemester'=>Semester::select(),
           'currentClassroom'=>$this->currentClassroom,
           'currentSemester'=>$this->currentSemester,
