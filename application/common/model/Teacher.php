@@ -101,6 +101,20 @@ class Teacher extends Model
     {
         return $this->hasMany('TeacherCourse');
     }
-
+    /**
+    *返回与老师有关的行程
+    *@param array $sechedules 行程数组
+    *@return Sechedule
+    *@return null 
+    */
+    public function getSelfSechedule($sechedules)
+    {
+        foreach ($sechedules as $key => $sechedule) {
+            if ($sechedule->teacher_id==$this->id) {
+                return $sechedule;
+            }
+        }
+        return null;
+    }
 
 }

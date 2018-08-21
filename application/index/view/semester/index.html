@@ -9,25 +9,54 @@
                     <form class="form-inline" action="{:url()}">
                         <div class="form-group">
                             <label class="sr-only" for="name">学期管理</label>
-                            <input name="name" type="text" class="form-control" placeholder="名称..." value="">
+                            <input name="name" type="text" class="form-control" placeholder="学期..." value="{:input('get.name')}">
                         </div>
                         <button type="submit" class="btn btn-default"><i class="glyphicon glyphicon-search"></i>&nbsp;查询</button>
                     </form>
                 </div>
                 <div class="col-md-4 text-right">
-                    <button class="btn btn-primary" data-toggle="modal" data-target="#mymodal-data"><i class="glyphicon glyphicon-plus"></i>&nbsp;增加</button>
-                    <div class="modal" id="mymodal-data" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel" aria-hidden="true">
+                    <button class="btn btn-primary" data-toggle="modal" data-target="#addSemester"><i class="glyphicon glyphicon-plus"></i>&nbsp;增加</button>
+                    <!-- 增加学期的表单 -->
+                    <div class="modal" id="addSemester" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel" aria-hidden="true">
                         <div class="modal-dialog">
                             <div class="modal-content">
                                 <div class="modal-header">
-                                    <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                                    <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only"></span></button>
                                     <h4 class="modal-title text-left">增加学期</h4>
                                 </div>
                                 <div class="modal-body text-left">
-                                    <form action="{:url('insert')}" method="post">
-                                        <label>学期名称：</label>
-                                        <input type="text" name="name">
-                                        <button type="submit" class="btn btn-primary">保存</button> 
+                                    <form action="{:url('insert')}" method="post" class="form-inline">
+                                        <div class="form-group">
+                                            <label>学期名称：</label>
+                                            <input type="text" class="form-control" name="name">
+                                            <label>总周次:</label>
+                                            <input type="number" min="0" max="20" name="totalweek" class="form-control">
+                                        </div>
+                                        <hr>
+                                        <div class="form-group">
+                                            <label>开始时间:</label>
+                                            <input type="date" name="begintime" class="form-control" >
+                                            <label>结束时间:</label>
+                                            <input type="date" name="closetime" class="form-control">
+                                        </div>
+                                        <hr>
+                                        <div class="form-group">
+                                            <label>开始抢课时间:</label>
+                                            <input type="date" name="starttaketime" class="form-control">
+                                            <label>结束抢课时间:</label>
+                                            <input type="date" name="endtaketime" class="form-control">                             
+                                        </div>
+                                        <hr>
+                                        <div class="form-group">
+                                            <label>允许抢课周次(周):</label>
+                                            <input type="number" name="startweekorder" class="form-control" min="0" max="20"> 
+                                            <span>~~</span>
+                                            <input type="number" name="endweekorder" class="form-control" min="0" max="20">
+                                        </div>
+                                        <hr>
+                                        <div class="form-group">
+                                            <button type="submit" class="btn btn-primary" style="margin-left: 500px;">保存</button> 
+                                        </div>
                                     </form>  
                                 </div>
                             </div>
@@ -38,33 +67,79 @@
             <hr />
             <table class="table table-hover table-bordered">
                 <tr class="info">
-                    <th>ID</th>
+                    <th>序号</th>
                     <th>学期</th>
+                    <th>学期周次</th>
+                    <th>学期开始时间</th>
+                    <th>学期结束时间</th>
+                    <th>开始抢课时间</th>
+                    <th>结束抢课时间</th>
+                    <th>允许抢课周次</th>
                     <th>操作</th>
                 </tr>
                 {volist name="semesters" id="semester" key="key"}
                 <tr>
                     <td>{$key}</td>
                     <td>{$semester->getData('name')}</td>
-                    <td><a class="btn btn-sm btn-danger" href="{:url('delete?id=' . $semester->getData('id'))}"><i class="glyphicon glyphicon-trash"></i>&nbsp;删除</a>
+                    <td>{$semester->totalweek}周</td>
+                    <td>{$semester->begintime}</td>
+                    <td>{$semester->closetime}</td>
+                    <td>{$semester->starttaketime}</td>
+                    <td>{$semester->endtaketime}</td>
+                    <td><span>{$semester->startweekorder}周~{$semester->endweekorder}周</span></td>
+                    <td>
+                         {eq name="$semester->istakesemester" value="true"}
+                            <button type="button" class="btn btn-sm btn-info" disabled="disabled"><i class="glyphicon glyphicon-asterisk"></i>&nbsp;当前开放选课学期</button>
+                         {else/}
+                            <a class="btn btn-sm btn-info" href="{:url('setTakeSemester?id='.$semester->getData('id'))}"><i class="glyphicon glyphicon-asterisk"></i>&nbsp;设为开放选课学期</a>
+                         {/eq}
+                         <button class="btn btn-primary" data-toggle="modal" data-target="#editSemester{$key}"><i class="glyphicon glyphicon-plus"></i>&nbsp;编辑</button>
+                         <a class="btn btn-sm btn-danger" href="{:url('delete?id=' . $semester->getData('id'))}"><i class="glyphicon glyphicon-trash"></i>&nbsp;删除</a>
 
-                    <button type="button" class="btn btn-sm btn-primary" data-toggle="modal" data-target=".bs-example-modal-lg{$key}"><i class="glyphicon glyphicon-pencil"></i>&nbsp;编辑</button>
+                   
                      
-                    <div class="modal fade bs-example-modal-lg{$key}" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel">
-                        <div class="modal-dialog modal-lg{$key}" role="document">
+                    <div class="modal" id="editSemester{$key}" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel" aria-hidden="true">
+                        <div class="modal-dialog">
                             <div class="modal-content">
                                 <div class="modal-header">
-                                    <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
-                                    <h4 class="modal-title">编辑学期</h4>
+                                    <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only"></span></button>
+                                    <h4 class="modal-title text-left">编辑学期</h4>
                                 </div>
-
-                                <div class="modal-body">
-                                    <form action="{:url('update')}" method="post">
-                                        <label>学期名称：</label>
-                                        <input type="hidden" name="id" value="{$semester->getData('id')}" />
-                                        <input type="text" name="name" id="name" value="{$semester->getData('name')}">
-                                        <button type="submit" class="btn btn-primary">保存</button>
-                                    </form>
+                                <div class="modal-body text-left">
+                                    <form action="{:url('update')}" method="post" class="form-inline">
+                                        <div class="form-group">
+                                            <input type="hidden" name="id" value="{$semester->id}">
+                                            <label>学期名称：</label>
+                                            <input type="text" class="form-control" name="name" value="{$semester->name}">
+                                            <label>总周次:</label>
+                                            <input type="number" min="0" max="20" name="totalweek" class="form-control" value="{$semester->totalweek}">
+                                        </div>
+                                        <hr>
+                                        <div class="form-group">
+                                            <label>开始时间:</label>
+                                            <input type="date" name="begintime" class="form-control" value="{$semester->getDate($semester->getData('begintime'))}">
+                                            <label>结束时间:</label>
+                                            <input type="date" name="closetime" class="form-control" value="{$semester->getDate($semester->getData('closetime'))}">
+                                        </div>
+                                        <hr>
+                                        <div class="form-group">
+                                            <label>开始抢课时间:</label>
+                                            <input type="date" name="starttaketime" class="form-control" value="{$semester->getDate($semester->getData('starttaketime'))}">
+                                            <label>结束抢课时间:</label>
+                                            <input type="date" name="endtaketime" class="form-control" value="{$semester->getDate($semester->getData('endtaketime'))}">
+                                        </div>
+                                        <hr>
+                                        <div class="form-group">
+                                            <label>允许抢课周次(周):</label>
+                                            <input type="number" name="startweekorder" class="form-control" min="0" max="20" value="{$semester->startweekorder}"> 
+                                            <span>~~</span>
+                                            <input type="number" name="endweekorder" class="form-control" min="0" max="20" value="{$semester->endweekorder}">
+                                        </div>
+                                        <hr>
+                                        <div class="form-group">
+                                            <button type="submit" class="btn btn-primary" style="margin-left: 500px;">保存</button> 
+                                        </div>
+                                    </form>  
                                 </div>
                             </div>
                         </div>

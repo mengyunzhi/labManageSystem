@@ -1,4 +1,5 @@
 <?php
+
 /*
  * sechedule和klass 的中间表的模型
  * */

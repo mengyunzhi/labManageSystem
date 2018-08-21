@@ -1,6 +1,8 @@
 <?php
 namespace app\index\controller;
 use think\Controller;    //引用controller
+use app\common\model\Sechedule;
+use app\common\model\Semester; 
 use app\common\model\Classroom;  // 教室模型
 use think\facade\Request;			// 引用Request
 class ClassroomController extends Controller 
@@ -36,17 +38,15 @@ class ClassroomController extends Controller
     {
     	// 接收传入数据
         $postData = Request::instance()->post();
-
-    	// 实例化Classroom空对象
         $Classroom = new Classroom();
-        
-        // 为对象的属性赋值
         $Classroom->name = $postData['name'];
-
         // 新增对象至数据表
-        $Classroom->save();
-        return $this->success('教室' . $Classroom->name . '新增成功。', url('index'));
-
+        if ($Classroom->save()){
+            $this->newsechedule($Classroom->id);
+            return $this->success('教室' . $Classroom->name . '新增成功。', url('index'));
+        }else{
+            return $this->error("保存失败");
+        }
     }
 
 
@@ -54,7 +54,6 @@ class ClassroomController extends Controller
     {
     	// 获取pathinfo传入的ID值.
         $id = Request::instance()->param('id/d'); // “/d”表示将数值转化为“整形”
-
         if (is_null($id) || 0 === $id) {
             return $this->error('未获取到ID信息');
         }
@@ -68,7 +67,7 @@ class ClassroomController extends Controller
         }
 
         // 删除对象
-        if (!$Classroom->delete()) {
+        if ($this->deletesechedule($Classroom->id)&&!$Classroom->delete()) {
             return $this->error('删除失败:' . $Classroom->getError());
         }
 
@@ -89,5 +88,44 @@ class ClassroomController extends Controller
         // 更新
         $Classroom->save();
         return $this->success('操作成功', url('index'));
+    }
+
+    /**
+    *删除有关教室行程
+    *@param int $classId 删除的教室id
+    *@return boolean
+    */
+    public function deletesechedule($classId)
+    {
+        if (Sechedule::where("classroom_id","=",$classId)->delete()) {
+            return true;
+        }else{
+            return false;
+        }
+    }
+    /**
+    *增加教室行程
+    *@param int $classId 增加教室id
+    */
+    public function newsechedule($classId)
+    {
+        $allSemester=Semester::select();
+        foreach ($allSemester as $key => $semester) {
+                for($i=1;$i<=$semester->getData('totalweek');$i++){
+                    for($week=1;$week<=7;$week++){
+                        for($node=1;$node<=5;$node++){                         
+                                $sechedule=new Sechedule();
+                                $sechedule->weekorder=$i;
+                                $sechedule->week=$week;
+                                $sechedule->node=$node;
+                                $sechedule->classroom_id=$classId;
+                                $sechedule->semester_id=$semester->getData('id');
+                                $sechedule->save();
+                        }
+                    }
+                }   
+        }
+        return;
+        
     }
 }
