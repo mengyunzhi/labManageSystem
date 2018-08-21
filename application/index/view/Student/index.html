@@ -21,7 +21,7 @@
 	    <!-- Collect the nav links, forms, and other content for toggling -->
 	    <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
 	      	<ul class="nav navbar-nav navbar-right">
-	      		<li><a href="#">{$Student->name}同学</a></li>
+	      		<li><a href="#">{$student->name}同学</a></li>
 		       	<li><a href="{:url('student')}">个人信息修改</a></li>
 		       	<li><a href="#">注销登录</a></li>
 	        </ul>
@@ -29,40 +29,30 @@
   	</div><!-- /.container-fluid -->
 </nav>
 <div class="row">
-    <div class="col-md-12 header">当前周次:第{$onWeekly}周</div>
+    <div class="col-md-12 header">当前课表:{$currentSemester->name}第{$currentWeekorder}周</div>
 </div>
 <div class="container">
-    <!-- 搜索功能-->
     <div class="row">
-        <h3>按条件查询:</h3>
-    </div>
-    <div class="row blacknav">
         <div class="col-md-12">
             <form action="{:url('index')}" method="post">
                 <div class="row">
-                    <div class="col-md-3">
+                    <div class="col-md-4">
                         <label>学期:</label>
-                        <select class="btn btn-default dropdown-toggle">
-                            <option>第一学期</option>
-                        </select>
-                    </div>
-                    <div class="col-md-3">
-                        <label>周次：</label>
-                        <select class="btn btn-default dropdown-toggle" name="weekly">
-                            <option value="1" {eq name="onWeekly" value="1" } selected="selected" {/eq}>第一周</option>
-                            <option value="2" {eq name="onWeekly" value="2" } selected="selected" {/eq}>第二周</option>
-                            <option value="3" {eq name="onWeekly" value="3" } selected="selected" {/eq}>第三周</option>
-                        </select>
-                    </div>
-                    <div class="col-md-3">
-                        <label>选择教室：</label>
-                        <select class="btn btn-default dropdown-toggle" name="classroom_num">
-                            {volist name="allClassroom" id="classroom"}
-                            <option value="{$classroom->id}" {eq name="onClassroom" value="$classroom->id" } selected="selected" {/eq}>{$classroom->name}</option>
+                        <select class="btn btn-default dropdown-toggle" name="semester_id">
+                            {volist name="allSemester" id="semester"}
+                                <option value="{$semester->id}" {eq name="$semester->id" value="$currentSemester->id"} selected="selected"{/eq}>{$semester->name}</option>
                             {/volist}
                         </select>
                     </div>
-                    <div class="col-md-3">
+                    <div class="col-md-4">
+                        <label>周次：</label>
+                        <select class="btn btn-default dropdown-toggle" name="weekorder">
+                            {for start="1" end="$currentSemester->totalweek+1" }
+                                <option value="{$i}" {eq name="$i" value="$currentWeekorder"} selected="selected" {/eq}>第{$i}周</option>
+                            {/for}
+                        </select>
+                    </div>
+                    <div class="col-md-4">
                         <button type="submit" class="btn btn-default">搜索</button>
                     </div>
                 </div>
@@ -85,21 +75,26 @@
                     <th>星期六</th>
                     <th>星期日</th>
                 </tr>
-                {volist name="weekList" id="nodeList" key="key"}
-                <tr>
-                    <td>第{$key}节</td>
-                    {volist name="nodeList" id="weekly"}
-                    <td style="text-align: center;">
-                        {eq name="weekly->teacher_id" value="0"} 还没有课{else/}
-                        <span style="margin-right: 10px;">{$weekly->teacher->name}</span><span>课程{$weekly->course->name}<br>
-                            {volist name="Klasses" id="Klass"}
-                              {eq name="$weekly->getKlassesIsChecked($Klass)" value="true"}<span>{$Klass->name}</span>{else/}{/eq} 
-                            {/volist}
-                        </span>
-                        {/eq}
-                    </td>
-                    {/volist}
-                </tr>
+                {volist name="secheduleList" id="sechedules" key="key"}
+                    <tr>
+                        <td>第{$key}节</td>
+                        {volist name="sechedules" id="sechedule"}
+                            <td style="text-align: center;">
+                                {eq name="sechedule" value="$null"}
+                                    <span>无课</span>
+                                {else/}
+                                    <span>课程:{$sechedule->course->name}</span>
+                                    <br>
+                                    <span>教室:{$sechedule->classroom->name}</span>
+                                    <br>
+                                    <span>班级:</span>
+                                    {volist name="Klasses" id="Klass"}
+                                        {eq name="$sechedule->getKlassesIsChecked($Klass)" value="true"}<span>{$Klass->name}</span>{else/}{/eq}
+                                    {/volist}     
+                                {/eq}
+                            </td>
+                        {/volist}
+                    </tr>
                 {/volist}
             </table>
         </div>

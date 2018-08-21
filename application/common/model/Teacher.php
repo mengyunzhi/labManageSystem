@@ -12,6 +12,11 @@ use think\Model;
 class Teacher extends Model
 {
 
+    //对course进行多对多关联
+    public function courses()
+    {
+        return $this->belongsToMany('Course','teacher_course');
+    }
 
     /*
      * 获取是否存在老师和课程的相关关联记录
@@ -31,18 +36,21 @@ class Teacher extends Model
         $TeacherCourse = TeacherCourse::get($map);
 
         //判断是否存在
-        if (is_null($TeacherCourse)) {
+        if (is_null($TeacherCourse))
+        {
             return false;
-        } else {
+        }else{
             return true;
         }
     }
 
 
+
+
     //对klass进行多对多关联
     public function klasses()
     {
-        return $this->belongsToMany('Klass', 'teacher_klass');
+        return $this->belongsToMany('Klass','teacher_klass');
     }
 
     /*
@@ -64,13 +72,19 @@ class Teacher extends Model
         $teacherKlass = TeacherKlass::get($map);
 
         //判断是否存在
-        if (is_null($teacherKlass)) {
+        if (is_null($teacherKlass)){
             return false;
-        } else {
+        }else{
             return true;
         }
     }
 
+
+    //对time进行多对多关联
+    public function times()
+    {
+        return $this->belongsToMany('Time','teacher_time');
+    }
 
     /*
      * 老师与老师班级中间表的一对多关联
@@ -85,40 +99,22 @@ class Teacher extends Model
      * */
     public function teacherCourse()
     {
-        return $this->hasMany('Course');
+        return $this->hasMany('TeacherCourse');
     }
-
-    //teache和college的多对多关联
-    public function colleges()
+    /**
+    *返回与老师有关的行程
+    *@param array $sechedules 行程数组
+    *@return Sechedule
+    *@return null 
+    */
+    public function getSelfSechedule($sechedules)
     {
-        return $this->belongsToMany('College', 'teacher_college');
+        foreach ($sechedules as $key => $sechedule) {
+            if ($sechedule->teacher_id==$this->id) {
+                return $sechedule;
+            }
+        }
+        return null;
     }
 
-    //teacher和grade进行多对多关联
-    public function grades()
-    {
-        return $this->belongsToMany('Grade', 'teacher_grade');
-    }
-
-
-    //对teacher和major进行多对多关联
-    public function majors()
-    {
-        return $this->belongsToMany('Major', 'teacher_major');
-    }
-
-    public function teacherCollege()
-    {
-        return $this->hasMany('TeacherCollege');
-    }
-
-    public function teacherMajor()
-    {
-        return $this->hasMany('TeacherMajor');
-    }
-
-    public function teacherGrade()
-    {
-        return $this->hasMany('TeacherGrade');
-    }
 }

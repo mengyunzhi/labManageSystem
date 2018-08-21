@@ -63,16 +63,17 @@
                                     {/eq}
                             	</div>
                             {else/}
-                            <span>上课信息:{$sechedule->teacher->name}</span>  
-                            <span>{$sechedule->course->name}</span>
+                            <span>教师:{$sechedule->teacher->name}</span>
+                            <br>  
+                            <span>课程:{$sechedule->course->name}</span>
                             <br>
-                            <span>所上班级:</span>
+                            <span>班级:</span>
                             {volist name="Klasses" id="Klass"}
                                 {eq name="$sechedule->getKlassesIsChecked($Klass)" value="true"}<span>{$Klass->name}</span>{else/}{/eq}
                             {/volist}
                             <br>
                                 {eq name="$sechedule->isChangeLesson()" value="true"}
-                                    <span class="glyphicon glyphicon-circle-arrow-right" aria-hidden="true"></span><span style="border-bottom: 1px; text-decoration:underline;color: gray;">换课中</span>
+                                    <span style="border-bottom: 1px; text-decoration:underline;color: gray;">换课中</span>
                                 {else/}
                                     {eq name="$sechedule->teacher_id" value="$teacher->id"}
     			                        <div>
