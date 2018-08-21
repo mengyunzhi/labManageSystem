@@ -4,6 +4,9 @@ namespace app\index\controller;
 
 use app\common\model\Changelesson;
 use app\common\model\Classroom;
+use app\common\model\College;
+use app\common\model\Grade;
+use app\common\model\Major;
 use app\common\model\Semester;
 use app\common\model\Course;
 use app\common\model\Klass;
@@ -56,8 +59,7 @@ class TeacherController extends Controller
         $this->tmajorsIds = $this->teacher->teacherMajor()->where($map)->select();
         $this->tcollegesIds = $this->teacher->teacherCollege()->where($map)->select();
         $this->tgradesIds = $this->teacher->teacherGrade()->where($map)->select();
-        $this->tcourses = $this->teacher->teacherCourse()->where($map)->select();
-
+        $this->tcourses = $this->teacher->course()->where($map)->select();
 
     }
 
@@ -332,52 +334,57 @@ class TeacherController extends Controller
     //抢课功能
     public function takeLesson()
     {
-      
-            //接收数据
-            $teacherId = Request::instance()->post('teacherId/d');
-            $timeClassroomId = Request::instance()->post('timeClassroomId/d');
-            $courseId = Request::instance()->post('courseId/d');
-            $klassIds = (array)Request::instance()->post('KlassIds');
 
-           
-            if (($teacherId === 0 && $timeClassroomId === 0 && is_null($klassIds) && $courseId === 0))
+        //接收数据
+        $teacherId = Request::instance()->post('teacherId/d');
+        $secheduleId = Request::instance()->post('secheduleId/d');
+        $courseId = Request::instance()->post('courseId/d');
+        $klassIds = (array)Request::instance()->post('KlassIds');
+
+        if (($teacherId === 0 && $secheduleId === 0 && is_null($klassIds) && $courseId === 0)) {
+            throw new \Exception('id有误', 1);
+        }
+
+        //得到timeClassroom对象
+        $Sechedule = Sechedule::get($secheduleId);
+
+        if (is_null($Sechedule)) {
+            throw new \Exception('不存在处于这个时间段的这个教室', 1);
+        }
+
+        $theTameTimeSechedules = $Sechedule->findTheSameTimeSechedule($Sechedule);
+
+        //判断相同时间段内老师或学生是否在其他地方上课
+        foreach ($theTameTimeSechedules as $theTameTimeSechedule)
+        {
+            if ($Sechedule->isExist($theTameTimeSechedule,$teacherId,$klassIds))
             {
-                throw new \Exception('id有误',1);
+                return $this->error('抢课失败，您或学生当前时间在其他地方已经有课了');
             }
+        }
 
-            //得到timeClassroom对象
-            $Sechedule = Sechedule::get($timeClassroomId);
 
-            if (is_null($Sechedule))
-            {
-                throw new \Exception('不存在处于这个时间段的这个教室',1);
-            }
+        //存数据
+        $Sechedule->teacher_id = $teacherId;
+        $Sechedule->course_id = $courseId;
 
-            //存数据
-            $Sechedule->teacher_id = $teacherId;
-            $Sechedule->course_id = $courseId;
+
+
         //判断添加的关联是否重复
-            foreach ($klassIds as $id)
-            {
-                $Klass = Klass::get($id);
-                if (!$Sechedule->getKlassesIsChecked($Klass))
-                {
+        foreach ($klassIds as $id) {
+            $Klass = Klass::get($id);
+            if (!$Sechedule->getKlassesIsChecked($Klass)) {
 
-                    $Sechedule->klasses()->save($id);
-              
-                 }
-            }
-
-            $Sechedule->save();
+                $Sechedule->klasses()->save($id);
 
             }
         }
 
-        $TimeClassroom->save();
+
+        $Sechedule->save();
 
         //成功返回提示
         return $this->success('恭喜，抢课成功', 'index');
-
 
     }
           

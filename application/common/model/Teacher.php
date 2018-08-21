@@ -12,41 +12,6 @@ use think\Model;
 class Teacher extends Model
 {
 
-    //对course进行多对多关联
-    public function courses()
-    {
-        return $this->belongsToMany('Course','teacher_course');
-    }
-
-    /*
-     * 获取是否存在老师和课程的相关关联记录
-     * */
-    public function getCoursesIsChecked(Course &$Course)
-    {
-        //取id
-        $teacherId = $this->id;
-        $courseId = $Course->id;
-
-        //定制查询条件
-        $map = array();
-        $map['teacher_id'] = $teacherId;
-        $map['course_id'] = $courseId;
-
-        //从关联表中取信息
-        $TeacherCourse = TeacherCourse::get($map);
-
-        //判断是否存在
-        if (is_null($TeacherCourse))
-        {
-            return false;
-        }else{
-            return true;
-        }
-    }
-
-
-
-
     //对klass进行多对多关联
     public function klasses()
     {
@@ -97,9 +62,9 @@ class Teacher extends Model
     /*
      * 老师与课程中间表的一对多关联
      * */
-    public function teacherCourse()
+    public function course()
     {
-        return $this->hasMany('TeacherCourse');
+        return $this->hasMany('Course');
     }
     /**
     *返回与老师有关的行程
@@ -117,4 +82,21 @@ class Teacher extends Model
         return null;
     }
 
+    //teacher和major的关联
+    public function teacherMajor()
+    {
+        return $this->hasMany('TeacherMajor');
+    }
+
+    //teahcer和grade的关联
+    public function teacherGrade()
+    {
+        return $this->hasMany('TeacherGrade');
+    }
+
+    //teacher和College的关联
+    public function teacherCollege()
+    {
+        return $this->hasMany('TeacherCollege');
+    }
 }

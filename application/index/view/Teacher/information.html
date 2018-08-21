@@ -193,26 +193,7 @@
     </div>
 </form>
 
-            <label>班级：</label><br>
-            {volist name="klasses" id="Klass"}
-            <input type="checkbox" name="klass_id[]" id="klass_id_{$Klass->id}"
-                   value="{$Klass->id}" {eq name="Teacher->getKlassesIsChecked($Klass)"
-            value="true"} checked="checked" {/eq}/>
 
-            <label for="klass_id_{$Klass->id}">{$Klass->name}</label><br>
-            {/volist}
-        </div>
-        <br>
-
-        <!--选择所教的课程-->
-        <div class="form-group">
-            <label>课程：</label><br>
-                {volist name="courses" id="Course"}
-                <input type="checkbox" name="course_id[]" id="course_id_{$Course->id}" value="{$Course->id}"
-                {eq name="Teacher->getCoursesIsChecked($Course)" value = "true"} checked="checked" {/eq}>
-                <label for="course_id_{$Course->id}">{$Course->name}</label><br>
-                {/volist}
-        </div>
         <br><br><br>
         <button type="submit" class="btn btn-default" style="margin-left: 100px;">保存</button>
     </form>

@@ -53,10 +53,6 @@
                     {volist name="sechedules" id="sechedule"}
                         <td style="text-align: center;">
                         	{eq name="sechedule->teacher_id" value="$null"}
-
-                            	<div style="text-align: center;">
-                            		<span>无课 可以<span class="glyphicon glyphicon-circle-arrow-right" aria-hidden="true"></span><a data-toggle="modal" data-target="#TakeLessons" data-whatever="{$sechedule->id}">抢课</a></span>
-                                </div>
                             	<div>
                             		<span>无课</span>
                                     <br>

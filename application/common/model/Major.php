@@ -7,5 +7,5 @@ use think\Model;
 class Major extends Model
 {
 
-    //进行
+
 }
