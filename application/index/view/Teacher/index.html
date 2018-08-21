@@ -146,9 +146,9 @@
 
 <script type="text/javascript">
 $('#ChangeLessons').on('show.bs.modal', function(event) {
-    var button = $(event.relatedTarget)
-    var recipient = button.data('whatever')
-    var modal = $(this)
+    var button = $(event.relatedTarget);
+    var recipient = button.data('whatever');
+    var modal = $(this);
     modal.find('.modal-body input').val(recipient)
 })
 </script>
