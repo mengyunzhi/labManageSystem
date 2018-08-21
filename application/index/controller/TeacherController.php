@@ -34,23 +34,22 @@ class TeacherController extends Controller
         $this->currentWeekorder=$this->currentSemester->getWeekorder();
         $this->currentClassroom=Classroom::get(1);
         $this->teacher=Teacher::get(2);
-        $this->setRange($this->currentSemester->id,$this->currentWeekorder,$this->currentClassroom->id);
+        $this->setRange($this->currentSemester->id,$this->currentWeekorder);
     }
     /*
-    *显示查询首页
+    *显示教师课表
     */
     public function index()
     { 
         $postData=Request::instance()->post();
         if (!empty($postData)) {
-          $this->setRange((int)$postData['semester_id'],(int)$postData['weekorder'],(int)$postData['classroom_id']);
+          $this->setRange((int)$postData['semester_id'],(int)$postData['weekorder']);
         }
-        $secheduleList=$this->editSechedule();
+        $secheduleList=$this->editIndexSechedule();
         //像v层传送老师数据
         $this->assign([
           'secheduleList'=>$secheduleList,
           'Klasses'=>Klass::select(),
-          'Courses'=>Course::select(),
           'currentSemester'=>Semester::currentSemester(Semester::select()),
           'allSemester'=>Semester::select(),
           'currentClassroom'=>$this->currentClassroom,
@@ -68,16 +67,39 @@ class TeacherController extends Controller
     *@param int $weekorder 查询的周次
     *@param int $classroomId 查询的教室id
     */
-    public function setRange($semesterId,$weekorder,$classroomId)
+    public function setRange($semesterId,$weekorder,$classroomId=null)
     {
       $this->currentSemester=Semester::get($semesterId);
       $this->currentWeekorder=$weekorder;
       $this->currentClassroom=Classroom::get($classroomId);
-      $this->sechedule=Sechedule::where('semester_id','=',$semesterId)->where('weekorder','=',$weekorder)->where('classroom_id','=',$classroomId);
+      $this->sechedule=Sechedule::where('semester_id','=',$semesterId)->where('weekorder','=',$weekorder);
+      if ($classroomId!==null) {
+        $this->sechedule->where('classroom_id','=',$classroomId);
+      }
     }
-
     /**
-    *获取行程 编辑行程格式
+    *编辑首页课表行程格式
+    *@return array
+    */
+    public function editIndexSechedule()
+    {
+      $secheduleList=array();
+        for($i=1;$i<=5;$i++){
+            $nodeList=array();
+            $temp1=clone $this->sechedule;
+            $temp1=$temp1->where('node','=',$i);
+            for ($j=1; $j<=7 ;$j++) {
+                $temp2=clone $temp1; 
+                $temp2=$temp2->where('week','=',$j)->select();       
+                $nodeList[$j]=$this->teacher->getSelfSechedule($temp2);
+            }
+            ksort($nodeList);
+            array_push($secheduleList, $nodeList);
+        }
+        return $secheduleList;
+    }
+    /**
+    *获取行程 编辑抢课行程格式
     *@return array
     */
     public function editSechedule(){
@@ -104,6 +126,7 @@ class TeacherController extends Controller
       // 判断是否为选课系统开放时间
       $time=time();
       if($time>=$this->currentSemester->getData('starttaketime')&&$time<=$this->currentSemester->getData('endtaketime')){
+          $this->setRange($this->currentSemester->id,$this->currentWeekorder,1);
           $this->currentSemester=Semester::getOpenSemester(Semester::select());
           $postData=Request::instance()->post();
           if (!empty($postData)) {

@@ -12,14 +12,19 @@ class Sechedule extends Model
     {
         return $this->belongsToMany('Klass');
     }
-
-
     public function teacher(){
     	return $this->belongsTo('Teacher');
     }
     public function course(){
     	return $this->belongsTo('Course');
-    }	
+    }
+    /**
+    *行程与教室一对多关联
+    */	
+    public function classroom()
+    {
+        return $this->belongsTo('Classroom');
+    }
     /**
     *判断行程是否在换课中
     *@return boolean
