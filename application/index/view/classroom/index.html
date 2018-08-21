@@ -38,7 +38,7 @@
             <hr />
             <table class="table table-hover table-bordered">
                 <tr class="info">
-                    <th>ID</th>
+                    <th>序号</th>
                     <th>名称</th>
                     <th>操作</th>
                 </tr>
@@ -46,9 +46,11 @@
                 <tr>
                     <td>{$key}</td>
                     <td>{$classroom->getData('name')}</td>
-                    <td><a class="btn btn-sm btn-danger" href="{:url('delete?id=' . $classroom->getData('id'))}"><i class="glyphicon glyphicon-trash"></i>&nbsp;删除</a>
+                    <td>
+                        <button type="button" class="btn btn-sm btn-primary" data-toggle="modal" data-target=".bs-example-modal-lg{$key}"><i class="glyphicon glyphicon-pencil"></i>&nbsp;编辑</button>
+                        <a class="btn btn-sm btn-danger" href="{:url('delete?id=' . $classroom->getData('id'))}"><i class="glyphicon glyphicon-trash"></i>&nbsp;删除</a>
 
-                    <button type="button" class="btn btn-sm btn-primary" data-toggle="modal" data-target=".bs-example-modal-lg{$key}"><i class="glyphicon glyphicon-pencil"></i>&nbsp;编辑</button>
+                    
                      
                     <div class="modal fade bs-example-modal-lg{$key}" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel">
                         <div class="modal-dialog modal-lg{$key}" role="document">

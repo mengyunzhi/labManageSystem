@@ -2,11 +2,10 @@
 namespace app\common\model;
 use think\Model;
 
-
 /**
- * 课程
+ * 行程表
  */
-class Course extends Model
+class SecheduleKlass extends Model
 {
-	
+
 }

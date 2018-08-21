@@ -2,11 +2,10 @@
 namespace app\common\model;
 use think\Model;
 
-
 /**
- * 课程
- */
-class Course extends Model
+*换课的申请表
+*/
+class Changelesson extends Model
 {
 	
 }

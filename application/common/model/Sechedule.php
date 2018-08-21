@@ -1,26 +1,44 @@
 <?php
 namespace app\common\model;
 use think\Model;
-use app\common\model\TimeclassroomKlass;
 
 /**
  * 时间教室表
  */
-class Timeclassroom extends Model
+class Sechedule extends Model
 {
     //
 	public function klasses()
     {
         return $this->belongsToMany('Klass');
     }
-
-
     public function teacher(){
     	return $this->belongsTo('Teacher');
     }
     public function course(){
     	return $this->belongsTo('Course');
-    }	
+    }
+    /**
+    *行程与教室一对多关联
+    */	
+    public function classroom()
+    {
+        return $this->belongsTo('Classroom');
+    }
+    /**
+    *判断行程是否在换课中
+    *@return boolean
+    */
+    public function isChangeLesson()
+    {
+        $applySechedule=Changelesson::get(['applysechedule_id'=>$this->id]);
+        $targetSechedule=Changelesson::get(['targetsechedule_id'=>$this->id]);
+        if(isset($applySechedule)||isset($targetSechedule)){
+            return true;
+        }else{
+            return false;
+        }
+    }
 
     //判断中间表中是否存在该关联
     public function getKlassesIsChecked(Klass &$Klass)
@@ -33,10 +51,10 @@ class Timeclassroom extends Model
         //定制查询条件
         $map = array();
         $map['klass_id'] = $klassId;
-        $map['timeclassroom_id'] = $timeClassroomId;
+        $map['sechedule_id'] = $timeClassroomId;
 
         //从关联表中取信息
-        $TimeClassroomKlass = TimeclassroomKlass::get($map);
+        $TimeClassroomKlass = SecheduleKlass::get($map);
 
         //判断是否存在
         if (is_null($TimeClassroomKlass)) {
@@ -45,18 +63,6 @@ class Timeclassroom extends Model
           return true;
         }
 
-    }
-
-    //传入周次，星期，节次，教室,查询在timeclassroom表里对应的对象并返回该对象的id
-    public static function findtarget($weekly,$week,$node,$classroom_num)
-    {
-        $target = Timeclassroom::where([
-          ['weekly','=',$weekly],
-          ['week','=',$week],
-          ['node','=',$node],
-          ['classroom_num','=',$classroom_num]
-      ])->select();
-        return $target[0]['id'];
     }
 
     //找到timeclassroom_klass表里所有timeclassroom_id为id的对象
@@ -96,5 +102,68 @@ class Timeclassroom extends Model
         //保存
         $ChangeLesson ->save();
         $TargetLesson ->save();
+    }
+
+    /*
+    * 找到相同时间的其他教室
+    * */
+    public function findTheSameTimeSechedule(Sechedule &$Sechedule)
+    {
+        //定制查询条件
+        $map = array();
+        $map['weekorder'] = $Sechedule->weekorder;
+        $map['node'] = $Sechedule->node;
+        $map['week'] = $Sechedule->week;
+        $map['semester_id'] = $Sechedule->semester_id;
+
+        //找到相同时间的教室
+        $sechedules = $Sechedule->where($map)->select();
+
+        return $sechedules;
+    }
+
+    /*
+     * 判断老师和学生是否在这个教室
+     * */
+    public function isExist(Sechedule &$Sechedule, $teacherId, $klassIds)
+    {
+        //定制查询当前教室的班级的条件
+        $map['sechedule_id'] = $Sechedule->id;
+        $flag = false;
+        //找到当前教室的班级
+        $currentSechedules = array();
+        $currentSechedules = SecheduleKlass::where($map)->select();
+
+        //判断教师在不在
+        if (!($Sechedule->teacher_id === $teacherId))
+        {
+
+            if (!empty($currentSechedules))
+            {
+                return false;
+            }
+
+            //判断学生在不在
+            foreach ($klassIds as $klassId)
+            {
+
+                foreach ($currentSechedules as $currentSechedule)
+                {
+
+                    if ($currentSechedule->klass_id === $klassId)
+                    {
+
+                        $flag = false;
+                    }
+
+                    //判断标记
+                    if (!$flag)
+                        return true;
+                }
+            }
+        }
+
+        //存在一样的老师或学生
+        return true;
     }
 }
