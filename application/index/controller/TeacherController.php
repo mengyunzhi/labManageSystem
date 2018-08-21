@@ -1,4 +1,5 @@
 <?php
+
 namespace app\index\controller;
 use app\common\model\Classroom;
 use app\common\model\Semester;
@@ -10,38 +11,60 @@ use think\Controller;
 use think\facade\Request;
 
 /**
- * 老师选课页面和个人信息页面的功能 
+ * 老师选课页面和个人信息页面的功能
  */
-
 class TeacherController extends Controller
 {
     private $sechedule;/*行程范围 @param where查询后返回值*/
 
     private $currentSemester;/*当前查询学期 默认为本学期 @param Semester*/
-    
+
     private $currentWeekorder;/*当前查询周次 默认本周次 @param int*/
-    
+
     private $currentClassroom;/*当前查询教室 @param Classroom*/
-    
+
     private $teacher;/*登录的教师 @param Teacher*/
-    
+
+    private $tklassIds;/*登录教师教的班级id*/
+
+    private $tmajorsIds;//登陆教师教的的专业的id
+
+    private $tcollegesIds;//登录教师教的学院的id
+
+    private $tgradesIds;//登录教师教的年级的id
+
+    private $tcourses;//登录教师教的课程
+
     /**
-    *构造函数 初始化查询条件
-    */
-    public function __construct(){
+     *构造函数 初始化查询条件
+     */
+    public function __construct()
+    {
         parent::__construct();
-        $this->currentSemester=Semester::currentSemester(Semester::select());
-        $this->currentWeekorder=$this->currentSemester->getWeekorder();
-        $this->currentClassroom=Classroom::get(1);
-        $this->teacher=Teacher::get(2);
-        $this->setRange($this->currentSemester->id,$this->currentWeekorder);
+
+        $this->currentSemester = Semester::currentSemester(Semester::select());
+        $this->currentWeekorder = $this->currentSemester->getWeekorder();
+        $this->currentClassroom = Classroom::get(1);
+        $this->teacher = Teacher::get(1);
+        $this->setRange($this->currentSemester->id, $this->currentWeekorder, $this->currentClassroom->id);
+        //寻找和老师有关的信息的条件
+        $map['teacher_id'] = $this->teacher->id;
+        //和老师有关的信息
+        $this->tklassIds = $this->teacher->teacherKlass()->where($map)->select();
+        $this->tmajorsIds = $this->teacher->teacherMajor()->where($map)->select();
+        $this->tcollegesIds = $this->teacher->teacherCollege()->where($map)->select();
+        $this->tgradesIds = $this->teacher->teacherGrade()->where($map)->select();
+        $this->tcourses = $this->teacher->teacherCourse()->where($map)->select();
+
+
     }
+
     /*
     *显示教师课表
     */
     public function index()
-    { 
-        $postData=Request::instance()->post();
+    {
+        $postData = Request::instance()->post();
         if (!empty($postData)) {
           $this->setRange((int)$postData['semester_id'],(int)$postData['weekorder']);
         }
@@ -61,6 +84,7 @@ class TeacherController extends Controller
     }
 
     /**
+
     *根据查询条件设置范围
     *@param int $semesterId 查询的学期id
     *@param int $weekorder 查询的周次
@@ -98,6 +122,7 @@ class TeacherController extends Controller
         return $secheduleList;
     }
     /**
+
     *获取行程 编辑抢课行程格式
     *@return array
     */
@@ -106,20 +131,21 @@ class TeacherController extends Controller
         for($i=1;$i<=5;$i++){
             $nodeList=array();//节数组
             //划定每节范围
-            $temp=clone $this->sechedule;
-            $temp=$temp->where('node','=',$i);
-            $weeklyList=$temp->select();
-            foreach($weeklyList as $weekly){
-            $nodeList[$weekly['week']]=$weekly;
+            $temp = clone $this->sechedule;
+            $temp = $temp->where('node', '=', $i);
+            $weeklyList = $temp->select();
+            foreach ($weeklyList as $weekly) {
+                $nodeList[$weekly['week']] = $weekly;
             }
             ksort($nodeList);
             array_push($weekList, $nodeList);
         }
         return $weekList;
     }
+
     /**
-    *显示换课抢课界面
-    */
+     *显示换课抢课界面
+     */
     public function takelessonInterface()
     {
       // 判断是否为选课系统开放时间
@@ -150,25 +176,152 @@ class TeacherController extends Controller
       }
       
     }
+        // 判断是否为选课系统开放时间
+        $time = time();
+        if ($time >= $this->currentSemester->getData('starttaketime') && $time <= $this->currentSemester->getData('endtaketime')) {
+            $postData = Request::instance()->post();
+            if (!empty($postData)) {
+                $this->setRange($this->currentSemester->id, (int)$postData['weekorder'], (int)$postData['classroom_id']);
+            }
+            $secheduleList = $this->editSechedule();
+
+            //得到老师教的班级
+            $i = 0;
+            foreach ($this->tklassIds as $klassId) {
+                $id = $klassId->getData('klass_id');
+                if (is_null($tklasses[$i++] = Klass::get($id))) {
+                    return $this->error('找的班级不存在');
+                }
+            }
+            //防止传过来的数据为空
+            if (is_null($tklasses)) {
+                $tklasses = 0;
+            }
+
+
+            //得到老师教的专业
+            $tmajors = array();
+            $i = 0;
+            foreach ($this->tmajorsIds as $majorId) {
+                $id = $majorId->getData('major_id');
+                $tmajors[$i++] = Major::get($id);
+            }
+            if (is_null($tmajors)) {
+                $tmajors = 0;
+            }
+
+            //得到老师教的学院
+            $tcolleges = array();
+            $i = 0;
+            foreach ($this->tcollegesIds as $collegeId) {
+                $id = $collegeId->getData('college_id');
+                $tcolleges[$i++] = College::get($id);
+            }
+            if (is_null($tcolleges)) {
+                $tcolleges = 0;
+            }
+
+            //得到老师的年级
+            $tgrades = array();
+            $i = 0;
+            foreach ($this->tgradesIds as $gradeId) {
+                $id = $gradeId->getData('grade_id');
+                $tgrades[$i++] = Grade::get($id);
+            }
+            if (is_null($tgrades)) {
+                $tgrades = 0;
+            }
+
+            $this->assign([
+                'currentSemester' => $this->currentSemester,
+                'currentWeekorder' => $this->currentWeekorder,
+                'startweekorder' => $this->currentSemester->startweekorder,
+                'endweekorder' => $this->currentSemester->endweekorder,
+                'currentClassroom' => $this->currentClassroom,
+                'allClassroom' => Classroom::select(),
+                'Klasses' => Klass::select(),
+                'teacher' => $this->teacher,
+                'null' => null,
+                'secheduleList' => $secheduleList,
+                'tcolleges' => $tcolleges,
+                'tgrades' => $tgrades,
+                'tmajors' => $tmajors,
+                'tklasses' => $tklasses,
+                'tcourses' => $this->tcourses
+            ]);
+            return $this->fetch('takelessonInterface');
+        } else {
+            return $this->error("未到开放的时间");
+        }
+
+    }
 
     //进入老师的信息页面
     public function information()
     {
 
-        //得到老师信息，由于无法扫码登录，暂时以这个代替
-        $Teacher = Teacher::get(1);
-
         //得到课程和班级的信息
         $klasses = Klass::all();
-        $courses = Course::all();
+        $colleges = College::all();
+        $majors = Major::all();
+        $grades = Grade::all();
 
+
+        //得到和老师有关的信息
+        $tklass = array();
+        $i = 0;
+        foreach ($this->tklassIds as $klassId) {
+            $id = $klassId->getData('klass_id');
+            if (is_null($tklass[$i++] = Klass::get($id))) {
+                return $this->error('找的班级不存在');
+            }
+        }
+        //防止传过来的数据为空
+        if (is_null($tklass)) {
+            $tklass = 0;
+        }
+
+        $tmajors = array();
+        $i = 0;
+        foreach ($this->tmajorsIds as $majorId) {
+
+            $id = $majorId->getData('major_id');
+            $tmajors[$i++] = Major::get($id);
+        }
+        if (is_null($tmajors)) {
+            $tmajors = 0;
+        }
+
+        $tcolleges = array();
+        $i = 0;
+        foreach ($this->tcollegesIds as $collegeId) {
+            $id = $collegeId->getData('college_id');
+            $tcolleges[$i++] = College::get($id);
+        }
+        if (is_null($tcolleges)) {
+            $tcolleges = 0;
+        }
+
+        $tgrades = array();
+        $i = 0;
+        foreach ($this->tgradesIds as $gradeId) {
+            $id = $gradeId->getData('grade_id');
+            $tgrades[$i++] = Grade::get($id);
+        }
+        if (is_null($tgrades)) {
+            $tgrades = 0;
+        }
         //把信息传递给V层
-        $this->assign('klasses',$klasses);
-        $this->assign('courses',$courses);
-
-        //向v层传数据
-        $this->assign('Teacher', $Teacher);
-
+        $this->assign('tklass', $tklass);
+        $this->assign('grades', $grades);
+        $this->assign('colleges', $colleges);
+        $this->assign('majors', $majors);
+        $this->assign('klasses', $klasses);
+        $this->assign('courses', $this->tcourses);
+        $this->assign('Teacher', $this->teacher);
+        $this->assign('tmajors', $tmajors);
+        $this->assign('tcolleges', $tcolleges);
+        $this->assign('tgrades', $tgrades);
         //取回打包的数据
         return $this->fetch('information');
 
@@ -178,99 +331,35 @@ class TeacherController extends Controller
     public function saveInformation()
     {
 
-               $id = Request::instance()->post('id/d');
+         $id = Request::instance()->post('id/d');
 
 
-               //判断Id存不存在
-               if (is_null($id) || $id === 0)
-               {
-                   throw new \Exception('未获取到id信息',1);
-               }
+         //判断Id存不存在
+          if (is_null($id) || $id === 0){
+             throw new \Exception('未获取到id信息',1);
+          }
+      
+        $Teacher = Teacher::get($id);
 
-               $Teacher = Teacher::get($id);
+        //判断对象是否存在
+        if (null === $Teacher) {
+            return $this->error('未找到id为' . $id . '的对象');
+        }
 
-               //判断对象是否存在
-               if (null === $Teacher)
-               {
-                   return $this->error('未找到id为'. $id .'的对象');
-               }
-
-
-               //存储姓名
-               $Teacher->name = Request::instance()->post('name');
-               if (is_null($Teacher->save()))
-               {
-                   return $this->error('姓名更新失败' . $Teacher->getError());
-               }
-
-
-               //判断Id存不存在
-               if (is_null($id) || $id === 0)
-               {
-                   throw new \Exception('未获取到id信息',1);
-               }
-
-               $Teacher = Teacher::get($id);
-
-               //判断对象是否存在
-               if (null === $Teacher)
-               {
-                   return $this->error('未找到id为'. $id .'的对象');
-               }
-
-
-               //存储姓名
-               $Teacher->name = Request::instance()->post('name');
-               if (is_null($Teacher->save()))
-               {
-                   return $this->error('姓名更新失败' . $Teacher->getError());
-               }
-
-
-
-               //删除原有信息
-               $map = ['teacher_id'=>$id];
-               //执行删除操作，由于可能存在删除0条记录，故使用flase来进行判断
-               if (false === $Teacher->teacherCourse()->where($map)->delete())
-               {
-                   return $this->error('删除老师课程关联信息发生错误' . $Teacher->TeacherCourse()->getError());
-               }
-               $coursesIds = Request::instance()->post('course_id/a');
-
-               //对老师班级关联信息执行以上操作
-               if (!is_null($coursesIds)){
-                   if (!$Teacher->courses()->saveAll($coursesIds)){
-                       return $this->error('老师课程信息保存错误',$Teacher->courses()->getError());
-                   }
-               }
-
-               if (false === $Teacher->teacherKlass()->where($map)->delete())
-               {
-                   return $this->error('删除老师班级关联信息失败' . $Teacher->teacherKlass()->getError());
-               }
-
-               //增加数据
-               $klassIds = Request::instance()->post('klass_id/a');
-
-               if (!is_null($klassIds))
-               {
-                   if (!$Teacher->klasses()->saveAll($klassIds))
-                   {
-                       return $this->error('老师班级信息保存错误' . $Teacher->klasses()->getError());
-                   }
-               }
-
+        //存储姓名
+        $Teacher->name = Request::instance()->post('name');
+        if (is_null($Teacher->save())) {
+            return $this->error('姓名更新失败' . $Teacher->getError());
+        }
+      
                //成功返回提示
                return $this->success('更新成功',url('index'));
-
-               //获取到正常的异常，输出异常
-
     }
 
     //抢课功能
     public function takeLesson()
     {
-
+      
             //接收数据
             $teacherId = Request::instance()->post('teacherId/d');
             $timeClassroomId = Request::instance()->post('timeClassroomId/d');
@@ -315,41 +404,73 @@ class TeacherController extends Controller
         //成功返回提示
         return $this->success('恭喜，抢课成功','index');
 
-    }
 
-    //换课功能
-    public function changeLesson()
+    }
+          
+    }
+ //老师删除课程
+    public function deleteCourse()
     {
-      //接收要换课的id
-      $id = Request::instance()->post('id');
-      $ChangeLesson = TimeClassroom::get($id);//通过id，找到timeclassroom表里对应的对象
-      //通过周次，星期，节次，教室找到目标课的id
-      $weekly = Request::instance()->post('weekly');
-      $week = Request::instance()->post('week');
-      $node = Request::instance()->post('node');
-      $classroom_num = Request::instance()->post('classroom_num');     
-      $targetid = Sechedule::findtarget($weekly,$week,$node,$classroom_num);
+        try {
+            //实例化请求
+            $Request = Request::instance();
 
-      //判断是否是同一教室时间
-      if ($id == $targetid) {
-        return $this->error('换课失败，目标课不能为同一节课','index');
-      }
+            //获取id数据
+            $ids = $Request->post('ids');
 
-      //实例化目标课对象
-      $TargetLesson = Sechedule::get($targetid);
+            //删除对象
+            foreach ($ids as $id) {
+                if (!Course::destroy($id)) {
+                    return $this->error('删除失败');
+                }
+            }
 
+            //获取到tp内置异常是，直接向上抛出
+        } catch (HttpException $exception) {
+            throw $exception;
+            //获取到正常的异常时输出异常
+        } catch (\Exception $exception) {
+            return $exception->getMessage();
+        }
 
-      //判断目标教室时间是否有课，如果没课或者为同一老师的·课，直接调换
-      if ($TargetLesson->teacher_id == 0 or $TargetLesson->teacher_id == $ChangeLesson->teacher_id) 
-      {
-        Timeclassroom::exchange($id,$targetid);
-        return $this->success('换课成功','index');
-      }
-      
-      //向目标课程的教师发送消息，取得同意后再向管理员发送请求，通过后进行交换(此功能待完善)
-      else {
-        return '向目标课程的教师发送消息，取得同意后再向管理员发送请求，通过后进行交换(此功能待完善)';
-      }
+        //成功进行跳转
+        return $this->success('删除成功', url('index'));
     }
+
+
+    //老师增加班级
+    public function addKlass()
+    {
+
+    }
+
+    //老师删除班级
+    public function deleteKlass()
+    {
+        try {
+            //实例化请求
+            $Request = Request::instance();
+
+            //获取id数据
+            $klassIds = $Request->post('ids');
+
+            $teacherId = $Request->post('teacherId/d');
+
+
+            //删除对象
+            foreach ($klassIds as $id) {
+                $map['klass_id'] = $id;
+                $map['teacher_id'] = $teacherId;
+                if (!TeacherKlass::destroy($id)) {
+                    return $this->error('删除失败');
+                }
+            }
+            //获取到tp内置异常是，直接向上抛出
+        } catch (HttpException $exception) {
+            throw $exception;
+            //获取到正常的异常时输出异常
+        } catch (\Exception $exception) {
+            return $exception->getMessage();
+        }
 
 }
