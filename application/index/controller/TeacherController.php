@@ -42,7 +42,7 @@ class TeacherController extends Controller
         $this->currentSemester=Semester::currentSemester(Semester::select());
         $this->currentWeekorder=$this->currentSemester->getWeekorder();
         $this->currentClassroom=Classroom::get(1);
-        $this->teacher=Teacher::get(1);
+        $this->teacher=Teacher::get(2);
         $this->setRange($this->currentSemester->id,$this->currentWeekorder,$this->currentClassroom->id);
     }
     /*
@@ -112,27 +112,28 @@ class TeacherController extends Controller
     {
       // 判断是否为选课系统开放时间
       $time=time();
-      if ($time>=$this->currentSemester->getData('starttaketime')&&$time<=$this->currentSemester->getData('endtaketime')){
-        $postData=Request::instance()->post();
-        if (!empty($postData)) {
-          $this->setRange($this->currentSemester->id,(int)$postData['weekorder'],(int)$postData['classroom_id']);
-        }
-        $secheduleList=$this->editSechedule();
-        $this->assign([
-          'currentSemester'=>$this->currentSemester,
-          'currentWeekorder'=>$this->currentWeekorder,
-          'startweekorder'=>$this->currentSemester->startweekorder,
-          'endweekorder'=>$this->currentSemester->endweekorder,
-          'currentClassroom'=>$this->currentClassroom,
-          'allClassroom'=>Classroom::select(),
-          'Klasses'=>Klass::select(),
-          'teacher'=>$this->teacher,
-          'null'=>null,
-          'secheduleList'=>$secheduleList,
-        ]);
-        return $this->fetch('takelessonInterface');
+      if($time>=$this->currentSemester->getData('starttaketime')&&$time<=$this->currentSemester->getData('endtaketime')){
+          $this->currentSemester=Semester::getOpenSemester(Semester::select());
+          $postData=Request::instance()->post();
+          if (!empty($postData)) {
+              $this->setRange($this->currentSemester->id,(int)$postData['weekorder'],(int)$postData['classroom_id']);
+          }
+          $secheduleList=$this->editSechedule();
+          $this->assign([
+              'currentSemester'=>$this->currentSemester,
+              'currentWeekorder'=>$this->currentWeekorder,
+              'startweekorder'=>$this->currentSemester->startweekorder,
+              'endweekorder'=>$this->currentSemester->endweekorder,
+              'currentClassroom'=>$this->currentClassroom,
+              'allClassroom'=>Classroom::select(),
+              'Klasses'=>Klass::select(),
+              'teacher'=>$this->teacher,
+              'null'=>null,
+              'secheduleList'=>$secheduleList,
+          ]);
+          return $this->fetch('takelessonInterface');
       }else{
-        return $this->error("未到开放的时间");
+          return $this->error("未到开放的时间");
       }
       
     }

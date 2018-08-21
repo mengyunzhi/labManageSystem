@@ -1,9 +1,8 @@
 {extend name="Teacher/nav"} {block name="title"}梦云智选课系统{/block} {block name="content"}
-<div class="row">
-    <div class="col-md-12 header">当前时间:{$currentSemester->name}第{$currentWeekorder}周</div>
-</div>
 <div class="container">
-    <div class="row blacknav">
+    <div class="row"> <div class="col-md-12" ><h3>当前开放抢课学期:{$currentSemester->name}</h3></div></div>
+    <div class="row"><div class="col-md-12" style="margin-bottom: 20px;"><span >您的位置:</span><span>{$currentSemester->name}-></span><span>第{$currentWeekorder}周-></span><span>{$currentClassroom->name}</span></div></div>
+    <div class="row ">
         <div class="col-md-12">
             <form action="{:url('takelessonInterface')}" method="post">
                 <div class="row">
@@ -52,10 +51,16 @@
                 <tr>
                     <td>第{$key}节</td>
                     {volist name="sechedules" id="sechedule"}
-                        <td>
+                        <td style="text-align: center;">
                         	{eq name="sechedule->teacher_id" value="$null"}
-                            	<div style="text-align: center;">
-                            		<span>无课 可以<span class="glyphicon glyphicon-circle-arrow-right" aria-hidden="true"></span><a data-toggle="modal" data-target="#TakeLessons" data-whatever="{$sechedule->id}">抢课</a></span>
+                            	<div>
+                            		<span>无课</span>
+                                    <br>
+                                    {eq name="sechedule->isChangeLesson()" value="true"}
+                                        <span>换课中</span>
+                                    {else/}
+                                        <span class="glyphicon glyphicon-circle-arrow-right" aria-hidden="true"><a data-toggle="modal" data-target="#TakeLessons" data-whatever="{$sechedule->id}">抢课</a></span>
+                                    {/eq}
                             	</div>
                             {else/}
                             <span>上课信息:{$sechedule->teacher->name}</span>  
@@ -63,15 +68,19 @@
                             <br>
                             <span>所上班级:</span>
                             {volist name="Klasses" id="Klass"}
-                              {eq name="$sechedule->getKlassesIsChecked($Klass)" value="true"}<span>{$Klass->name}</span>{else/}{/eq}
+                                {eq name="$sechedule->getKlassesIsChecked($Klass)" value="true"}<span>{$Klass->name}</span>{else/}{/eq}
                             {/volist}
                             <br>
-                             	{eq name="$sechedule->teacher_id" value="$teacher->id"}
-			                        <div style="text-align: center;">
-			                        	<span class="glyphicon glyphicon-circle-arrow-right" aria-hidden="true"></span>
-			                        	<a data-toggle="modal" data-target="#ChangeLessons" data-whatever="{$sechedule->id}">换课</a>
-			                        </div> 
-                        		{/eq}
+                                {eq name="$sechedule->isChangeLesson()" value="true"}
+                                    <span class="glyphicon glyphicon-circle-arrow-right" aria-hidden="true"></span><span style="border-bottom: 1px; text-decoration:underline;color: gray;">换课中</span>
+                                {else/}
+                                    {eq name="$sechedule->teacher_id" value="$teacher->id"}
+    			                        <div>
+    			                        	<span class="glyphicon glyphicon-circle-arrow-right" aria-hidden="true"></span>
+    			                        	<a data-toggle="modal" data-target="#ChangeLessons" data-whatever="{$sechedule->id}">换课</a>
+    			                        </div> 
+                            		{/eq}
+                                {/eq}
                             {/eq}
                         </td>
                     {/volist}

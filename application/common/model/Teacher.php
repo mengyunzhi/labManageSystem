@@ -100,6 +100,7 @@ class Teacher extends Model
         return $this->belongsToMany('Grade', 'teacher_grade');
     }
 
+
     //对teacher和major进行多对多关联
     public function majors()
     {
@@ -120,7 +121,4 @@ class Teacher extends Model
     {
         return $this->hasMany('TeacherGrade');
     }
-
-
-
 }
