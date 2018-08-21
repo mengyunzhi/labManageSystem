@@ -19,16 +19,17 @@ class SemesterController extends Controller
         // 设置每页大小
         $pageSize = 5;
 
-    	  // 实例化Semester
-    	  $Semester = new Semester;
+    	// 实例化Semester
+    	$Semester = new Semester;
 		
-		    // 按条件查询数据并调用分页
-        $semesters = $Semester->where('name', 'like', '%' . $name . '%')->paginate($pageSize, false, [
+		//增加数据显示在第一个,按条件查询并分页
+        $semesters= $Semester->where('name', 'like', '%' . $name . '%')->order('id desc')->paginate($pageSize, false,[
             'query'=>[
-                'name' => $name,
-                ],
-            ]);
-        // 向V层传数据
+                'name' =>$name,
+            ],
+        ]);
+
+       // 向V层传数据
         $this->assign('semesters', $semesters);
 
         // 取回打包后的数据
@@ -36,6 +37,14 @@ class SemesterController extends Controller
 
         // 将数据返回给用户
         return $htmls;       
+    }
+
+
+    public function reverse()
+    {
+        $test= Request::instance()->get();
+        $this->assign('test',$test);
+       
     }
     /**
     *新增学期的方法
@@ -61,8 +70,7 @@ class SemesterController extends Controller
             return $this->success('学期' . $Semester->name . '新增成功。', url('index'));
        }else{
             return $this->error("保存失败");
-       }
-       
+       }    
 
     }
 
