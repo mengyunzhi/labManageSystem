@@ -1,0 +1,168 @@
+{extend name="Teacher/nav"} {block name="title"}消息中心{/block} {block name="content"}
+
+<body>
+    <div class="container ">
+        <div class="row">
+            <div class="col-md-12">
+                <div class="tabbable" id="tabs">
+                    <!-- 切换卡 -->
+                    <ul class="nav nav-tabs">
+                        <li class="active"><a data-toggle="tab" href="#my">我的换课申请</a></li>
+                        <li><a data-toggle="tab" href="#other">谁向我换课</a></li>
+                        <li><a data-toggle="tab" href="#compelete">已完成</a></li>
+                    </ul>
+                    <div class="tab-content">
+                        <!-- 我的换课申请 -->
+                        <div class="tab-pane active" id="my">
+                            {volist name="applymessages" id="applymessage" key="key"}
+                            <div class="accordion" id="parent1">
+                                <div class="accordion-group">
+                                    <div class="accordion-heading">
+                                        我向{$applymessage->getTarget()->teacher->name}老师发送了一个换课请求
+                                        <a class="accordion-toggle collapsed" data-toggle="collapse" data-parent="#parent1" href="#{$key}"> 查看详情 
+                                        </a>
+                                    </div>
+                                    <div id="{$key}" class="accordion-body collapse" style="height: 0px;">
+                                        <div class="accordion-inner">
+                                            <table class="table table-hover table-bordered">
+                                                <tr class="info">
+                                                    <th style="text-align: center">申请者时刻表</th>
+                                                    <th style="text-align: center">目标时刻表</th>
+                                                    <th style="text-align: center">状态</th>
+                                                </tr>
+                                                <tr>
+                                                    <td class="warning text-center">
+                                                        {$applymessage->getApply()->teacher->name} 第{$applymessage->getApply()->weekorder}周 星期{$applymessage->getApply()->week} 第{$applymessage->getApply()->node}节 {$applymessage->getApply()->classroom->name}
+                                                        {$applymessage->getApply()->course->name}
+                                                    </td>
+                                                    <td class="success text-center">
+                                                        {$applymessage->getTarget()->teacher->name} 第{$applymessage->getTarget()->weekorder}周 星期{$applymessage->getTarget()->week} 第{$applymessage->getTarget()->node}节 {$applymessage->getTarget()->classroom->name}
+                                                        {$applymessage->getTarget()->course->name}
+                                                    </td>
+                                                    <td class="text-center">{$applymessage->state}</td>
+                                                </tr>
+                                            </table>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            {/volist}
+                        </div>
+                        <!-- 谁向我换课 -->
+                        <div class="tab-pane" id="other">
+                            {volist name="requestmessages" id="requestmessage" key="key"}
+                            <div class="accordion" id="parent2">
+                                <div class="accordion-group">
+                                    <div class="accordion-heading">
+                                        {$requestmessage->getApply()->teacher->name}老师向我发送了一个换课请求
+                                        <a class="accordion-toggle collapsed" data-toggle="collapse" data-parent="#parent2" href="#{$key}1"> 查看详情 
+                                        </a>
+                                    </div>
+                                    <div id="{$key}1" class="accordion-body collapse" style="height: 0px;">
+                                        <div class="accordion-inner">
+                                            <table class="table table-hover table-bordered">
+                                                <tr class="info">
+                                                    <th>ID</th>
+                                                    <th class="text-center">申请者时刻表</th>
+                                                    <th class="text-center">目标时刻表</th>
+                                                    <th class="text-center">操作</th>
+                                                </tr>
+                                                <tr>
+                                                    <td>{$key}</td>
+                                                    <td class="warning">
+                                                        {$requestmessage->getApply()->teacher->name} 第{$requestmessage->getApply()->weekorder}周 星期{$requestmessage->getApply()->week} 第{$requestmessage->getApply()->node}节 {$requestmessage->getApply()->classroom->name}
+                                                        {$requestmessage->getApply()->course->name}
+                                                    </td>
+                                                    <td class="success">
+                                                        {$requestmessage->getTarget()->teacher->name} 第{$requestmessage->getTarget()->weekorder}周 星期{$requestmessage->getTarget()->week} 第{$requestmessage->getTarget()->node}节 {$requestmessage->getTarget()->course->name}
+                                                    </td>
+                                                    <td class="text-center">
+                                                        {switch name="$requestmessage->getData('state')"} 
+                                                            {case value="0"}
+                                                            <a href="{:url('handlemessage', ['request' => 1,'id' => " $requestmessage->id"])}" class="btn btn-md btn-primary"><i class="glyphicon glyphicon-ok" aria-hidden="true">&nbsp;同意</i></a>&nbsp
+                                                            <a href="{:url('handlemessage', ['request' => 0,'id' => " $requestmessage->id"])}" class="btn btn-md btn-danger"><i class="glyphicon glyphicon-remove" aria-hidden="true">&nbsp;拒绝</i></a>
+                                                            {/case} 
+                                                            {case value="1"}<p>你已同意，等待管理员审核</p>{/case} 
+                                                            {case value="2"}<p>你已拒绝</p>{/case} 
+                                                            {case value="3"}<p>管理员已同意，换课成功</p>{/case} 
+                                                            {case value="4"}<p>管理员已拒绝，换课失败</p>{/case} 
+                                                            {default/}<p>游客</p>
+                                                        {/switch}                                                      
+                                                    </td>
+                                                </tr>
+                                            </table>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            {/volist}
+                        </div>
+                        <!-- 已完成 -->
+                        <div class="tab-pane" id="compelete">
+                            {volist name="resultmessages" id="resultmessage" key="key"}
+                            <div class="accordion" id="parent1">
+                                <div class="accordion-group">
+                                    <div class="accordion-heading">
+                                        {switch name="$resultmessage->getData('state')"}
+                                            {case value="3"}
+                                                {$resultmessage->getTarget()->teacher->name}老师向{$resultmessage->getApply()->teacher->name}老师发送的换课请求已由管理员处理
+                                            {/case}
+                                            {case value="4"}
+                                                {$resultmessage->getApply()->teacher->name}老师向
+                                                {$resultmessage->getTarget()->teacher->name}老师
+                                                发送的换课请求已由管理员处理
+                                            {/case}
+                                            {/switch}                                             
+                                        <a class="accordion-toggle collapsed" data-toggle="collapse" data-parent="#parent1" href="#{$key}2"> 查看详情 
+                                        </a>
+                                    </div>
+                                    <div id="{$key}2" class="accordion-body collapse" style="height: 0px;">
+                                        <div class="accordion-inner">
+                                            <table class="table table-hover table-bordered">
+                                                <tr class="info">
+                                                    <th style="text-align: center">申请者时刻表</th>
+                                                    <th style="text-align: center">目标时刻表</th>
+                                                    <th style="text-align: center">状态</th>
+                                                </tr>
+                                                <tr>
+                                                    {switch name="$resultmessage->getData('state')"} 
+                                                            {case value="3"}
+                                                                 <td class="warning text-center">
+                                                                    {$resultmessage->getTarget()->teacher->name}
+                                                                    {$resultmessage->getApply()->teacher->name}
+                                                                     第{$resultmessage->getApply()->weekorder}周 星期{$resultmessage->getApply()->week} 第{$resultmessage->getApply()->node}节 {$resultmessage->getApply()->classroom->name} {$resultmessage->getTarget()->course->name}
+                                                                </td>
+                                                                <td class="success text-center">
+                                                                    {$resultmessage->getApply()->teacher->name} 第{$resultmessage->getTarget()->weekorder}周 星期{$resultmessage->getTarget()->week} 第{$resultmessage->getTarget()->node}节 {$resultmessage->getTarget()->classroom->name}
+                                                                    {$resultmessage->getApply()->course->name}
+                                                                </td>
+                                                                <td class="text-center">{$resultmessage->state}</td>
+                                                            {/case}
+                                                            {case value="4"}
+                                                                <td class="warning text-center">
+                                                                    {$resultmessage->getApply()->teacher->name}
+                                                                    {$resultmessage->getApply()->teacher->name}
+                                                                     第{$resultmessage->getApply()->weekorder}周 星期{$resultmessage->getApply()->week} 第{$resultmessage->getApply()->node}节 {$resultmessage->getApply()->classroom->name} {$resultmessage->getApply()->course->name}
+                                                                </td>
+                                                                <td class="success text-center">
+                                                                    {$resultmessage->getTarget()->teacher->name} 第{$resultmessage->getTarget()->weekorder}周 星期{$resultmessage->getTarget()->week} 第{$resultmessage->getTarget()->node}节 {$resultmessage->getTarget()->classroom->name}
+                                                                    {$resultmessage->getTarget()->course->name}
+                                                                </td>
+                                                                <td class="text-center">{$resultmessage->state}</td>
+                                                            {/case}
+                                                    {/switch}                                                  
+                                                </tr>
+                                            </table>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            {/volist}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+{/block}
