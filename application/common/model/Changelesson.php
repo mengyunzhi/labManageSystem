@@ -28,7 +28,7 @@ class Changelesson extends Model
     }
 
     //筛选登陆的教师向他人换课的请求信息
-    public static function findapply($changelessons,$id)
+    public static function findapply($changelessons, $id)
     {
         //新建换课请求信息数组
         $applymessages = array();
@@ -48,7 +48,7 @@ class Changelesson extends Model
     }
 
     //筛选他人向登陆的教师换课的请求信息
-    public static function findrequest($changelessons,$id)
+    public static function findrequest($changelessons, $id)
     {
         //新建换课请求信息数组
         $requestmessages = array();
@@ -68,7 +68,7 @@ class Changelesson extends Model
     }
 
     //筛选管理员处理的请求结果
-    public static function findresult($changeresults,$id)
+    public static function findresult($changeresults, $id)
     {
         //新建换课请求信息数组
         $resultmessages = array();
@@ -85,5 +85,18 @@ class Changelesson extends Model
 
         //返回换课请求信息数组
         return $resultmessages;
+    }
+
+    //判断是否处于换课中
+    public static function isChangeLesson($id)
+    {
+        $state = Changelesson::where('state', '<', 2)
+        ->where('applysechedule_id|targetsechedule_id', '=',$id)
+        ->select();
+        if (empty($state[0])) {
+            return false;
+        } else {
+            return true;
+        }
     }
 }

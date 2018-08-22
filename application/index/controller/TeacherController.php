@@ -5,12 +5,12 @@ namespace app\index\controller;
 use app\common\model\Changelesson;
 use app\common\model\Classroom;
 use app\common\model\College;
-use app\common\model\Grade;
-use app\common\model\Major;
-use app\common\model\Semester;
 use app\common\model\Course;
+use app\common\model\Grade;
 use app\common\model\Klass;
+use app\common\model\Major;
 use app\common\model\Sechedule;
+use app\common\model\Semester;
 use app\common\model\Teacher;
 use think\Controller;
 use think\facade\Request;
@@ -20,25 +20,25 @@ use think\facade\Request;
  */
 class TeacherController extends Controller
 {
-    private $sechedule;/*行程范围 @param where查询后返回值*/
+    private $sechedule; /*行程范围 @param where查询后返回值*/
 
-    private $currentSemester;/*当前查询学期 默认为本学期 @param Semester*/
+    private $currentSemester; /*当前查询学期 默认为本学期 @param Semester*/
 
-    private $currentWeekorder;/*当前查询周次 默认本周次 @param int*/
+    private $currentWeekorder; /*当前查询周次 默认本周次 @param int*/
 
-    private $currentClassroom;/*当前查询教室 @param Classroom*/
+    private $currentClassroom; /*当前查询教室 @param Classroom*/
 
-    private $teacher;/*登录的教师 @param Teacher*/
+    private $teacher; /*登录的教师 @param Teacher*/
 
-    private $tklassIds;/*登录教师教的班级id*/
+    private $tklassIds; /*登录教师教的班级id*/
 
-    private $tmajorsIds;//登陆教师教的的专业的id
+    private $tmajorsIds; //登陆教师教的的专业的id
 
-    private $tcollegesIds;//登录教师教的学院的id
+    private $tcollegesIds; //登录教师教的学院的id
 
-    private $tgradesIds;//登录教师教的年级的id
+    private $tgradesIds; //登录教师教的年级的id
 
-    private $tcourses;//登录教师教的课程
+    private $tcourses; //登录教师教的课程
 
     /**
     *构造函数 初始化查询条件 取得登录信息
@@ -59,15 +59,15 @@ class TeacherController extends Controller
     }
 
     /*
-    *显示教师课表
-    */
+     *显示教师课表
+     */
     public function index()
     {
         $postData = Request::instance()->post();
         if (!empty($postData)) {
-          $this->setRange((int)$postData['semester_id'],(int)$postData['weekorder']);
+            $this->setRange((int) $postData['semester_id'], (int) $postData['weekorder']);
         }
-        $secheduleList=$this->editIndexSechedule();
+        $secheduleList = $this->editIndexSechedule();
         //像v层传送老师数据
         $this->assign([
           'secheduleList'=>$secheduleList,
@@ -85,36 +85,36 @@ class TeacherController extends Controller
 
     /**
 
-    *根据查询条件设置范围
-    *@param int $semesterId 查询的学期id
-    *@param int $weekorder 查询的周次
-    *@param int $classroomId 查询的教室id
-    */
-    public function setRange($semesterId,$weekorder,$classroomId=null)
+     *根据查询条件设置范围
+     *@param int $semesterId 查询的学期id
+     *@param int $weekorder 查询的周次
+     *@param int $classroomId 查询的教室id
+     */
+    public function setRange($semesterId, $weekorder, $classroomId = null)
     {
-      $this->currentSemester=Semester::get($semesterId);
-      $this->currentWeekorder=$weekorder;
-      $this->currentClassroom=Classroom::get($classroomId);
-      $this->sechedule=Sechedule::where('semester_id','=',$semesterId)->where('weekorder','=',$weekorder);
-      if ($classroomId!==null) {
-        $this->sechedule->where('classroom_id','=',$classroomId);
-      }
+        $this->currentSemester = Semester::get($semesterId);
+        $this->currentWeekorder = $weekorder;
+        $this->currentClassroom = Classroom::get($classroomId);
+        $this->sechedule = Sechedule::where('semester_id', '=', $semesterId)->where('weekorder', '=', $weekorder);
+        if ($classroomId !== null) {
+            $this->sechedule->where('classroom_id', '=', $classroomId);
+        }
     }
     /**
-    *编辑首页课表行程格式
-    *@return array
-    */
+     *编辑首页课表行程格式
+     *@return array
+     */
     public function editIndexSechedule()
     {
-      $secheduleList=array();
-        for($i=1;$i<=5;$i++){
-            $nodeList=array();
-            $temp1=clone $this->sechedule;
-            $temp1=$temp1->where('node','=',$i);
-            for ($j=1; $j<=7 ;$j++) {
-                $temp2=clone $temp1; 
-                $temp2=$temp2->where('week','=',$j)->select();       
-                $nodeList[$j]=$this->teacher->getSelfSechedule($temp2);
+        $secheduleList = array();
+        for ($i = 1; $i <= 5; $i++) {
+            $nodeList = array();
+            $temp1 = clone $this->sechedule;
+            $temp1 = $temp1->where('node', '=', $i);
+            for ($j = 1; $j <= 7; $j++) {
+                $temp2 = clone $temp1;
+                $temp2 = $temp2->where('week', '=', $j)->select();
+                $nodeList[$j] = $this->teacher->getSelfSechedule($temp2);
             }
             ksort($nodeList);
             array_push($secheduleList, $nodeList);
@@ -123,13 +123,14 @@ class TeacherController extends Controller
     }
     /**
 
-    *获取行程 编辑抢课行程格式
-    *@return array
-    */
-    public function editSechedule(){
-        $weekList=array();
-        for($i=1;$i<=5;$i++){
-            $nodeList=array();//节数组
+     *获取行程 编辑抢课行程格式
+     *@return array
+     */
+    public function editSechedule()
+    {
+        $weekList = array();
+        for ($i = 1; $i <= 5; $i++) {
+            $nodeList = array(); //节数组
             //划定每节范围
             $temp = clone $this->sechedule;
             $temp = $temp->where('node', '=', $i);
@@ -154,7 +155,7 @@ class TeacherController extends Controller
         if ($time >= $this->currentSemester->getData('starttaketime') && $time <= $this->currentSemester->getData('endtaketime')) {
             $postData = Request::instance()->post();
             if (!empty($postData)) {
-                $this->setRange($this->currentSemester->id, (int)$postData['weekorder'], (int)$postData['classroom_id']);
+                $this->setRange($this->currentSemester->id, (int) $postData['weekorder'], (int) $postData['classroom_id']);
             }
             $secheduleList = $this->editSechedule();
 
@@ -219,7 +220,8 @@ class TeacherController extends Controller
                 'tgrades' => $tgrades,
                 'tmajors' => $tmajors,
                 'tklasses' => $tklasses,
-                'tcourses' => $this->tcourses
+                'tcourses' => $this->tcourses,
+                'changelesson' => new Changelesson,
             ]);
             return $this->fetch('takelessonInterface');
         } else {
@@ -245,7 +247,6 @@ class TeacherController extends Controller
         $colleges = College::all();
         $majors = Major::all();
         $grades = Grade::all();
-
 
         //得到和老师有关的信息
         $tklass = array();
@@ -310,14 +311,13 @@ class TeacherController extends Controller
     //保存个人信息
     public function saveInformation()
     {
-         $id = Request::instance()->post('id/d');
+        $id = Request::instance()->post('id/d');
 
+        //判断Id存不存在
+        if (is_null($id) || $id === 0) {
+            throw new \Exception('未获取到id信息', 1);
+        }
 
-         //判断Id存不存在
-          if (is_null($id) || $id === 0){
-             throw new \Exception('未获取到id信息',1);
-          }
-      
         $Teacher = Teacher::get($id);
 
         //判断对象是否存在
@@ -330,9 +330,9 @@ class TeacherController extends Controller
         if (is_null($Teacher->save())) {
             return $this->error('姓名更新失败' . $Teacher->getError());
         }
-      
-               //成功返回提示
-               return $this->success('更新成功',url('index'));
+
+        //成功返回提示
+        return $this->success('更新成功', url('index'));
     }
 
     //抢课功能
@@ -343,7 +343,7 @@ class TeacherController extends Controller
         $teacherId = Request::instance()->post('teacherId/d');
         $secheduleId = Request::instance()->post('secheduleId/d');
         $courseId = Request::instance()->post('courseId/d');
-        $klassIds = (array)Request::instance()->post('KlassIds');
+        $klassIds = (array) Request::instance()->post('KlassIds');
 
         if (($teacherId === 0 && $secheduleId === 0 && is_null($klassIds) && $courseId === 0)) {
             throw new \Exception('id有误', 1);
@@ -359,20 +359,15 @@ class TeacherController extends Controller
         $theTameTimeSechedules = $Sechedule->findTheSameTimeSechedule($Sechedule);
 
         //判断相同时间段内老师或学生是否在其他地方上课
-        foreach ($theTameTimeSechedules as $theTameTimeSechedule)
-        {
-            if ($Sechedule->isExist($theTameTimeSechedule,$teacherId,$klassIds))
-            {
+        foreach ($theTameTimeSechedules as $theTameTimeSechedule) {
+            if ($Sechedule->isExist($theTameTimeSechedule, $teacherId, $klassIds)) {
                 return $this->error('抢课失败，您或学生当前时间在其他地方已经有课了');
             }
         }
 
-
         //存数据
         $Sechedule->teacher_id = $teacherId;
         $Sechedule->course_id = $courseId;
-
-
 
         //判断添加的关联是否重复
         foreach ($klassIds as $id) {
@@ -384,14 +379,12 @@ class TeacherController extends Controller
             }
         }
 
-
         $Sechedule->save();
 
         //成功返回提示
         return $this->success('恭喜，抢课成功', 'index');
 
     }
-          
 
     //老师删除课程
     public function deleteCourse()
@@ -454,7 +447,6 @@ class TeacherController extends Controller
 
             $teacherId = $Request->post('teacherId/d');
 
-
             //删除对象
             foreach ($klassIds as $id) {
                 $map['klass_id'] = $id;
@@ -481,37 +473,62 @@ class TeacherController extends Controller
     {
         //接收要换课的id
         $applyid = Request::instance()->post('id');
-        $ApplySchedule = Sechedule::get($applyid); //通过id，找到Sechedule表里对应的对象
+        $ApplySechedule = Sechedule::get($applyid); //通过id，找到Sechedule表里对应的对象
+
         //通过周次，星期，节次，教室找到目标课的id
-        $weekly = Request::instance()->post('weekly');
+        $weekorder = Request::instance()->post('weekorder');
         $week = Request::instance()->post('week');
         $node = Request::instance()->post('node');
-        $classroom_id = Request::instance()->post('classroom_num');
-        $targetid = Sechedule::findtarget($weekly, $week, $node, $classroom_num);
+        $classroom_id = Request::instance()->post('classroom_id');
+        $targetid = Sechedule::findtarget($weekorder, $week, $node, $classroom_id);
 
         //判断是否是同一教室时间
-        if ($apply == $targetid) {
-            return $this->error('换课失败，目标课不能为同一节课', 'index');
+        if ($applyid == $targetid) {
+            return $this->error('换课失败，目标课不能为同一节课', 'takelessonInterface');
         }
 
         //实例化目标课对象
         $TargetSechedule = Sechedule::get($targetid);
 
-        //判断目标教室时间是否有课，如果没课或者为同一老师的课，直接调换
-        if ($TargetSechedule->teacher_id === null or $TargetSechedule->teacher_id == $ApplySchedule->teacher_id) {
-            Sechedule::exchange($applyid, $targetid);
-            return $this->success('换课成功', 'index');
+        //判断教师和班级与目标课是否时间冲突，避免同一时间在不同教室上课这种情况
+        $theTameTimeSechedules = $TargetSechedule->findTheSameTimeSechedule($TargetSechedule);
+        $teacherId = $ApplySechedule->teacher_id;
+
+        $klassIds = $ApplySechedule->getKlasses()->column('klass_id');
+
+        foreach ($theTameTimeSechedules as $theTameTimeSechedule) {
+            if ($TargetSechedule->isExist($theTameTimeSechedule, $teacherId, $klassIds)) {
+                return $this->error('换课失败，您或学生当前时间在其他地方已经有课了');
+            }
         }
 
-        //如果不同，则向目标课程的教师发送消息，取得同意后再向管理员发送请求，通过后进行交换(此功能待完善)
-        else {
+        //判断目标教室时间是否有课，如果没课，直接调换
+        if ($TargetSechedule->teacher_id === null) {
+            Sechedule::exchange($applyid, $targetid);
+            return $this->success('换课成功', 'takelessonInterface');
+        }
 
+        //如果有课，判断是否是申请者自己的课，如果是，且目标课未处于换课状态，则直接进行交换
+        else if ($TargetSechedule->teacher_id === $applyid) {
+            if (Changelesson::ischange($targetid) === false) {
+                Sechedule::exchange($applyid, $targetid);
+                return $this->success('换课成功', 'takelessonInterface');
+            } else {
+                return $this->error('换课失败，目标课正在换课中', 'takelessonInterface');
+            }
+
+        }
+
+        //如果不是申请者自己的课，则判断目标课是否处于换课状态,如果不是，则向目标课的教师发送消息，取得同意后再向管理员发送请求，通过后进行交换
+        else if (Changelesson::ischange($targetid) === false) {
             //生成请求消息
             $message = new Changelesson();
             $message->applysechedule_id = $applyid;
             $message->targetsechedule_id = $targetid;
             $message->save();
-            return $this->success('发送换课请求已成功，请等待审核', 'index');
+            return $this->success('发送换课请求已成功，请等待审核', 'takelessonInterface');
+        } else {
+            return $this->error('换课失败，目标课正在换课中', 'takelessonInterface');
         }
     }
 
@@ -527,18 +544,18 @@ class TeacherController extends Controller
         $changeresults = $Changelessons->where('state', '>', 2)->order('id', 'desc')->select();
 
         //筛选出登陆的教师向他人换课的请求信息
-        $applymessages = Changelesson::findapply($changelessons,$id);
+        $applymessages = Changelesson::findapply($changelessons, $id);
 
         //筛选他人向登陆的教师换课的请求信息
-        $requestmessages = Changelesson::findrequest($changelessons,$id);
+        $requestmessages = Changelesson::findrequest($changelessons, $id);
 
         //筛选出管理员处理的请求结果
-        $resultmessages = Changelesson::findresult($changeresults,$id);
+        $resultmessages = Changelesson::findresult($changeresults, $id);
 
         //向v层传送数据
         $this->assign('applymessages', $applymessages);
         $this->assign('requestmessages', $requestmessages);
-        $this->assign('resultmessages',$resultmessages);
+        $this->assign('resultmessages', $resultmessages);
         return $this->fetch("message");
     }
 

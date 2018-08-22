@@ -69,18 +69,18 @@ class Sechedule extends Model
     }
 
     //传入周次，星期，节次，教室,查询在sechedule表里对应的对象并返回该对象的id
-    public static function findtarget($weekly, $week, $node, $classroom_num)
+    public static function findtarget($weekorder, $week, $node, $classroom_id)
     {
         $target = Sechedule::where([
-            ['weekly', '=', $weekly],
+            ['weekorder', '=', $weekorder],
             ['week', '=', $week],
             ['node', '=', $node],
-            ['classroom_num', '=', $classroom_num],
+            ['classroom_id', '=', $classroom_id],
         ])->select();
         return $target[0]['id'];
     }
 
-    //找到sechedule_klass表里所有sechedule_id为id的对象
+    //找到sechedule_klass表里所有sechedule_id为sechedule表里的id的对象
     public function getKlasses()
     {
         return SecheduleKlass::where('sechedule_id', '=', $this->id)->select();
@@ -139,7 +139,7 @@ class Sechedule extends Model
     }
 
     /*
-     * 判断老师和学生是否在这个教室
+     * 判断老师和班级是否在这个教室
      * */
     public function isExist(Sechedule &$Sechedule, $teacherId, $klassIds)
     {
