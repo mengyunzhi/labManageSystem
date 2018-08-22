@@ -13,7 +13,7 @@ class SemesterController extends Controller
     */
     public function index()
     {
-    	  // 获取查询信息
+    	// 获取查询信息
         $name = Request::instance()->get('name');
 
         // 设置每页大小
@@ -37,14 +37,6 @@ class SemesterController extends Controller
 
         // 将数据返回给用户
         return $htmls;       
-    }
-
-
-    public function reverse()
-    {
-        $test= Request::instance()->get();
-        $this->assign('test',$test);
-       
     }
     /**
     *新增学期的方法

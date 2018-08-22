@@ -12,6 +12,10 @@ use app\common\model\Course;
 use app\common\model\Klass;
 use app\common\model\Sechedule;
 use app\common\model\Teacher;
+use app\common\model\TeacherCollege;
+use app\common\model\TeacherGrade;
+use app\common\model\TeacherKlass;
+use app\common\model\TeacherMajor;
 use think\Controller;
 use think\facade\Request;
 
@@ -435,6 +439,62 @@ class TeacherController extends Controller
     //老师增加班级
     public function addKlass()
     {
+        //接收数据
+        $collegeId = Request::instance()->post('aCollege');
+        $majorId = Request::instance()->post('aMajor');
+        $gradeId = Request::instance()->post('aGrade');
+        $klassId = Request::instance()->post('aKlass');
+
+        //定制查询条件
+        $mapCollege['college_id'] = $collegeId;
+        $mapCollege['teacher_id'] = $this->teacher->id;
+
+        $mapMajor['major_id'] = $majorId;
+        $mapMajor['teacher_id'] = $this->teacher->id;
+
+        $mapGrade['grade_id'] = $gradeId;
+        $mapGrade['teacher_id'] = $this->teacher->id;
+
+        $mapKlass['klass_id'] = $klassId;
+        $mapKlass['teacher_id'] = $this->teacher->id;
+
+        //查询数据并判断是否添加
+        //判断学院是否需要添加
+        if (empty(TeacherCollege::get($mapCollege))){
+            $TeacherCollege = new TeacherCollege();
+            $TeacherCollege->college_id = $collegeId;
+            $TeacherCollege->teacher_id = $this->teacher->id;
+            $TeacherCollege->save();
+        }
+
+        //判断专业是否需要添加
+        if (empty(TeacherMajor::get($mapMajor))){
+
+            $TeacherMajor = new TeacherMajor();
+            $TeacherMajor->major_id = $majorId;
+            $TeacherMajor->teacher_id = $this->teacher->id;
+            $TeacherMajor->save();
+        }
+
+        //判断年级是否需要添加
+        if (empty(TeacherGrade::get($mapGrade))){
+            $TeacherGrade = new TeacherGrade();
+            $TeacherGrade->grade_id = $gradeId;
+            $TeacherGrade->teacher_id = $this->teacher->id;
+            $TeacherGrade->save();
+        }
+
+        //判断课程能否需要添加
+        if (!empty(TeacherKlass::get($mapKlass))) {
+            return $this->error('添加班级失败，因为这个班已经被添加了');
+        }
+
+        $TeacherKlass = new TeacherKlass();
+        $TeacherKlass->teacher_id = $this->teacher->id;
+        $TeacherKlass->klass_id = $klassId;
+        $TeacherKlass->save();
+
+        return $this->success('新增班级成功',url('information'));
 
     }
 
@@ -486,7 +546,7 @@ class TeacherController extends Controller
         $targetid = Sechedule::findtarget($weekly, $week, $node, $classroom_num);
 
         //判断是否是同一教室时间
-        if ($apply == $targetid) {
+        if ($applyid == $targetid) {
             return $this->error('换课失败，目标课不能为同一节课', 'index');
         }
 
@@ -560,4 +620,34 @@ class TeacherController extends Controller
             return $this->error('操作失败,请重试', url('message'));
         }
     }
+
+
+    public function getMajor()
+    {
+        $collegeIndex = Request::instance()->param('college/d');
+        $map['college_id'] = $collegeIndex;
+        $majors = Major::Where($map)->select();
+
+        return $majors;
+    }
+
+    public function getGrade()
+    {
+        $majorIndex = Request::instance()->param('major/d');
+        $map['major_id'] = $majorIndex;
+        $grades = Grade::Where($map)->select();
+
+        return $grades;
+    }
+
+    public function getKlass()
+    {
+        $gradeIndex = Request::instance()->param('grade/d');
+        $map['grade_id'] = $gradeIndex;
+        $klasses = Klass::Where($map)->select();
+
+        return $klasses;
+    }
+
+
 }
