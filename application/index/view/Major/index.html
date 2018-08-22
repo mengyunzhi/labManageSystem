@@ -45,13 +45,15 @@
             <table  class="table table-hover table-bordered">
                 <tr class="info" >
                     <th width="10%">ID</th>
-                    <th width="70%">专业名</th>
+                    <th width="35%">专业名</th>
+                    <th width="35%">所属学院</th>
                     <th width="20%">操作</th>
                 </tr>
                 {volist name="majors" id="major" key="key"}
                 <tr>
                     <td>{$key}</td>
                     <td>{$major->getData('name')}</td>
+                    <td>{$major->college->getData('name')}</td>
                     <td>
                     <button type="button" class="btn btn-sm btn-primary" data-toggle="modal" data-target=".bs-example-modal-lg{$key}"><i class="glyphicon glyphicon-pencil"></i>&nbsp;编辑</button>
 
