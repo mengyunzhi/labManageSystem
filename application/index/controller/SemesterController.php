@@ -13,22 +13,23 @@ class SemesterController extends Controller
     */
     public function index()
     {
-    	  // 获取查询信息
+    	// 获取查询信息
         $name = Request::instance()->get('name');
 
         // 设置每页大小
         $pageSize = 5;
 
-    	  // 实例化Semester
-    	  $Semester = new Semester;
+    	// 实例化Semester
+    	$Semester = new Semester;
 		
-		    // 按条件查询数据并调用分页
-        $semesters = $Semester->where('name', 'like', '%' . $name . '%')->paginate($pageSize, false, [
+		//增加数据显示在第一个,按条件查询并分页
+        $semesters= $Semester->where('name', 'like', '%' . $name . '%')->order('id desc')->paginate($pageSize, false,[
             'query'=>[
-                'name' => $name,
-                ],
-            ]);
-        // 向V层传数据
+                'name' =>$name,
+            ],
+        ]);
+
+       // 向V层传数据
         $this->assign('semesters', $semesters);
 
         // 取回打包后的数据
@@ -61,8 +62,7 @@ class SemesterController extends Controller
             return $this->success('学期' . $Semester->name . '新增成功。', url('index'));
        }else{
             return $this->error("保存失败");
-       }
-       
+       }    
 
     }
 

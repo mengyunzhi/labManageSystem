@@ -91,4 +91,96 @@
         </div>
     </div>
 </div>
+
+<!--抢课的表单-->
+<form action="{:url('takeLesson')}" method="post">
+    <div class="modal fade" id="TakeLessons" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-body">
+                    <div>
+                        <input type="hidden" name="secheduleId" id="secheduleId">
+                        <input type="hidden" name="teacherId" value="{$teacher->id}">
+                    </div>
+                    {volist name="tcolleges" id="College"}
+                    <label>{$College->name}:</label><br>
+                    <label>
+                        {volist name="tmajors" id="Major"}
+                        <label {neq name="$Major->college_id" value="$College->id" } hidden="hidden" {/neq}>
+                        <label>
+                            {volist name="tgrades" id="Grade"}
+                            <label {neq name="$Grade->major_id" value="$Major->id" } hidden="hidden" {/neq}>
+                            <label>
+                                {volist name="tklasses" id="Klass"}
+                                <label {neq name="$Klass->grade_id" value="$Major->id" } hidden="hidden" {/neq}>
+                                &nbsp&nbsp&nbsp&nbsp&nbsp&nbsp
+                                &nbsp&nbsp&nbsp&nbsp&nbsp&nbsp
+                                {$Klass->name}
+                            </label>
+                            <input type="checkbox"  value="1" name="klassIds[]"  {neq name="$Klass->grade_id" value="$Major->id" } hidden="hidden" {/neq}>
+                        </label><br>
+                        {/volist}
+                    </label>
+                    </label>
+                    {/volist}
+                    </label>
+                    {/volist}
+                    </label>
+                    {/volist}
+                </div>
+                <hr/>
+                &nbsp&nbsp&nbsp&nbsp&nbsp&nbsp
+                    <label>课程名称:</label>
+                    <br>
+                <label>
+                    {volist name="tcourses" id="Course" key="key"}
+                    &nbsp&nbsp&nbsp&nbsp&nbsp&nbsp
+                    &nbsp&nbsp&nbsp&nbsp&nbsp
+                    &nbsp&nbsp&nbsp&nbsp&nbsp
+                    {$Course->name}
+                <input  type="radio" value="{$Course->id}" name="courseId">
+                    <br>
+                    {/volist}
+                </label>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#addCourse" style="margin-right: 330px">
+                        <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
+                        添加课程
+                    </button>
+                    <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+                    <button type="submit" class="btn btn-primary">保存</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</form>
+
+<!--老师可以在本页面增加课程-->
+<div class="modal fade" id="addCourse" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <form action="{:url('addCourse')}" class="form-inline" method="post">
+                <div class="modal-body">
+                    <label>课程名称:</label>
+                    <input name="newCourseName" placeholder="请输入要增加的课程名">
+                    <input type="hidden" name="teacherId" value="{$teacher->id}" class="form-control">
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+                    <button type="submit" class="btn btn-primary">保存</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<script type="text/javascript">
+    $('#TakeLessons').on('show.bs.modal', function(event) {
+        var button = $(event.relatedTarget);
+        var recipient = button.data('whatever');
+        var modal = $(this);
+        modal.find('#secheduleId').val(recipient)
+    })
+</script>
 {/block}

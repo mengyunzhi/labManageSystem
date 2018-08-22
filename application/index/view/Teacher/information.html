@@ -6,37 +6,194 @@
         <div class="form-group" style="padding-top: 50px">
             <label >姓名：</label>
             <input type="hidden" name="id" value="{$Teacher->getData('id')}">
-            <input type="text" name="name" value="{$Teacher->name}">
+            <input type="text" class="form-control" id="name" value="{$Teacher->name}">
         </div>
         <br>
-        <div class="form-group" style="margin-left: 5px;padding: 50px 0">
-            <label >身份:</label>
-            <input type="text" class="form-control" readonly="true" id="type" placeholder="老师">
-        </div>
-        <br>
+        <div class="form-group" style="   margin-left: 5px;padding: 50px 0">
+            <label>身份:</label>
+            <label>老师</label>
+        <hr>
 
         <!--选择所教的班级-->
         <div class="form-group">
-            <label>班级：</label><br>
-            {volist name="klasses" id="Klass"}
-            <input type="checkbox" name="klass_id[]" id="klass_id_{$Klass->id}"
-                   value="{$Klass->id}" {eq name="Teacher->getKlassesIsChecked($Klass)"
-            value="true"} checked="checked" {/eq}/>
-
-            <label for="klass_id_{$Klass->id}">{$Klass->name}</label><br>
+            <label>所教班级：</label><br>
+            <button type="button" class="btn btn-primary " data-toggle="modal" data-target="#addKlass">
+                <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
+                添加班级
+            </button>
+            <!--//删除课程的按钮-->
+            <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#deleteKlass">
+                <span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
+                删除班级
+            </button>
+            <br><br>
+            {volist name="tcolleges" id="College"}
+            <label>{$College->name}:</label><br>
+            <div>
+                {volist name="tmajors" id="Major"}
+                <div {neq name="$Major->college_id" value="$College->id" } hidden="hidden" {/neq}>
+                <div>
+                    {volist name="tgrades" id="Grade"}
+                    <div {neq name="$Grade->major_id" value="$Major->id" } hidden="hidden" {/neq}>
+                    <div>
+                        {volist name="tklass" id="Klass"}
+                        <div {neq name="$Klass->grade_id" value="$Grade->id" } hidden="hidden" {/neq}>
+                        &nbsp&nbsp&nbsp&nbsp&nbsp&nbsp
+                        &nbsp&nbsp&nbsp&nbsp&nbsp&nbsp
+                        {$Klass->name}
+                    </div><br>
+                    {/volist}
+                </div>
+            </div>
             {/volist}
         </div>
-        <br>
+</div>
+{/volist}
+</div>
+{/volist}
+</div>
+<br>
+<hr>
 
-        <!--选择所教的课程-->
-        <div class="form-group">
-            <label>课程：</label><br>
-                {volist name="courses" id="Course"}
-                <input type="checkbox" name="course_id[]" id="course_id_{$Course->id}" value="{$Course->id}"
-                {eq name="Teacher->getCoursesIsChecked($Course)" value = "true"} checked="checked" {/eq}>
-                <label for="course_id_{$Course->id}">{$Course->name}</label><br>
-                {/volist}
+<!--//展示所教的课程-->
+<div class="form-group">
+    <!--//添加课程的按钮-->
+    <button type="button" class="btn btn-primary " data-toggle="modal" data-target="#addCourse">
+        <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
+        添加课程
+    </button>
+    <!--//删除课程的按钮-->
+    <button type="button" class="btn btn-primary " data-toggle="modal" data-target="#deleteCourse">
+        <span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
+        删除课程
+    </button>
+    <br><br>
+    <label>所教课程：</label><br>
+    {volist name="courses" id="Course"}
+    <label>
+        &nbsp&nbsp&nbsp&nbsp&nbsp&nbsp
+        &nbsp&nbsp&nbsp&nbsp&nbsp&nbsp
+        {$Course->name}
+    </label><br>
+    {/volist}
+</div>
+<br><br><br>
+<button type="submit" class="btn btn-primary" style="margin-left: 100px;">保存</button>
+</form>
+<!--增加课程的表单-->
+<div class="modal fade" id="addCourse" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <form action="{:url('addCourse')}" class="form-inline" method="post">
+                <div class="modal-body">
+                    <label>课程名称:</label>
+                    <input name="newCourseName" placeholder="请输入要增加的课程名">
+                    <input type="hidden" name="teacherId" value="{$Teacher->id}" class="form-control">
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+                    <button type="submit" class="btn btn-primary">保存</button>
+                </div>
+            </form>
         </div>
+    </div>
+</div>
+
+<!--删除课程的表单-->
+<form action="{:url('deleteCourse')}" method="post">
+    <div class="modal fade" id="deleteCourse" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-body">
+                    <label>课程名称:</label>
+                    <br>
+                    {volist name="courses" id="Course" key="key"}
+                    <input type="checkbox" value="{$Course->id}" name="ids[{$key}]">
+                    <label>{$Course->name}</label><br>
+                    {/volist}
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+                    <button type="submit" class="btn btn-primary">确定</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</form>
+
+<!--没想到好的办法-->
+<!--添加班级-->
+<form action="{:url('addKlass')}" method="post">
+    <div class="modal fade" id="addKlass" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-body">
+                    <br>
+                    <label>选择学院：</label>
+                    <select>
+                        {volist name="colleges" id="College"}
+                        <option name="College" value="{$College->id}">
+                            {$College->name}
+                        </option>
+                        {/volist}
+                    </select>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+                    <button type="submit" class="btn btn-primary">确定</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</form>
+
+<!--删除班级-->
+<form action="{:url('deleteKlass')}" method="post">
+    <input type="hidden" value="{$Teacher->id}" name="teacherId">
+    <div class="modal fade" id="deleteKlass" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+
+                <div class="modal-body">
+                    {volist name="tcolleges" id="College"}
+                    <label>{$College->name}:</label><br>
+
+                    <label>
+                        {volist name="tmajors" id="Major"}
+                        <label {neq name="$Major->college_id" value="$College->id" } hidden="hidden" {/neq}>
+                        <label>
+                            {volist name="tgrades" id="Grade"}
+                            <label {neq name="$Grade->major_id" value="$Major->id" } hidden="hidden" {/neq}>
+                            <label>
+                                {volist name="tklass" id="Klass"}
+                                <label for="klass"{neq name="$Klass->grade_id" value="$Major->id" } hidden="hidden" {/neq}>
+                                &nbsp&nbsp&nbsp&nbsp&nbsp&nbsp
+                                &nbsp&nbsp&nbsp&nbsp&nbsp&nbsp
+                                {$Klass->name}
+                            </label>
+                            <input type="checkbox" id="klass" value="{$Klass->id}" name="ids[{$key}]"  {neq name="$Klass->grade_id" value="$Major->id" } hidden="hidden" {/neq}>
+
+                        </label><br>
+                        {/volist}
+                    </label>
+                    </label>
+                    {/volist}
+                    </label>
+                    {/volist}
+                    </label>
+                    {/volist}
+                </div>
+
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+                    <button type="submit" class="btn btn-primary">确定</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</form>
+
+
         <br><br><br>
         <button type="submit" class="btn btn-default" style="margin-left: 100px;">保存</button>
     </form>
