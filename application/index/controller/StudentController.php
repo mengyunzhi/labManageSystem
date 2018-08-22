@@ -26,9 +26,13 @@ class StudentController extends Controller
     */
     public function __construct(){
         parent::__construct();
+        $userId = session('userId');
+        $this->student=Student::get(['user_id'=>$userId]);
+        if (is_null($this->student)) {
+          return $this->error("请先登录",url('Login/index'));
+        }
         $this->currentSemester=Semester::currentSemester(Semester::select());
         $this->currentWeekorder=$this->currentSemester->getWeekorder();
-        $this->student=Student::get(1);
         $this->setRange($this->currentSemester->id,$this->currentWeekorder);
     }
     /*
@@ -88,7 +92,14 @@ class StudentController extends Controller
         }
         return $secheduleList;
     }
-
+    /**
+    *注销登录
+    */
+    public function logout()
+    {
+      session('userId',null);
+      return $this->success('注销成功',url('Login/index'));
+    }
     public function student()
     {
         //没有扫码，因此直接得到学生信息

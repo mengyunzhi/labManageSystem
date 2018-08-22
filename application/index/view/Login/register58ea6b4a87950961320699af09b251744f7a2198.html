@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>教师注册</title>
+	<title>课表查询登录</title>
+	<meta charset="utf-8">
+	<link rel="stylesheet" href="http://cdn.bootcss.com/bootstrap/3.3.0/css/bootstrap.min.css">
+    <!-- jQuery文件。务必在bootstrap.min.js 之前引入 -->
+    <script src="http://cdn.bootcss.com/jquery/1.11.1/jquery.min.js"></script>
+    <!-- 最新的 Bootstrap 核心 JavaScript 文件 -->
+    <script src="http://cdn.bootcss.com/bootstrap/3.3.0/js/bootstrap.min.js"></script>
+    
+</head>
+<body>
+<div class="container-fluid" >
+ 	<div class="row">
+  		<div id="scrollBox" style="position: fixed;top: 0px;left: 0px;">
+  			<div id="showPicture" class="carousel slide" data-ride="carousel">
+  				<div class="carousel-inner" role="listbox">
+    				<div class="item active">
+      					<img src="/labmanagesystem/public/register1.jpeg" >
+    				</div>
+    				<div class="item">
+      					<img src="/labmanagesystem/public/register2.jpg" style="width: 100%;">
+    				</div>
+    				<div class="item">
+      					<img src="/labmanagesystem/public/register3.jpg" style="width: 100%;height: 100%;">
+    				</div>
+  				</div>
+  				<a class="left carousel-control" href="#showPicture" role="button" data-slide="prev">
+   				<span class="sr-only"></span>
+  				</a>
+  				<a class="right carousel-control" href="#showPicture" role="button" data-slide="next">
+    			<span class="sr-only"></span>
+  				</a>
+			</div>
+		</div>
+  		<div class="col-md-12">
+  			<div id="register">
+  				<div class="row">
+  					<div class="col-md-3"></div>
+  					<div class="col-md-9">
+  						<div style="margin-top: 100px;">
+  							<h1 style="font-size: 50px;">欢迎注册教师选课系统</h1>
+  							<h2>你的注册身份是:老师</h2>
+  							<div style="width: 400px;margin-top: 20px;">
+  								<form action="{:url('register')}" method="post">
+                    <input type="hidden" name="role" value="老师">
+  									<div class="form-group" style="text-align: left;margin: 10px 0px 10px 0px;">
+    									<label >账号</label>
+    									<input type="text" class="form-control"  placeholder="输入账号" style="height: 60px;width: 500px;" name="username">
+  									</div>
+  									<div class="form-group" style="text-align: left;margin: 10px 0px 10px 0px;">
+    									<label >密码</label>
+    									<input type="password" class="form-control"  placeholder="输入密码" style="height: 60px;width: 500px;" name="password">   							
+  									</div>
+  									<div class="form-group" style="text-align: left;margin: 10px 0px 10px 0px;">
+    									<label >您的名字</label>
+    									<input type="text" class="form-control"  placeholder="姓名" style="height: 60px;width: 500px;" name="name">
+    									<div style="margin-top: 10px;">
+    										<label >绑定第三方登录</label>
+    									</div>
+  									</div>				
+  									<button type="submit" class="btn btn-info btn-lg btn-block" style="width: 500px;height: 70px;">立即注册</button>
+								</form>
+  							</div>
+  						</div>
+  					</div>
+  				</div>
+  			</div>
+  		</div>
+	</div>
+</div>
+</body>
+<script type="text/javascript">
+	window.onload=setHeight;
+    	function setHeight()
+    	{
+    		var scrollBox=document.getElementById("scrollBox");
+    		scrollBox.style.height=window.outerHeight+"px";
+    		scrollBox.style.width=(window.innerWidth/3)+"px";
+    		var register=document.getElementById("register");
+    		register.style.margin="0px"+" "+"0px"+" "+"0px"+" "+(window.innerWidth/3)+"px";
+    	}
+</script>
+</html>
