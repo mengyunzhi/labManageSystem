@@ -1,4 +1,6 @@
-{extend name="Administrator/nav"} {block name="title"}学生管理{/block} {block name="content"}
+{extend name="Administrator/nav"} 
+{block name="title"}学生管理{/block} 
+{block name="content"}
 <div class="row">
     <div class="col-md-12">
         <div class="container">
@@ -42,10 +44,10 @@
             <hr />
             <table class="table table-hover table-bordered">
                 <tr class="info">
-                    <th>ID</th>
-                    <th>学生名字</th>
-                    <th>所属班级</th>
-                    <th>操作</th>
+                    <th width="10%">ID</th>
+                    <th width="35%">学生名字</th>
+                    <th width="35%">所属班级</th>
+                    <th width="20%">操作</th>
                 </tr>
                 {volist name="students" id="student" key="key"}
                 <tr>

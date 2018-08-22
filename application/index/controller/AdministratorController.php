@@ -18,25 +18,30 @@ use think\facade\Request;
  */
 class AdministratorController extends Controller
 {
-    private $sechedule; /*行程范围 @param where查询后返回值*/
+    private $sechedule;/*行程范围 @param where查询后返回值*/
 
-    private $currentSemester; /*当前查询学期 默认为本学期 @param Semester*/
-
-    private $currentWeekorder; /*当前查询周次 默认本周次 @param int*/
-
-    private $currentClassroom; /*当前查询教室 @param Classroom*/
-
-    private $administrator; /*登录的管理员 @param Teacher*/
+    private $currentSemester;/*当前查询学期 默认为本学期 @param Semester*/
+    
+    private $currentWeekorder;/*当前查询周次 默认本周次 @param int*/
+    
+    private $currentClassroom;/*当前查询教室 @param Classroom*/
+    
+    private $administrator;/*登录的管理员 @param Administrator*/
     /**
      *构造函数 初始化查询条件
      */
     public function __construct()
     {
         parent::__construct();
-        $this->currentSemester = Semester::currentSemester(Semester::select());
-        $this->currentWeekorder = $this->currentSemester->getWeekorder();
-        $this->currentClassroom = Classroom::get(1);
-        $this->setRange($this->currentSemester->id, $this->currentWeekorder, $this->currentClassroom->id);
+        $userId = session('userId');
+        $this->administrator=Administrator::get(['user_id'=>$userId]);
+        if (is_null($this->administrator)) {
+          return $this->error("请先登录",url('Login/index'));
+        }
+        $this->currentSemester=Semester::currentSemester(Semester::select());
+        $this->currentWeekorder=$this->currentSemester->getWeekorder();
+        $this->currentClassroom=Classroom::get(1);
+        $this->setRange($this->currentSemester->id,$this->currentWeekorder,$this->currentClassroom->id);
     }
     public function index()
     {
@@ -93,6 +98,14 @@ class AdministratorController extends Controller
             array_push($weekList, $nodeList);
         }
         return $weekList;
+    }
+    /**
+    *注销登录
+    */
+    public function logout()
+    {
+      session('userId',null);
+      return $this->success('注销成功',url('Login/index'));
     }
     //管理员个人信息界面
     public function personalinformation()

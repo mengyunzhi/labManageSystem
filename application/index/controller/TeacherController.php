@@ -41,25 +41,20 @@ class TeacherController extends Controller
     private $tcourses; //登录教师教的课程
 
     /**
-     *构造函数 初始化查询条件
-     */
-    public function __construct()
-    {
+    *构造函数 初始化查询条件 取得登录信息
+    */
+    public function __construct(){
         parent::__construct();
-
-        $this->currentSemester = Semester::currentSemester(Semester::select());
-        $this->currentWeekorder = $this->currentSemester->getWeekorder();
-        $this->currentClassroom = Classroom::get(1);
-        $this->teacher = Teacher::get(1);
-        $this->setRange($this->currentSemester->id, $this->currentWeekorder, $this->currentClassroom->id);
-        //寻找和老师有关的信息的条件
-        $map['teacher_id'] = $this->teacher->id;
-        //和老师有关的信息
-        $this->tklassIds = $this->teacher->teacherKlass()->where($map)->select();
-        $this->tmajorsIds = $this->teacher->teacherMajor()->where($map)->select();
-        $this->tcollegesIds = $this->teacher->teacherCollege()->where($map)->select();
-        $this->tgradesIds = $this->teacher->teacherGrade()->where($map)->select();
-        $this->tcourses = $this->teacher->course()->where($map)->select();
+        $userId = session('userId');
+        $this->teacher=Teacher::get(['user_id'=>$userId]);
+        if (is_null($this->teacher)) {
+          return $this->error("请先登录",url('Login/index'));
+        }
+        $this->currentSemester=Semester::currentSemester(Semester::select());
+        $this->currentWeekorder=$this->currentSemester->getWeekorder();
+        $this->currentClassroom=Classroom::get(1);
+       
+        $this->setRange($this->currentSemester->id,$this->currentWeekorder);
 
     }
 
@@ -75,14 +70,15 @@ class TeacherController extends Controller
         $secheduleList = $this->editIndexSechedule();
         //像v层传送老师数据
         $this->assign([
-            'secheduleList' => $secheduleList,
-            'Klasses' => Klass::select(),
-            'allSemester' => Semester::select(),
-            'currentClassroom' => $this->currentClassroom,
-            'currentSemester' => $this->currentSemester,
-            'currentWeekorder' => $this->currentWeekorder,
-            'allClassroom' => Classroom::select(),
-            'null' => null,
+          'secheduleList'=>$secheduleList,
+          'Klasses'=>Klass::select(),
+          'allSemester'=>Semester::select(),
+          'currentClassroom'=>$this->currentClassroom,
+          'currentSemester'=>$this->currentSemester,
+          'currentWeekorder'=>$this->currentWeekorder,
+          'allClassroom'=>Classroom::select(),
+          'null'=>null,
+          'teacher'=>$this->teacher,
         ]);
         return $this->fetch();
     }
@@ -232,6 +228,14 @@ class TeacherController extends Controller
             return $this->error("未到开放的时间");
         }
 
+    }
+    /**
+    *注销登录
+    */
+    public function logout()
+    {
+      session('userId',null);
+      return $this->success('注销成功',url('Login/index'));
     }
 
     //进入老师的信息页面
