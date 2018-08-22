@@ -4,6 +4,9 @@ namespace app\index\controller;
 use app\common\model\User;
 use think\Controller;
 use think\facade\Request;
+use app\common\model\Teacher;
+use app\common\model\Student;
+use app\common\model\Administrator;
 
 /**
 *登录类 包含学生注册 老师注册 登录验证 登录界面
@@ -56,5 +59,41 @@ class LoginController extends Controller
 	public function register58ea6b4a87950961320699af09b251744f7a2198()
 	{
 		return $this->fetch();
+	}
+	/**
+	*对老师进行注册
+	*/
+	public function registerTeacher()
+	{
+		$postData=Request::instance()->post();
+		$username=$postData['username'];
+		$password=$postData['password'];
+		$teacherName=$postData['teacherName'];
+		if (empty($username)||empty($password)) {
+			return $this->error("请输入完整信息");
+		}
+		// 判断用户名是否存在
+		if (!is_null(User::get(['username'=>$username]))) {
+			return $this->error("用户名已存在");
+		}
+		if (User::register($username,$password,"老师")) {
+			$user=User::get(['username'=>$username]);
+			$this->addTeacher($teacherName,$user->id);
+			$this->role(User::get(['username'=>$username]));
+		}else{
+			return $this->error("注册失败");
+		}
+	}
+	/**
+	*增加教师
+	*@param string $name 教师名字
+	*@param int $id 用户id 
+	*/
+	public function addTeacher($name,$id)
+	{
+			$teacher=new Teacher();
+			$teacher->name=$name;
+			$teacher->user_id=$id;
+			$teacher->save();
 	}
 }
