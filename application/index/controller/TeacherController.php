@@ -61,6 +61,7 @@ class TeacherController extends Controller
           'currentWeekorder'=>$this->currentWeekorder,
           'allClassroom'=>Classroom::select(),
           'null'=>null,
+          'teacher'=>$this->teacher,
         ]);
         return $this->fetch();
     }

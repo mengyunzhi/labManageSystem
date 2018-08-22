@@ -61,14 +61,25 @@ class LoginController extends Controller
 		return $this->fetch();
 	}
 	/**
-	*对老师进行注册
+	*学生注册界面
 	*/
-	public function registerTeacher()
+	public function studentRegister()
+	{
+		return $this->fetch('studentRegister');
+	}
+	/**
+	*进行注册
+	*/
+	public function register()
 	{
 		$postData=Request::instance()->post();
 		$username=$postData['username'];
 		$password=$postData['password'];
-		$teacherName=$postData['teacherName'];
+		$role=$postData['role'];
+		$name=$postData['name'];
+		if ($role="学生") {
+			$klassId=$postData['klassId'];
+		}
 		if (empty($username)||empty($password)) {
 			return $this->error("请输入完整信息");
 		}
@@ -76,9 +87,15 @@ class LoginController extends Controller
 		if (!is_null(User::get(['username'=>$username]))) {
 			return $this->error("用户名已存在");
 		}
-		if (User::register($username,$password,"老师")) {
+		if (User::register($username,$password,$role)) {
 			$user=User::get(['username'=>$username]);
-			$this->addTeacher($teacherName,$user->id);
+			if ($role=="老师") {
+				$this->addTeacher($name,$user->id);
+			}else if($role=="学生"){
+				$this->addStudent($name,$user->id,$klassId);
+			}else{
+				return $this->error("数据出错");
+			}
 			$this->role(User::get(['username'=>$username]));
 		}else{
 			return $this->error("注册失败");
@@ -95,5 +112,19 @@ class LoginController extends Controller
 			$teacher->name=$name;
 			$teacher->user_id=$id;
 			$teacher->save();
+	}
+	/**
+	*增加学生
+	*@param string $name 学生名字
+	*@param int $id 用户id
+	*@param int $klassId 学生的班级
+	*/
+	public function addStudent($name,$id,$klassId)
+	{
+		$student=new Student();
+		$student->name=$name;
+		$student->user_id=$id;
+		$student->klass_id=$klassId;
+		$student->save();
 	}
 }
