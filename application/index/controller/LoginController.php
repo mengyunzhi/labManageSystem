@@ -77,7 +77,7 @@ class LoginController extends Controller
 		$password=$postData['password'];
 		$role=$postData['role'];
 		$name=$postData['name'];
-		if ($role="学生") {
+		if ($role=="学生") {
 			$klassId=$postData['klassId'];
 		}
 		if (empty($username)||empty($password)) {
