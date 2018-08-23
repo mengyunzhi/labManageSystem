@@ -34,15 +34,15 @@ class TeacherController extends Controller
 
     private $teacher; /*登录的教师 @param Teacher*/
 
-    private $tklassIds; /*登录教师教的班级id*/
+    private $tklassIds = []; /*登录教师教的班级id*/
 
-    private $tmajorsIds; //登陆教师教的的专业的id
+    private $tmajorsIds = []; //登陆教师教的的专业的id
 
-    private $tcollegesIds; //登录教师教的学院的id
+    private $tcollegesIds = []; //登录教师教的学院的id
 
-    private $tgradesIds; //登录教师教的年级的id
+    private $tgradesIds = []; //登录教师教的年级的id
 
-    private $tcourses; //登录教师教的课程
+    private $tcourses = []; //登录教师教的课程
 
     /**
     *构造函数 初始化查询条件 取得登录信息
@@ -57,7 +57,6 @@ class TeacherController extends Controller
         $this->currentSemester=Semester::currentSemester(Semester::select());
         $this->currentWeekorder=$this->currentSemester->getWeekorder();
         $this->currentClassroom=Classroom::get(1);
-       
         $this->setRange($this->currentSemester->id,$this->currentWeekorder);
 
     }
@@ -94,13 +93,13 @@ class TeacherController extends Controller
      *@param int $weekorder 查询的周次
      *@param int $classroomId 查询的教室id
      */
-    public function setRange($semesterId, $weekorder, $classroomId = null)
+    public function setRange($semesterId, $weekorder, $classroomId =null )
     {
         $this->currentSemester = Semester::get($semesterId);
         $this->currentWeekorder = $weekorder;
-        $this->currentClassroom = Classroom::get($classroomId);
         $this->sechedule = Sechedule::where('semester_id', '=', $semesterId)->where('weekorder', '=', $weekorder);
         if ($classroomId !== null) {
+            $this->currentClassroom = Classroom::get($classroomId);
             $this->sechedule->where('classroom_id', '=', $classroomId);
         }
     }
@@ -153,7 +152,6 @@ class TeacherController extends Controller
      */
     public function takelessonInterface()
     {
-
         // 判断是否为选课系统开放时间
         $time = time();
         if ($time >= $this->currentSemester->getData('starttaketime') && $time <= $this->currentSemester->getData('endtaketime')) {
@@ -164,6 +162,8 @@ class TeacherController extends Controller
             $secheduleList = $this->editSechedule();
 
             //得到老师教的班级
+
+            $tklasses = [];
             $i = 0;
             foreach ($this->tklassIds as $klassId) {
                 $id = $klassId->getData('klass_id');
@@ -303,7 +303,7 @@ class TeacherController extends Controller
         $this->assign('majors', $majors);
         $this->assign('klasses', $klasses);
         $this->assign('courses', $this->tcourses);
-        $this->assign('Teacher', $this->teacher);
+        $this->assign('teacher', $this->teacher);
         $this->assign('tmajors', $tmajors);
         $this->assign('tcolleges', $tcolleges);
         $this->assign('tgrades', $tgrades);

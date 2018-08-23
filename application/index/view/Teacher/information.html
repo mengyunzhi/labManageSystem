@@ -5,8 +5,8 @@
     <form class="form-inline" action="{:url('saveInformation')}" method="post">
         <div class="form-group" style="padding-top: 50px">
             <label >姓名：</label>
-            <input type="hidden" name="id" value="{$Teacher->getData('id')}">
-            <input type="text" class="form-control" id="name" value="{$Teacher->name}">
+            <input type="hidden" name="id" value="{$teacher->getData('id')}">
+            <input type="text" class="form-control" id="name" value="{$teacher->name}">
         </div>
         <br>
         <div class="form-group" style="   margin-left: 5px;padding: 50px 0">
@@ -88,7 +88,7 @@
                 <div class="modal-body">
                     <label>课程名称:</label>
                     <input name="newCourseName" placeholder="请输入要增加的课程名">
-                    <input type="hidden" name="teacherId" value="{$Teacher->id}" class="form-control">
+                    <input type="hidden" name="teacherId" value="{$teacher->id}" class="form-control">
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
@@ -183,7 +183,7 @@
 
 <!--删除班级-->
 <form action="{:url('deleteKlass')}" method="post">
-    <input type="hidden" value="{$Teacher->id}" name="teacherId">
+    <input type="hidden" value="{$teacher->id}" name="teacherId">
     <div class="modal fade" id="deleteKlass" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
         <div class="modal-dialog" role="document">
             <div class="modal-content">
