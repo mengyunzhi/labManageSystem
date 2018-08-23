@@ -58,6 +58,14 @@ class TeacherController extends Controller
         $this->currentWeekorder=$this->currentSemester->getWeekorder();
         $this->currentClassroom=Classroom::get(1);
         $this->setRange($this->currentSemester->id,$this->currentWeekorder);
+        //寻找和老师有关的信息的条件
+        $map['teacher_id'] = $this->teacher->id;
+        //和老师有关的信息
+        $this->tklassIds = $this->teacher->teacherKlass()->where($map)->select();
+        $this->tmajorsIds = $this->teacher->teacherMajor()->where($map)->select();
+        $this->tcollegesIds = $this->teacher->teacherCollege()->where($map)->select();
+        $this->tgradesIds = $this->teacher->teacherGrade()->where($map)->select();
+        $this->tcourses = $this->teacher->course()->where($map)->select();
 
     }
 
@@ -261,10 +269,6 @@ class TeacherController extends Controller
                 return $this->error('找的班级不存在');
             }
         }
-        //防止传过来的数据为空
-        if (is_null($tklass)) {
-            $tklass = 0;
-        }
 
         $tmajors = array();
         $i = 0;
@@ -273,9 +277,6 @@ class TeacherController extends Controller
             $id = $majorId->getData('major_id');
             $tmajors[$i++] = Major::get($id);
         }
-        if (is_null($tmajors)) {
-            $tmajors = 0;
-        }
 
         $tcolleges = array();
         $i = 0;
@@ -283,9 +284,7 @@ class TeacherController extends Controller
             $id = $collegeId->getData('college_id');
             $tcolleges[$i++] = College::get($id);
         }
-        if (is_null($tcolleges)) {
-            $tcolleges = 0;
-        }
+
 
         $tgrades = array();
         $i = 0;
@@ -293,9 +292,7 @@ class TeacherController extends Controller
             $id = $gradeId->getData('grade_id');
             $tgrades[$i++] = Grade::get($id);
         }
-        if (is_null($tgrades)) {
-            $tgrades = 0;
-        }
+
         //把信息传递给V层
         $this->assign('tklass', $tklass);
         $this->assign('grades', $grades);
@@ -331,12 +328,14 @@ class TeacherController extends Controller
 
         //存储姓名
         $Teacher->name = Request::instance()->post('name');
+
+
         if (is_null($Teacher->save())) {
             return $this->error('姓名更新失败' . $Teacher->getError());
         }
 
         //成功返回提示
-        return $this->success('更新成功', url('index'));
+        return $this->success('更新成功', url('information'));
     }
 
     //抢课功能
@@ -504,14 +503,13 @@ class TeacherController extends Controller
 
             //获取id数据
             $klassIds = $Request->post('ids');
-
             $teacherId = $Request->post('teacherId/d');
 
             //删除对象
             foreach ($klassIds as $id) {
                 $map['klass_id'] = $id;
                 $map['teacher_id'] = $teacherId;
-                if (!TeacherKlass::destroy($id)) {
+                if (!TeacherKlass::destroy($map)) {
                     return $this->error('删除失败');
                 }
             }
@@ -525,7 +523,7 @@ class TeacherController extends Controller
         }
 
         //成功进行跳转
-        return $this->success('删除成功', url('index'));
+        return $this->success('删除成功', url('information'));
     }
 
     //换课功能
