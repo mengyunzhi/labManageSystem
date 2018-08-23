@@ -348,7 +348,7 @@ class TeacherController extends Controller
         $teacherId = Request::instance()->post('teacherId/d');
         $secheduleId = Request::instance()->post('secheduleId/d');
         $courseId = Request::instance()->post('courseId/d');
-        $klassIds = (array)Request::instance()->post('KlassIds');
+        $klassIds = (array)Request::instance()->post('klassIds');
 
         if (($teacherId === 0 && $secheduleId === 0 && is_null($klassIds) && $courseId === 0)) {
             throw new \Exception('id有误', 1);
