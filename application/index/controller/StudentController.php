@@ -102,9 +102,9 @@ class StudentController extends Controller
     }
     public function student()
     {
-        //没有扫码，因此直接得到学生信息
-        $Student = Student::get('1');
-
+        //获取登录学生信息
+        $Student = $this->student;
+    
         if(is_null($Student))
         {
             return $this->error('不存在这个学生');
