@@ -1,6 +1,10 @@
 <?php
 
 namespace app\index\controller;
+use app\common\model\College;
+use app\common\model\Grade;
+use app\common\model\Klass;
+use app\common\model\Major;
 use app\common\model\User;
 use think\Controller;
 use think\facade\Request;
@@ -65,6 +69,15 @@ class LoginController extends Controller
 	*/
 	public function studentRegister()
 	{
+        $klasses = Klass::all();
+        $colleges = College::all();
+        $majors = Major::all();
+        $grades = Grade::all();
+
+        $this->assign('klasses', $klasses);
+        $this->assign('grades', $grades);
+        $this->assign('colleges', $colleges);
+        $this->assign('majors', $majors);
 		return $this->fetch('studentRegister');
 	}
 	/**
@@ -72,6 +85,7 @@ class LoginController extends Controller
 	*/
 	public function register()
 	{
+	    var_dump($_POST);
 		$postData=Request::instance()->post();
 		$username=$postData['username'];
 		$password=$postData['password'];
@@ -127,4 +141,31 @@ class LoginController extends Controller
 		$student->klass_id=$klassId;
 		$student->save();
 	}
+
+    public function getMajor()
+    {
+        $collegeIndex = Request::instance()->param('college/d');
+        $map['college_id'] = $collegeIndex;
+        $majors = Major::Where($map)->select();
+
+        return $majors;
+    }
+
+    public function getGrade()
+    {
+        $majorIndex = Request::instance()->param('major/d');
+        $map['major_id'] = $majorIndex;
+        $grades = Grade::Where($map)->select();
+
+        return $grades;
+    }
+
+    public function getKlass()
+    {
+        $gradeIndex = Request::instance()->param('grade/d');
+        $map['grade_id'] = $gradeIndex;
+        $klasses = Klass::Where($map)->select();
+
+        return $klasses;
+    }
 }
