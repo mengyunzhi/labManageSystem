@@ -387,7 +387,7 @@ class TeacherController extends Controller
         $Sechedule->save();
 
         //成功返回提示
-        return $this->success('恭喜，抢课成功', 'index');
+        return $this->success('恭喜，抢课成功', 'takelessonInterface');
 
     }
 
