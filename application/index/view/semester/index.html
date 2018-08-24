@@ -29,15 +29,13 @@
                                         <div class="form-group">
                                             <label>学期名称：</label>
                                             <input type="text" class="form-control" name="name">
-                                            <label>总周次:</label>
-                                            <input type="number" min="0" max="20" name="totalweek" class="form-control">
                                         </div>
                                         <hr>
                                         <div class="form-group">
-                                            <label>开始时间:</label>
+                                            <label>学期开始时间:</label>
                                             <input type="date" name="begintime" class="form-control" >
-                                            <label>结束时间:</label>
-                                            <input type="date" name="closetime" class="form-control">
+                                             <label>总周次:</label>
+                                            <input type="number" min="0" max="30" name="totalweek" class="form-control">
                                         </div>
                                         <hr>
                                         <div class="form-group">
@@ -49,9 +47,9 @@
                                         <hr>
                                         <div class="form-group">
                                             <label>允许抢课周次(周):</label>
-                                            <input type="number" name="startweekorder" class="form-control" min="0" max="20"> 
+                                            <input type="number" name="startweekorder" class="form-control" min="0" max="30"> 
                                             <span>~~</span>
-                                            <input type="number" name="endweekorder" class="form-control" min="0" max="20">
+                                            <input type="number" name="endweekorder" class="form-control" min="0" max="30">
                                         </div>
                                         <hr>
                                         <div class="form-group">
@@ -111,15 +109,13 @@
                                             <input type="hidden" name="id" value="{$semester->id}">
                                             <label>学期名称：</label>
                                             <input type="text" class="form-control" name="name" value="{$semester->name}">
-                                            <label>总周次:</label>
-                                            <input type="number" min="0" max="20" name="totalweek" class="form-control" value="{$semester->totalweek}">
                                         </div>
                                         <hr>
                                         <div class="form-group">
                                             <label>开始时间:</label>
                                             <input type="date" name="begintime" class="form-control" value="{$semester->getDate($semester->getData('begintime'))}">
-                                            <label>结束时间:</label>
-                                            <input type="date" name="closetime" class="form-control" value="{$semester->getDate($semester->getData('closetime'))}">
+                                            <label>总周次:</label>
+                                            <input type="number" min="0" max="30" name="totalweek" class="form-control" value="{$semester->totalweek}">
                                         </div>
                                         <hr>
                                         <div class="form-group">
@@ -131,9 +127,9 @@
                                         <hr>
                                         <div class="form-group">
                                             <label>允许抢课周次(周):</label>
-                                            <input type="number" name="startweekorder" class="form-control" min="0" max="20" value="{$semester->startweekorder}"> 
+                                            <input type="number" name="startweekorder" class="form-control" min="0" max="30" value="{$semester->startweekorder}"> 
                                             <span>~~</span>
-                                            <input type="number" name="endweekorder" class="form-control" min="0" max="20" value="{$semester->endweekorder}">
+                                            <input type="number" name="endweekorder" class="form-control" min="0" max="30" value="{$semester->endweekorder}">
                                         </div>
                                         <hr>
                                         <div class="form-group">
