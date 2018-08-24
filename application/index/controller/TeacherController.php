@@ -165,15 +165,17 @@ class TeacherController extends Controller
         // 判断是否为选课系统开放时间
         $time = time();
         if ($time >= $this->currentSemester->getData('starttaketime') && $time <= $this->currentSemester->getData('endtaketime')) {
+            $this->currentSemester=Semester::getOpenSemester(Semester::select());
             $postData = Request::instance()->post();
             if (!empty($postData)) {
                 $this->setRange($this->currentSemester->id, (int)$postData['weekorder'], (int)$postData['classroom_id']);
                 $this->currentClassroom=Classroom::get((int)$postData['classroom_id']);
             }else{
+                $this->currentWeekorder=$this->currentSemester->startweekorder;
                 $this->setRange($this->currentSemester->id, $this->currentWeekorder, $this->currentClassroom->id);
             }
-            $secheduleList = $this->editSechedule();
 
+            $secheduleList = $this->editSechedule();
             //得到老师教的班级
 
             $tklasses = [];
@@ -221,12 +223,9 @@ class TeacherController extends Controller
             if (is_null($tgrades)) {
                 $tgrades = 0;
             }
-
             $this->assign([
                 'currentSemester' => $this->currentSemester,
                 'currentWeekorder' => $this->currentWeekorder,
-                'startweekorder' => $this->currentSemester->startweekorder,
-                'endweekorder' => $this->currentSemester->endweekorder,
                 'currentClassroom' => $this->currentClassroom,
                 'allClassroom' => Classroom::select(),
                 'Klasses' => Klass::select(),

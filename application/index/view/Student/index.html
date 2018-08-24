@@ -89,10 +89,7 @@
                                     <br>
                                     <span>教室:{$sechedule->classroom->name}</span>
                                     <br>
-                                    <span>班级:</span>
-                                    {volist name="Klasses" id="Klass"}
-                                        {eq name="$sechedule->getKlassesIsChecked($Klass)" value="true"}<span>{$Klass->name}</span>{else/}{/eq}
-                                    {/volist}     
+                                    <span>班级:{$student->klass->name}</span>  
                                 {/eq}
                             </td>
                         {/volist}
