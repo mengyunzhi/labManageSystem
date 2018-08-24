@@ -1,4 +1,5 @@
 <?php
+
 namespace app\common\model;
 
 use think\Model;
@@ -9,19 +10,24 @@ use think\Model;
 class Sechedule extends Model
 {
     //
-	public function klasses()
+    public function klasses()
     {
         return $this->belongsToMany('Klass');
     }
-    public function teacher(){
-    	return $this->belongsTo('Teacher');
+
+    public function teacher()
+    {
+        return $this->belongsTo('Teacher');
     }
-    public function course(){
-    	return $this->belongsTo('Course');
+
+    public function course()
+    {
+        return $this->belongsTo('Course');
     }
+
     /**
-    *行程与教室一对多关联
-    */	
+     *行程与教室一对多关联
+     */
 
     public function classroom()
     {
@@ -29,16 +35,16 @@ class Sechedule extends Model
     }
 
     /**
-    *判断行程是否在换课中
-    *@return boolean
-    */
+     *判断行程是否在换课中
+     * @return boolean
+     */
     public function isChangeLesson()
     {
-        $applySechedule=Changelesson::get(['applysechedule_id'=>$this->id]);
-        $targetSechedule=Changelesson::get(['targetsechedule_id'=>$this->id]);
-        if(isset($applySechedule)||isset($targetSechedule)){
+        $applySechedule = Changelesson::get(['applysechedule_id' => $this->id]);
+        $targetSechedule = Changelesson::get(['targetsechedule_id' => $this->id]);
+        if (isset($applySechedule) || isset($targetSechedule)) {
             return true;
-        }else{
+        } else {
             return false;
         }
     }
@@ -119,10 +125,10 @@ class Sechedule extends Model
         $ApplySechedule->save();
         $TargetSechedule->save();
     }
-  
-   /*
-    * 找到相同时间的其他教室
-    * */
+
+    /*
+     * 找到相同时间的其他教室
+     * */
     public function findTheSameTimeSechedule(Sechedule &$Sechedule)
     {
         //定制查询条件
@@ -145,30 +151,27 @@ class Sechedule extends Model
     {
         //定制查询当前教室的班级的条件
         $map['sechedule_id'] = $Sechedule->id;
-        $flag = false;
+        $flag = true;
         //找到当前教室的班级
         $currentSechedules = array();
         $currentSechedules = SecheduleKlass::where($map)->select();
 
-        //判断教师在不在
-        if (!($Sechedule->teacher_id === $teacherId))
-        {
 
-            if (!empty($currentSechedules))
-            {
+        //判断教师在不在
+        if (!($Sechedule->teacher_id == $teacherId)) {
+
+            //判断空值
+            if (empty($currentSechedules)) {
+
                 return false;
             }
 
             //判断学生在不在
-            foreach ($klassIds as $klassId)
-            {
+            foreach ($currentSechedules as $currentSechedule) {
 
-                foreach ($currentSechedules as $currentSechedule)
-                {
+                foreach ($klassIds as $klassId) {
 
-                    if ($currentSechedule->klass_id === $klassId)
-                    {
-
+                    if ($currentSechedule->klass_id == $klassId) {
                         $flag = false;
                     }
 
@@ -177,10 +180,15 @@ class Sechedule extends Model
                         return true;
                 }
             }
+        } else {
+
+            return true;
         }
 
-        //存在一样的老师或学生
-        return true;
+        //如果前面没有得出结果
+        return false;
+
+
     }
 }
 
