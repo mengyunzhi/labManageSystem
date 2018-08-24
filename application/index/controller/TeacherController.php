@@ -431,7 +431,7 @@ class TeacherController extends Controller
         $NewCourse->save();
 
         //成功返回结果
-        return $this->success('课程增加成功', url('takelessonInterface'));
+        return $this->success('课程增加成功', url('information'));
     }
 
     //老师增加班级

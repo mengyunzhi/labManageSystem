@@ -83,6 +83,8 @@
                                 {eq name="sechedule" value="$null"}
                                     <span>无课</span>
                                 {else/}
+                                    <span>教师:{$sechedule->teacher->name}</span>
+                                    <br>
                                     <span>课程:{$sechedule->course->name}</span>
                                     <br>
                                     <span>教室:{$sechedule->classroom->name}</span>
