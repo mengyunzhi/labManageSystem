@@ -97,30 +97,32 @@
                         <input type="hidden" name="teacherId" value="{$teacher->id}">
                     </div>
                     {volist name="tcolleges" id="College"}
-                    <label>{$College->name}:</label>
-                    <br>
-                    <label>
+                    <label>{$College->name}:</label><br>
+                    <div>
                         {volist name="tmajors" id="Major"}
-                        <label {neq name="$Major->college_id" value="$College->id" } hidden="hidden" {/neq}>
-                            <label>
-                                {volist name="tgrades" id="Grade"}
-                                <label {neq name="$Grade->major_id" value="$Major->id" } hidden="hidden" {/neq}>
-                                    <label>
-                                        {volist name="tklasses" id="Klass"}
-                                        <label {neq name="$Klass->grade_id" value="$Major->id" } hidden="hidden" {/neq}>
-                                            &nbsp&nbsp&nbsp&nbsp&nbsp&nbsp &nbsp&nbsp&nbsp&nbsp&nbsp&nbsp {$Klass->name}
-                                        </label>
-                                        <input type="checkbox" value="1" name="klassIds[]" {neq name="$Klass->grade_id" value="$Major->id" } hidden="hidden" {/neq}>
-                                    </label>
-                                    <br> {/volist}
-                                </label>
-                            </label>
+                        <div {neq name="$Major->college_id" value="$College->id" } hidden="hidden" {/neq}>
+                        <div>
+                            {volist name="tgrades" id="Grade"}
+                            <div {neq name="$Grade->major_id" value="$Major->id" } hidden="hidden" {/neq}>
+                            <div>
+                                {volist name="tklasses" id="Klass"}
+                                <div {neq name="$Klass->grade_id" value="$Grade->id" } hidden="hidden" {/neq}>
+                                &nbsp&nbsp&nbsp&nbsp&nbsp&nbsp
+                                &nbsp&nbsp&nbsp&nbsp&nbsp&nbsp
+                                {$Klass->name}
+                                <input type="checkbox" id="klass" value="{$Klass->id}" name="klassIds[{$key}]"  {neq name="$Klass->grade_id" value="$Grade->id" } hidden="hidden" {/neq}>
+                            </div><br>
                             {/volist}
-                        </label>
-                        {/volist}
-                    </label>
+                        </div>
+                    </div>
                     {/volist}
                 </div>
+            </div>
+            {/volist}
+        </div>
+        {/volist}
+
+                    </div>
                 <hr/> &nbsp&nbsp&nbsp&nbsp&nbsp&nbsp
                 <label>课程名称:</label>
                 <br>
@@ -183,7 +185,7 @@ $('#TakeLessons').on('show.bs.modal', function(event) {
                     </div>
                     <!-- 选择目标周次 -->
                     <div class="form-group">
-                        <label>周次：</label>
+                        <label>周次</label>
                         <select class="btn btn-default dropdown-toggle" name="weekorder">
                             {for start="$startweekorder" end="$endweekorder+1" }
                             <option value="{$i}" {eq name="$i" value="$currentWeekorder" } selected="selected" {/eq}>第{$i}周</option>
@@ -216,7 +218,7 @@ $('#TakeLessons').on('show.bs.modal', function(event) {
                     </div>
                     <!-- 选择目标教室 -->
                     <div class="form-group">
-                        <label>选择教室：</label>
+                        <label>选择教室</label>
                         <select class="btn btn-default dropdown-toggle" name="classroom_id">
                             {volist name="allClassroom" id="classroom"}
                             <option value="{$classroom->id}" {eq name="$currentClassroom->id" value="$classroom->id" } selected="selected" {/eq}>{$classroom->name}</option>

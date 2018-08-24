@@ -204,7 +204,6 @@
                                 &nbsp&nbsp&nbsp&nbsp&nbsp&nbsp
                                 {$Klass->name}
                                 <input type="checkbox" id="klass" value="{$Klass->id}" name="ids[{$key}]"  {neq name="$Klass->grade_id" value="$Grade->id" } hidden="hidden" {/neq}>
-
                             </div><br>
                             {/volist}
                         </div>
@@ -232,6 +231,8 @@
         var collegeNode = document.getElementById('college');
         var majorNode   = document.getElementById('major');
         var name = "aCollege";//建立的input的name
+
+        clear(majorNode);
 
         var collegeIndex = collegeNode.selectedIndex;
         var value = collegeNode[collegeIndex].value;
