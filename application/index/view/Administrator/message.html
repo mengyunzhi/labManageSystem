@@ -24,12 +24,12 @@
                 </tr>
                 {volist name="changelessons" id="changelesson" key="key"}
                 <tr>
-                    <td>{$key}</td>
-                    <td class="warning text-center">{$changelesson->getApply()->teacher->name} 第{$changelesson->getApply()->weekorder}周 星期{$changelesson->getApply()->week} 第{$changelesson->getApply()->node}节 {$changelesson->getApply()->classroom->name}
+                    <td width="10%">{$key}</td>
+                    <td class="warning text-center" width="35%">{$changelesson->getApply()->teacher->name} 第{$changelesson->getApply()->weekorder}周 星期{$changelesson->getApply()->week} 第{$changelesson->getApply()->node}节 {$changelesson->getApply()->classroom->name}
                     </td>
-                    <td class="success text-center">{$changelesson->getTarget()->teacher->name} 第{$changelesson->getTarget()->weekorder}周 星期{$changelesson->getTarget()->week} 第{$changelesson->getTarget()->node}节 {$changelesson->getTarget()->classroom->name}
+                    <td class="success text-center" width="35%">{$changelesson->getTarget()->teacher->name} 第{$changelesson->getTarget()->weekorder}周 星期{$changelesson->getTarget()->week} 第{$changelesson->getTarget()->node}节 {$changelesson->getTarget()->classroom->name}
                     </td>
-                    <td class="text-center">
+                    <td class="text-center" width="20%">
                         <a href="{:url('handlemessage', ['request' => 1,'id' => " $changelesson->id"])}" class="btn btn-md btn-primary"><i class="glyphicon glyphicon-ok" aria-hidden="true">&nbsp;同意</i></a>&nbsp
                         <a href="{:url('handlemessage', ['request' => 0,'id' => " $changelesson->id"])}" class="btn btn-md btn-danger"><i class="glyphicon glyphicon-remove" aria-hidden="true">&nbsp;拒绝</i></a>
                     </td>

@@ -370,7 +370,7 @@ class TeacherController extends Controller
         //判断相同时间段内老师或学生是否在其他地方上课
         foreach ($theTameTimeSechedules as $theTameTimeSechedule) {
             if ($Sechedule->isExist($theTameTimeSechedule, $teacherId, $klassIds)) {
-                return $this->error('抢课失败，您或学生当前时间在其他地方已经有课了');
+                return $this->error('抢课失败，您或学生当前时间在其他地方已经有课了','takelessonInterface');
             }
         }
 
@@ -560,7 +560,7 @@ class TeacherController extends Controller
 
         foreach ($theTameTimeSechedules as $theTameTimeSechedule) {
             if ($TargetSechedule->isExist($theTameTimeSechedule, $teacherId, $klassIds)) {
-                return $this->error('换课失败，您或学生当前时间在其他地方已经有课了');
+                return $this->error('换课失败，您或学生当前时间在其他地方已经有课了','takelessonInterface');
             }
         }
 
