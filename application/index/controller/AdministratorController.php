@@ -38,10 +38,14 @@ class AdministratorController extends Controller
         if (is_null($this->administrator)) {
           return $this->error("请先登录",url('Login/index'));
         }
-        $this->currentSemester=Semester::currentSemester(Semester::select());
-        $this->currentWeekorder=$this->currentSemester->getWeekorder();
-        $this->currentClassroom=Classroom::get(1);
-        $this->setRange($this->currentSemester->id,$this->currentWeekorder,$this->currentClassroom->id);
+        if (!Semester::select()->isEmpty()&&!Classroom::select()->isEmpty()) {
+            $this->currentSemester=Semester::currentSemester(Semester::select());
+            $this->currentWeekorder=$this->currentSemester->getWeekorder();
+            $classrooms=Classroom::select();
+            $this->currentClassroom=$classrooms[0];
+            $this->setRange($this->currentSemester->id,$this->currentWeekorder,$this->currentClassroom->id);
+        }
+        
     }
     public function index()
     {

@@ -36,26 +36,6 @@ class CourseController extends Controller
         return $this->fetch();
     }
 
-    public function save()
-    {
-    	// 实例化请求信息
-        $Request = Request::instance();
-
-        // 实例化班级并赋值
-        $Course = new Course();
-        $Course->name = $Request->post('name');
-        $Course->teacher_id = $Request->post('teacher_id/d');
- 
-        // 添加数据
-        if (!$Course->save()) {
-            return $this->error('数据添加错误：' . $Course->getError());
-        }
-
-        // 进行跳转
-        return $this->success('操作成功', url('index'));
-   
-    }
-
     public function update()
     {
         //获取ID

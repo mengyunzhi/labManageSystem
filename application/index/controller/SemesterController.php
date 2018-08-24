@@ -45,7 +45,11 @@ class SemesterController extends Controller
     {
     	
           //接收传入数据
-        $postData = Request::instance()->post();        
+        $postData = Request::instance()->post();
+        $validate = new \app\index\validate\Semester;
+        if (!$validate->check($postData)) {
+            return $this->error($validate->getError());
+        }        
         $Semester = new Semester();
         // 为对象的属性赋值
         $Semester->name = $postData['name'];
@@ -53,7 +57,7 @@ class SemesterController extends Controller
         $Semester->endtaketime=strtotime($postData['endtaketime']);
         $Semester->totalweek=(int)$postData['totalweek'];
         $Semester->begintime=strtotime($postData['begintime']);
-        $Semester->closetime=strtotime($postData['closetime']);
+        $Semester->closetime=$Semester->getData('begintime')+(($Semester->getData('totalweek'))*604800);
         $Semester->startweekorder=$postData['startweekorder'];
         $Semester->endweekorder=$postData['endweekorder'];
         // 新增对象至数据表
@@ -92,7 +96,11 @@ class SemesterController extends Controller
     */
     public function update()
     {
-        $postData = Request::instance()->post();    
+        $postData = Request::instance()->post();
+        $validate = new \app\index\validate\Semester;
+        if (!$validate->check($postData)) {
+            return $this->error($validate->getError());
+        }        
         $Semester = Semester::get((int)$postData['id']);
         // 为对象的属性赋值
         $oldtotalweek=$Semester->totalweek;
@@ -101,7 +109,7 @@ class SemesterController extends Controller
         $Semester->endtaketime=strtotime($postData['endtaketime']);
         $Semester->totalweek=(int)$postData['totalweek'];
         $Semester->begintime=strtotime($postData['begintime']);
-        $Semester->closetime=strtotime($postData['closetime']);
+        $Semester->closetime=$Semester->getData('begintime')+(($Semester->getData('totalweek'))*604800);
         $Semester->startweekorder=(int)$postData['startweekorder'];
         $Semester->endweekorder=(int)$postData['endweekorder'];
         $this->editsechedule($Semester->id,$oldtotalweek,$Semester->totalweek);
