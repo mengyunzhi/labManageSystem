@@ -119,7 +119,38 @@ class Sechedule extends Model
         $ApplySechedule->save();
         $TargetSechedule->save();
     }
-  
+    //传入交换课和空目标课的id，交换两课的教师，课程，班级
+    public static function exchangenull($applyid, $targetid) //id为交换课的id，target为目标课的id
+    {
+        $ApplySechedule = Sechedule::get($applyid); //通过id，找到sechedule表里对应的对象
+        $ApplyKlassIds = $ApplySechedule->getKlasses()->column('klass_id'); //找到sechedule_klass表里所有sechedule_id为id的对象，存到数组$Change中
+        $TargetSechedule = Sechedule::get($targetid); //通过targetid，找到sechedule表里对应的对象
+
+        $TargetSechedule->teacher_id = $ApplySechedule->teacher_id;
+        $TargetSechedule->course_id = $ApplySechedule->course_id;
+
+        //判断添加的关联是否重复
+        foreach ($ApplyKlassIds as $id) 
+        {
+            //添加新的班级时刻中间表
+            $Klass = Klass::get($id);
+            if (!$TargetSechedule->getKlassesIsChecked($Klass)) 
+            {
+                $TargetSechedule->klasses()->save($id);
+            }
+
+
+        }
+        //删除已有的班级时刻中间表               
+        $ApplyKlasses = SecheduleKlass::where('Sechedule_id','=',$applyid)->delete();
+        $ApplySechedule->teacher_id = null;
+        $ApplySechedule->course_id = null;
+
+        $TargetSechedule->save();
+        $ApplySechedule->save();
+
+
+    }
    /*
     * 找到相同时间的其他教室
     * */
