@@ -78,6 +78,35 @@
                     </div>
                 </div>
             </div>
+            <br><br>
+            <form action="{:url('index')}" method="post">
+                <div class="row">
+                    <div class="col-md-3">
+                        <label>学院:</label>
+                        <select class="btn btn-default dropdown-toggle" name="searchCollegeId" id="college2" onclick="getMajor1()">
+                            {volist name="colleges" id="College"}
+                            <option value="{$College->id}">{$College->name}</option>
+                            {/volist}
+                        </select>
+                    </div>
+                    <div class="col-md-3">
+                        <label>专业：</label>
+                        <select class="btn btn-default dropdown-toggle" name="searchMajor" id="major2" onclick="getGrade1()">
+                           <option></option>
+                        </select>
+                    </div>
+                    <div class="col-md-3">
+                        <label>年级：</label>
+                        <select class="btn btn-default dropdown-toggle" name="searchGradeId" id="grade2" onclick="getKlass1()">
+                            <option></option>
+                        </select>
+                    </div>
+                    <div class="col-md-3">
+                        <button type="submit" class="btn btn-default">搜索</button>
+                    </div>
+                </div>
+            </form>
+
             <hr/>
             <table class="table table-hover table-bordered">
                 <tr class="info">
@@ -177,7 +206,54 @@
         creatInput(value, name, gradeNode);
     }
 
+    function getMajor1() {
+        var major1 = document.getElementById('major1').innerHTML;
+        var collegeNode = document.getElementById('college2');
+        var majorNode = document.getElementById('major2');
+        var name = "aCollege";//建立的input的name
 
+        clear(majorNode);
+
+        var collegeIndex = collegeNode.selectedIndex;
+        var value = collegeNode[collegeIndex].value;
+        var url = "/labmanagesystem/public/index/klass/getMajor?college=" + value;
+        ajaxGet(url, function (response) {
+            var majors = response;
+            createOption(majorNode, majors);
+            setSelected(majorNode, major1);
+        });
+        creatInput(value, name, collegeNode);
+    }
+
+    function getGrade1() {
+        var grade1 = document.getElementById('grade1').innerHTML;
+        var majorNode = document.getElementById('major2');
+        var gradeNode = document.getElementById('grade2');
+        var name = "aMajor";//建立的input的name
+
+        clear(gradeNode);
+
+        var majorIndex = majorNode.selectedIndex;
+        var value = majorNode[majorIndex].value;
+        var url = "/labmanagesystem/public/index/klass/getGrade?major=" + value;
+        ajaxGet(url, function (response) {
+            var grades = response;
+            createOption(gradeNode, grades);
+            setSelected(gradeNode, grade1);
+        });
+        creatInput(value, name, majorNode);
+    }
+
+    function getKlass1() {
+
+        var gradeNode = document.getElementById('grade2');
+
+        var name = "aGrade";//建立的input的name
+
+        var gradeIndex = gradeNode.selectedIndex;
+        var value = gradeNode[gradeIndex].value;
+        creatInput(value, name, gradeNode);
+    }
 
     //访问php函数，一个对象数组的返回值
     function ajaxGet(url, callback) {

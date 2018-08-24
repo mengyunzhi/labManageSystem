@@ -19,6 +19,7 @@ class GradeController extends Controller
     public function index()
     {
 
+
         // 页面的查询功能和分页
         $name = input('get.name');
 

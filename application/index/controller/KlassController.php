@@ -18,8 +18,13 @@ use think\facade\Request;
 class KlassController extends Controller
 {
 
+
+
     public function index()
     {
+
+        $postData = Request::instance()->post();
+
 
         // 页面的查询功能和分页
         $name = input('get.name');
@@ -33,11 +38,18 @@ class KlassController extends Controller
         $Klass = new Klass();
         
        //增加数据显示在第一个,按条件查询并分页
-        $klasses = $Klass->where('name','like','%'.$name.'%')->order('id desc')->paginate($pageSize,false,[
+
+        if (empty($postData)) {
+            $klasses = $Klass->where('name','like','%'.$name.'%')->order('id desc')->
+            paginate($pageSize,false,[
                 'query' =>[
-                 'name' => $name,
+                    'name' => $name,
                 ]
-                ]);
+            ]);
+        }else{
+            $klasses = $Klass->where('grade_id','like','%'.$postData['searchGradeId'].'%')->
+            order('id desc')->paginate($pageSize,false);
+        }
 
         //向V层传数据
         $this->assign('klasses', $klasses);
@@ -46,6 +58,13 @@ class KlassController extends Controller
         $this->assign('majors', $majors);
         //渲染数据
         return $this->fetch();
+    }
+
+    public function search($data)
+    {
+        $map['grade_id'] = $data;
+        $klasses = Klass::where($map)->select();
+        return $klasses;
     }
 
     //班级的删除功能
@@ -93,7 +112,6 @@ class KlassController extends Controller
     //对数据进行保存或更新
     private function  saveKlass(Klass &$Klass, $isUpdate = false)
     {
-        var_dump($_POST);
         //数据更新
         $Klass->name = Request::instance()->post('name');
         $Klass->grade_id = Request::instance()->post('aGrade');
