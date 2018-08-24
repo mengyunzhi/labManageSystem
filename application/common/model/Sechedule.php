@@ -223,5 +223,80 @@ class Sechedule extends Model
 
 
     }
+
+     /*换课时判断是否时间冲突*/
+    public function isChangeExist($allSameSechedule,$applyTeacherId,$applyKlassIds,$TargetSechedule)
+    {
+        //如果教师时间冲突，则返回1
+        if ($TargetSechedule->isChangeTeacherExist($allSameSechedule,$applyTeacherId,$TargetSechedule)) {
+            return 1;
+        }
+        //如果教师时间不冲突，则判断班级是否冲突   
+        else
+        {
+            //如果冲突的班级为空，即班级不冲突，则返回2
+            if (empty($TargetSechedule->isChangeKlassExist($allSameSechedule,$applyKlassIds,$TargetSechedule))) {
+                return 2;
+            }
+            //如果冲突的班级不为空，则返回冲突的班级ID
+            else{
+                $result = $TargetSechedule->isChangeKlassExist($allSameSechedule,$applyKlassIds,$TargetSechedule);
+                return $result;
+            }
+        }
+
+    }
+
+    /*换课时判断老师是否时间冲突*/
+    public function isChangeTeacherExist($allSameSechedule,$applyTeacherId,$TargetSechedule)
+    {
+        //判断老师是否在目标时间的所有教室有没有课
+        foreach ($allSameSechedule as $SameSechedule) {
+            if ($SameSechedule->teacher_id === $applyTeacherId) {
+                $teacherSameSechedules[] = $SameSechedule;
+            }
+        }
+
+        //如果没有，则申请教师换到目标课后不会引起时间冲突
+        if (empty($teacherSameSechedules)) {
+            return false;
+        }
+        //如果有，判断有课的教室是不是有且仅有目标教室,如果是，则教师要换的是自己的课，并且不会引起时间冲突
+        else if($teacherSameSechedules[0]->classroom_id === $TargetSechedule->classroom_id and count($teacherSameSechedules) === 1){
+            return false;
+        }
+        //除此以外，教师换到目标后会引起时间冲突
+        else {
+            return true;
+        }
+    }
+
+    /*换课时判断班级是否时间冲突*/
+    public function isChangeKlassExist($allSameSechedule,$applyKlassIds,$TargetSechedule)
+    {
+        $sameKlassIds = array();
+        //判断班级是否在目标时间所有其他教室有课
+        foreach ($allSameSechedule as $SameSechedule) 
+        {
+            if ($SameSechedule->id != $TargetSechedule->id) {
+                //在相同时间情况下，寻找此教室里的所有有课的班级集合         
+                if (!empty($SameSechedule->getKlasses())) {
+                    $klass_ids = $SameSechedule->getKlasses()->column('klass_id');
+
+                    //比较有课的班级集合与申请换课的班级集合，返回相同的班级的ID
+                    $sameKlassId = array_intersect($klass_ids,$applyKlassIds);
+
+                    //如果相同的班级不为空，则申请换课的班级集合里至少有一个班时间冲突，将冲突的班级存到$sameKlassIds数组中
+                    if (!empty($sameKlassId)) {                    
+                         $sameKlassIds = $sameKlassId;
+                    }
+                }      
+            }                
+        }
+
+        //移除$sameKlassIds中重复的值,将时间冲突的班级id返回
+        $result = array_unique($sameKlassIds);
+        return $result;
+    }
 }
 
