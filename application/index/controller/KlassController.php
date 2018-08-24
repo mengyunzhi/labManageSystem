@@ -24,9 +24,9 @@ class KlassController extends Controller
         $pageSize = 5;
 
         $Klass = new Klass();
-       //按条件查询数据并调用分页
-        $klasses = $Klass->where('name','like','%'.$name.'%')
-            ->paginate($pageSize,false,[
+        
+       //增加数据显示在第一个,按条件查询并分页
+        $klasses = $Klass->where('name','like','%'.$name.'%')->order('id desc')->paginate($pageSize,false,[
                 'query' =>[
                  'name' => $name,
                 ]
