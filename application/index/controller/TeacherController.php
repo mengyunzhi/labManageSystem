@@ -57,7 +57,8 @@ class TeacherController extends Controller
         }
         $this->currentSemester = Semester::currentSemester(Semester::select());
         $this->currentWeekorder = $this->currentSemester->getWeekorder();
-        $this->currentClassroom = Classroom::get(1);
+        $classrooms=Classroom::select();
+        $this->currentClassroom=$classrooms[0];
         $this->setRange($this->currentSemester->id, $this->currentWeekorder);
         //寻找和老师有关的信息的条件
         $map['teacher_id'] = $this->teacher->id;
