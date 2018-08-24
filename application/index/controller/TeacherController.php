@@ -167,6 +167,9 @@ class TeacherController extends Controller
             $postData = Request::instance()->post();
             if (!empty($postData)) {
                 $this->setRange($this->currentSemester->id, (int)$postData['weekorder'], (int)$postData['classroom_id']);
+                $this->currentClassroom=Classroom::get((int)$postData['classroom_id']);
+            }else{
+                $this->setRange($this->currentSemester->id, $this->currentWeekorder, $this->currentClassroom->id);
             }
             $secheduleList = $this->editSechedule();
 
@@ -430,7 +433,7 @@ class TeacherController extends Controller
         $NewCourse->save();
 
         //成功返回结果
-        return $this->success('课程增加成功', url('index'));
+        return $this->success('课程增加成功', url('takelessonInterface'));
     }
 
     //老师增加班级
