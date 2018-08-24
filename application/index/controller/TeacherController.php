@@ -350,7 +350,8 @@ class TeacherController extends Controller
         $courseId = Request::instance()->post('courseId/d');
         $klassIds = (array)Request::instance()->post('klassIds');
 
-        if (($teacherId === 0 && $secheduleId === 0 && is_null($klassIds) && $courseId === 0)) {
+
+
             throw new \Exception('id有误', 1);
         }
 
@@ -374,14 +375,11 @@ class TeacherController extends Controller
         $Sechedule->teacher_id = $teacherId;
         $Sechedule->course_id = $courseId;
 
-        //判断添加的关联是否重复
+
+        var_dump($klassIds);
         foreach ($klassIds as $id) {
-            $Klass = Klass::get($id);
-            if (!$Sechedule->getKlassesIsChecked($Klass)) {
-
+            var_dump($id);
                 $Sechedule->klasses()->save($id);
-
-            }
         }
 
         $Sechedule->save();

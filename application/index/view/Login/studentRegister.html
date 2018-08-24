@@ -119,6 +119,7 @@
         var collegeNode = document.getElementById('college');
         var majorNode = document.getElementById('major');
         var name = "aCollege";//建立的input的name
+        clear(majorNode);
         var collegeIndex = collegeNode.selectedIndex;
         var value = collegeNode[collegeIndex].value;
         var url = "/labmanagesystem/public/index/login/getMajor?college=" + value;
