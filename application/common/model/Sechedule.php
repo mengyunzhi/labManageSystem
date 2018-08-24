@@ -161,7 +161,7 @@ class Sechedule extends Model
    /*
     * 找到相同时间的其他教室
     * */
-  
+
     public function findTheSameTimeSechedule(Sechedule &$Sechedule)
     {
         //定制查询条件

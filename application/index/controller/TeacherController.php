@@ -167,6 +167,9 @@ class TeacherController extends Controller
             $postData = Request::instance()->post();
             if (!empty($postData)) {
                 $this->setRange($this->currentSemester->id, (int)$postData['weekorder'], (int)$postData['classroom_id']);
+                $this->currentClassroom=Classroom::get((int)$postData['classroom_id']);
+            }else{
+                $this->setRange($this->currentSemester->id, $this->currentWeekorder, $this->currentClassroom->id);
             }
             $secheduleList = $this->editSechedule();
 
@@ -350,10 +353,9 @@ class TeacherController extends Controller
         $courseId = Request::instance()->post('courseId/d');
         $klassIds = (array)Request::instance()->post('klassIds');
 
+        if (($teacherId === 0 || $secheduleId === 0 || empty($klassIds) || $courseId === 0||is_null($courseId))) {
+            $this->error("请填写完整信息");
 
-
-        if ((empty($teacherId)||$teacherId === 0 ||empty($secheduleId)|| $secheduleId === 0 || empty($klassIds) || $courseId === 0 ||empty($courseId))) {
-            throw new \Exception('id有误', 1);
         }
 
         //得到timeClassroom对象
@@ -378,14 +380,14 @@ class TeacherController extends Controller
 
 
         foreach ($klassIds as $id) {
-            var_dump($id);
+
                 $Sechedule->klasses()->save($id);
         }
 
         $Sechedule->save();
 
         //成功返回提示
-        return $this->success('恭喜，抢课成功', 'index');
+        return $this->success('恭喜，抢课成功', 'takelessonInterface');
 
     }
 
@@ -429,7 +431,7 @@ class TeacherController extends Controller
         $NewCourse->save();
 
         //成功返回结果
-        return $this->success('课程增加成功', url('index'));
+        return $this->success('课程增加成功', url('takelessonInterface'));
     }
 
     //老师增加班级
