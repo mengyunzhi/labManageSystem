@@ -16,7 +16,7 @@ class MajorController extends controller
 		$name =Request::instance()->get('name');
 		//设置每页大小
 		$pageSize = 5;
-		//实例化College
+		//实例化
 		$Major = new Major;
 		//增加数据显示在第一个，按条件查询并分页
 		$majors = $Major->where('name', 'like', '%' . $name .'%')->order('id desc')->paginate($pageSize, false,[

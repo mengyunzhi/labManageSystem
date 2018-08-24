@@ -9,24 +9,24 @@
             <input type="text" class="form-control" name="name" value="{$teacher->name}">
         </div>
         <br>
-        <div class="form-group" style="   margin-left: 5px;padding: 50px 0">
+        <div class="form-group" style="margin-left: 5px;padding: 50px 0">
             <label>身份:</label>
             <label>老师</label>
             <hr>
 
             <!--选择所教的班级-->
             <div class="form-group">
-                <label>所教班级：</label><br>
                 <button type="button" class="btn btn-primary " data-toggle="modal" data-target="#addKlass">
                     <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
                     添加班级
                 </button>
-                <!--//删除课程的按钮-->
+                <!--//删除班级的按钮-->
                 <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#deleteKlass">
                     <span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
                     删除班级
                 </button>
                 <br><br>
+                <label>所教班级：</label><br>
                 {volist name="tcolleges" id="College"}
                 <label>{$College->name}:</label><br>
                 <div>
@@ -67,7 +67,7 @@
         <span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
         删除课程
     </button>
-    <br>
+    <br><br>
     <label>所教课程：</label><br>
     {volist name="courses" id="Course"}
     <label>
@@ -129,7 +129,7 @@
             <div class="modal-content">
                 <div class="modal-body">
                     <br>
-                    <p id="major1" class="hide">5</p>
+                    <p id="major1" class="hide">1</p>
                     <p id="grade1" class="hide">1</p>
                     <p id="klass1" class="hide">1</p>
 
@@ -204,7 +204,6 @@
                                 &nbsp&nbsp&nbsp&nbsp&nbsp&nbsp
                                 {$Klass->name}
                                 <input type="checkbox" id="klass" value="{$Klass->id}" name="ids[{$key}]"  {neq name="$Klass->grade_id" value="$Grade->id" } hidden="hidden" {/neq}>
-
                             </div><br>
                             {/volist}
                         </div>
@@ -226,19 +225,18 @@
 </form>
 
 <script>
-
     //onchang的方法完成级联表单操作
     function getMajor() {
         var major1      = document.getElementById('major1').innerHTML;
         var collegeNode = document.getElementById('college');
         var majorNode   = document.getElementById('major');
         var name = "aCollege";//建立的input的name
+
         clear(majorNode);
 
         var collegeIndex = collegeNode.selectedIndex;
         var value = collegeNode[collegeIndex].value;
         var url = "/labmanagesystem/public/index/teacher/getMajor?college="+value;
-
         ajaxGet(url, function (response) {
             var majors = response;
             createOption(majorNode,majors);
