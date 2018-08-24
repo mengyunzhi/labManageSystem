@@ -19,7 +19,7 @@ class ClassroomController extends Controller
     	$Classroom = new Classroom;
 		
 		// 按条件查询数据并调用分页
-        $classrooms = $Classroom->where('name', 'like', '%' . $name . '%')->paginate($pageSize, false, [
+        $classrooms = $Classroom->where('name', 'like', '%' . $name . '%')->order('id desc')->paginate($pageSize, false, [
             'query'=>[
                 'name' => $name,
                 ],

@@ -57,7 +57,8 @@ class TeacherController extends Controller
         }
         $this->currentSemester = Semester::currentSemester(Semester::select());
         $this->currentWeekorder = $this->currentSemester->getWeekorder();
-        $this->currentClassroom = Classroom::get(1);
+        $classrooms=Classroom::select();
+        $this->currentClassroom=$classrooms[0];
         $this->setRange($this->currentSemester->id, $this->currentWeekorder);
         //寻找和老师有关的信息的条件
         $map['teacher_id'] = $this->teacher->id;
@@ -167,6 +168,9 @@ class TeacherController extends Controller
             $postData = Request::instance()->post();
             if (!empty($postData)) {
                 $this->setRange($this->currentSemester->id, (int)$postData['weekorder'], (int)$postData['classroom_id']);
+                $this->currentClassroom=Classroom::get((int)$postData['classroom_id']);
+            }else{
+                $this->setRange($this->currentSemester->id, $this->currentWeekorder, $this->currentClassroom->id);
             }
             $secheduleList = $this->editSechedule();
 
@@ -350,10 +354,9 @@ class TeacherController extends Controller
         $courseId = Request::instance()->post('courseId/d');
         $klassIds = (array)Request::instance()->post('klassIds');
 
+        if (($teacherId === 0 || $secheduleId === 0 || empty($klassIds) || $courseId === 0||is_null($courseId))) {
+            $this->error("请填写完整信息");
 
-
-        if ((empty($teacherId)||$teacherId === 0 ||empty($secheduleId)|| $secheduleId === 0 || empty($klassIds) || $courseId === 0 ||empty($courseId))) {
-            throw new \Exception('id有误', 1);
         }
 
         //得到timeClassroom对象
@@ -368,7 +371,7 @@ class TeacherController extends Controller
         //判断相同时间段内老师或学生是否在其他地方上课
         foreach ($theTameTimeSechedules as $theTameTimeSechedule) {
             if ($Sechedule->isExist($theTameTimeSechedule, $teacherId, $klassIds)) {
-                return $this->error('抢课失败，您或学生当前时间在其他地方已经有课了');
+                return $this->error('抢课失败，您或学生当前时间在其他地方已经有课了','takelessonInterface');
             }
         }
 
@@ -385,7 +388,7 @@ class TeacherController extends Controller
         $Sechedule->save();
 
         //成功返回提示
-        return $this->success('恭喜，抢课成功', 'index');
+        return $this->success('恭喜，抢课成功', 'takelessonInterface');
 
     }
 
@@ -429,7 +432,7 @@ class TeacherController extends Controller
         $NewCourse->save();
 
         //成功返回结果
-        return $this->success('课程增加成功', url('index'));
+        return $this->success('课程增加成功', url('takelessonInterface'));
     }
 
     //老师增加班级
@@ -558,25 +561,28 @@ class TeacherController extends Controller
 
         foreach ($theTameTimeSechedules as $theTameTimeSechedule) {
             if ($TargetSechedule->isExist($theTameTimeSechedule, $teacherId, $klassIds)) {
-                return $this->error('换课失败，您或学生当前时间在其他地方已经有课了');
+                return $this->error('换课失败，您或学生当前时间在其他地方已经有课了','takelessonInterface');
             }
         }
 
         //判断目标教室时间是否有课，如果没课，直接调换
         if ($TargetSechedule->teacher_id === null) {
-            Sechedule::exchange($applyid, $targetid);
+            Sechedule::exchangenull($applyid, $targetid);
             return $this->success('换课成功', 'takelessonInterface');
         } //如果有课，判断是否是申请者自己的课，如果是，且目标课未处于换课状态，则直接进行交换
         else if ($TargetSechedule->teacher_id === $applyid) {
-            if (Changelesson::ischange($targetid) === false) {
+            if (Changelesson::ischangeLesson($targetid) === false) {
                 Sechedule::exchange($applyid, $targetid);
-                return $this->success('换课成功', 'takelessonInterface');
+                die();
+                return; //$this->success('换课成功', 'takelessonInterface');
             } else {
                 return $this->error('换课失败，目标课正在换课中', 'takelessonInterface');
             }
 
-        } //如果不是申请者自己的课，则判断目标课是否处于换课状态,如果不是，则向目标课的教师发送消息，取得同意后再向管理员发送请求，通过后进行交换
-        else if (Changelesson::ischange($targetid) === false) {
+        }
+
+        //如果不是申请者自己的课，则判断目标课是否处于换课状态,如果不是，则向目标课的教师发送消息，取得同意后再向管理员发送请求，通过后进行交换
+        else if (Changelesson::ischangeLesson($targetid) === false) {
             //生成请求消息
             $message = new Changelesson();
             $message->applysechedule_id = $applyid;
@@ -592,7 +598,7 @@ class TeacherController extends Controller
     public function message()
     {
         //获取当前老师的id
-        $id = 1;
+        $id = $this->teacher->id;
 
         //从换课表中找到所有换课申请
         $Changelessons = new Changelesson;
@@ -612,6 +618,7 @@ class TeacherController extends Controller
         $this->assign('applymessages', $applymessages);
         $this->assign('requestmessages', $requestmessages);
         $this->assign('resultmessages', $resultmessages);
+        $this->assign('teacher', $this->teacher);
         return $this->fetch("message");
     }
 

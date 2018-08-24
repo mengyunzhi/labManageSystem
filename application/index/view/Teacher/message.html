@@ -31,15 +31,15 @@
                                                     <th style="text-align: center">状态</th>
                                                 </tr>
                                                 <tr>
-                                                    <td class="warning text-center">
+                                                    <td class="warning text-center" width="40%">
                                                         {$applymessage->getApply()->teacher->name} 第{$applymessage->getApply()->weekorder}周 星期{$applymessage->getApply()->week} 第{$applymessage->getApply()->node}节 {$applymessage->getApply()->classroom->name}
                                                         {$applymessage->getApply()->course->name}
                                                     </td>
-                                                    <td class="success text-center">
+                                                    <td class="success text-center" width="40%">
                                                         {$applymessage->getTarget()->teacher->name} 第{$applymessage->getTarget()->weekorder}周 星期{$applymessage->getTarget()->week} 第{$applymessage->getTarget()->node}节 {$applymessage->getTarget()->classroom->name}
                                                         {$applymessage->getTarget()->course->name}
                                                     </td>
-                                                    <td class="text-center">{$applymessage->state}</td>
+                                                    <td class="text-center" width="20%">{$applymessage->state}</td>
                                                 </tr>
                                             </table>
                                         </div>
@@ -69,14 +69,14 @@
                                                 </tr>
                                                 <tr>
                                                     <td>{$key}</td>
-                                                    <td class="warning">
+                                                    <td class="warning" width="40%">
                                                         {$requestmessage->getApply()->teacher->name} 第{$requestmessage->getApply()->weekorder}周 星期{$requestmessage->getApply()->week} 第{$requestmessage->getApply()->node}节 {$requestmessage->getApply()->classroom->name}
                                                         {$requestmessage->getApply()->course->name}
                                                     </td>
-                                                    <td class="success">
+                                                    <td class="success" width="40%">
                                                         {$requestmessage->getTarget()->teacher->name} 第{$requestmessage->getTarget()->weekorder}周 星期{$requestmessage->getTarget()->week} 第{$requestmessage->getTarget()->node}节 {$requestmessage->getTarget()->course->name}
                                                     </td>
-                                                    <td class="text-center">
+                                                    <td class="text-center" width="20%">
                                                         {switch name="$requestmessage->getData('state')"} 
                                                             {case value="0"}
                                                             <a href="{:url('handlemessage', ['request' => 1,'id' => " $requestmessage->id"])}" class="btn btn-md btn-primary"><i class="glyphicon glyphicon-ok" aria-hidden="true">&nbsp;同意</i></a>&nbsp
@@ -127,28 +127,26 @@
                                                 <tr>
                                                     {switch name="$resultmessage->getData('state')"} 
                                                             {case value="3"}
-                                                                 <td class="warning text-center">
-                                                                    {$resultmessage->getTarget()->teacher->name}
-                                                                    {$resultmessage->getApply()->teacher->name}
+                                                                 <td class="warning text-center" width="40%">
+                                                                    {$resultmessage->getTarget()->teacher->name}                                 
                                                                      第{$resultmessage->getApply()->weekorder}周 星期{$resultmessage->getApply()->week} 第{$resultmessage->getApply()->node}节 {$resultmessage->getApply()->classroom->name} {$resultmessage->getTarget()->course->name}
                                                                 </td>
-                                                                <td class="success text-center">
+                                                                <td class="success text-center" width="40%">
                                                                     {$resultmessage->getApply()->teacher->name} 第{$resultmessage->getTarget()->weekorder}周 星期{$resultmessage->getTarget()->week} 第{$resultmessage->getTarget()->node}节 {$resultmessage->getTarget()->classroom->name}
                                                                     {$resultmessage->getApply()->course->name}
                                                                 </td>
-                                                                <td class="text-center">{$resultmessage->state}</td>
+                                                                <td class="text-center" width="20%">{$resultmessage->state}</td>
                                                             {/case}
                                                             {case value="4"}
-                                                                <td class="warning text-center">
-                                                                    {$resultmessage->getApply()->teacher->name}
+                                                                <td class="warning text-center" width="40%">
                                                                     {$resultmessage->getApply()->teacher->name}
                                                                      第{$resultmessage->getApply()->weekorder}周 星期{$resultmessage->getApply()->week} 第{$resultmessage->getApply()->node}节 {$resultmessage->getApply()->classroom->name} {$resultmessage->getApply()->course->name}
                                                                 </td>
-                                                                <td class="success text-center">
+                                                                <td class="success text-center" width="40%">
                                                                     {$resultmessage->getTarget()->teacher->name} 第{$resultmessage->getTarget()->weekorder}周 星期{$resultmessage->getTarget()->week} 第{$resultmessage->getTarget()->node}节 {$resultmessage->getTarget()->classroom->name}
                                                                     {$resultmessage->getTarget()->course->name}
                                                                 </td>
-                                                                <td class="text-center">{$resultmessage->state}</td>
+                                                                <td class="text-center" width="20%">{$resultmessage->state}</td>
                                                             {/case}
                                                     {/switch}                                                  
                                                 </tr>

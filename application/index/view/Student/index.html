@@ -21,7 +21,7 @@
 	    <!-- Collect the nav links, forms, and other content for toggling -->
 	    <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
 	      	<ul class="nav navbar-nav navbar-right">
-	      		<li><a href="#">{$student->name}同学</a></li>
+	      		<li><a href="#">欢迎您:{$student->klass->name},{$student->name}同学</a></li>
 		       	<li><a href="{:url('student')}">个人信息修改</a></li>
 		       	<li><a href="{:url('logout')}">注销登录</a></li>
 	        </ul>
