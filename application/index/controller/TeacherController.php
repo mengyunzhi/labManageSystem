@@ -349,9 +349,8 @@ class TeacherController extends Controller
         $secheduleId = Request::instance()->post('secheduleId/d');
         $courseId = Request::instance()->post('courseId/d');
         $klassIds = (array)Request::instance()->post('klassIds');
-
-        if (($teacherId === 0 && $secheduleId === 0 && is_null($klassIds) && $courseId === 0)) {
-            throw new \Exception('id有误', 1);
+        if (($teacherId === 0 || $secheduleId === 0 || empty($klassIds) || $courseId === 0||is_null($courseId))) {
+            $this->error("请填写完整信息");
         }
 
         //得到timeClassroom对象
