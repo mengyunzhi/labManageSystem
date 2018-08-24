@@ -1,23 +1,21 @@
 <?php
 /**
  * Created by PhpStorm.
- * User: ASUS-PC
- * Date: 2018/8/7
- * Time: 9:46
+ * User: emmmm
+ * Date: 2018/8/24
+ * Time: 19:04
  */
 
 namespace app\index\controller;
 use app\common\model\College;
 use app\common\model\Grade;
+
 use app\common\model\Major;
 use think\Controller;
-use app\common\model\Klass;
-use think\exception\HttpResponseException;
 use think\facade\Request;
 
-class KlassController extends Controller
+class GradeController extends Controller
 {
-
     public function index()
     {
 
@@ -28,19 +26,19 @@ class KlassController extends Controller
 
         $colleges = College::all();
         $majors = Major::all();
-        $grades = Grade::all();
 
-        $Klass = new Klass();
-       //按条件查询数据并调用分页
-        $klasses = $Klass->where('name','like','%'.$name.'%')
+
+        $grade =new Grade();
+        //按条件查询数据并调用分页
+        $grades = $grade->where('name','like','%'.$name.'%')
             ->paginate($pageSize,false,[
                 'query' =>[
-                 'name' => $name,
+                    'name' => $name,
                 ]
-                ]);
+            ]);
 
         //向V层传数据
-        $this->assign('klasses', $klasses);
+
         $this->assign('grades', $grades);
         $this->assign('colleges', $colleges);
         $this->assign('majors', $majors);
@@ -65,11 +63,11 @@ class KlassController extends Controller
             }
 
             //获取要删除的对象
-            $Klass = Klass::get($id);
+            $Klass = Grade::get($id);
 
             //要删除的对象不存在
             if (is_null($Klass)) {
-                throw new \Exception('不存在id为' . $id . '的班级，删除失败');
+                throw new \Exception('不存在id为' . $id . '的年级，删除失败');
             }
 
             //删除对象
@@ -91,12 +89,12 @@ class KlassController extends Controller
 
 
     //对数据进行保存或更新
-    private function  saveKlass(Klass &$Klass, $isUpdate = false)
+    private function  saveKlass(Grade &$Klass, $isUpdate = false)
     {
-        var_dump($_POST);
+
         //数据更新
         $Klass->name = Request::instance()->post('name');
-        $Klass->grade_id = Request::instance()->post('aGrade');
+        $Klass->major_id = Request::instance()->post('aMajor');
         $result =  $Klass->save();
         return $result;
 
@@ -109,7 +107,7 @@ class KlassController extends Controller
 
         try{
             //实例化班级并赋值
-            $Klass = new Klass();
+            $Klass = new Grade();
 
             //新增数据
             if (!$this->saveKlass($Klass)){
@@ -117,7 +115,7 @@ class KlassController extends Controller
                 $message = '数据添加错误: '.$Klass->getError();
             } else {
                 // 提示操作成功,并跳转至班级管理页面
-                return $this->success('班级'.$Klass->name.'新增成功', url('index'));
+                return $this->success('年级'.$Klass->name.'新增成功', url('index'));
             }
 
 
@@ -132,7 +130,7 @@ class KlassController extends Controller
 
         return $this->error($message);
     }
-    
+
     //执行更新操作
     public function update()
     {
@@ -147,7 +145,7 @@ class KlassController extends Controller
                 if (!$this->saveKlass($Klass)){
                     return $this->error('更新失败' . $Klass->getError());
                 }
-                    // 调用PHP内置类时，需要在前面加上 \
+                // 调用PHP内置类时，需要在前面加上 \
 
             }
         }catch (\think\Exception\HttpResponseException $e) {

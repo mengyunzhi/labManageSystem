@@ -1,9 +1,9 @@
 <!DOCTYPE html>
 <html>
 <head>
-	<title>{block name="title"}{/block}</title>
-	<meta charset="utf-8">
-	<link rel="stylesheet" href="http://cdn.bootcss.com/bootstrap/3.3.0/css/bootstrap.min.css">
+    <title>{block name="title"}{/block}</title>
+    <meta charset="utf-8">
+    <link rel="stylesheet" href="http://cdn.bootcss.com/bootstrap/3.3.0/css/bootstrap.min.css">
     <!-- jQuery文件。务必在bootstrap.min.js 之前引入 -->
     <script src="http://cdn.bootcss.com/jquery/1.11.1/jquery.min.js"></script>
     <!-- 最新的 Bootstrap 核心 JavaScript 文件 -->
@@ -12,29 +12,30 @@
 </head>
 <body>
 <nav class="navbar navbar-default ">
-  	<div class="container-fluid">
-    <!-- Brand and toggle get grouped for better mobile display -->
-    	<div class="navbar-header">
-      		<a class="navbar-brand" href="{:url('Administrator/index')}">梦云智</a>
-    	</div>
+    <div class="container-fluid">
+        <!-- Brand and toggle get grouped for better mobile display -->
+        <div class="navbar-header">
+            <a class="navbar-brand" href="{:url('Administrator/index')}">梦云智</a>
+        </div>
 
-	    <!-- Collect the nav links, forms, and other content for toggling -->
-	    <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
-	      	<ul class="nav navbar-nav navbar-right">
-	      		<li><a href="{:url('Administrator/personalInformation')}">个人信息</a></li>
-		        <li><a href="{:url('Administrator/creatcode')}">二维码生成</a></li>
-		        <!-- <li><a href="{:url('Administrator/changeClasses')}">教师换课调课</a></li> -->
-		        <li><a href="{:url('Classroom/index')}">教室管理</a></li>
-		        <li><a href="{:url('Course/index')}">课程管理</a></li>
-		        <li><a href="{:url('Semester/index')}">学期管理</a></li>
-		        <li><a href="{:url('College/index')}">学院管理</a></li>
-		        <li><a href="{:url('Major/index')}">专业管理</a></li>
-            <li><a href="{:url('Klass/index')}">班级管理</a></li>
-		        <li><a href="{:url('Administrator/message')}">换课请求</a></li>
-            <li><a href="{:url('logout')}">注销登录</a></li>
-	        </ul>
-	    </div><!-- /.navbar-collapse -->
-  	</div><!-- /.container-fluid -->
+        <!-- Collect the nav links, forms, and other content for toggling -->
+        <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+            <ul class="nav navbar-nav navbar-right">
+                <li><a href="{:url('Administrator/personalInformation')}">个人信息</a></li>
+                <li><a href="{:url('Administrator/creatcode')}">二维码生成</a></li>
+                <!-- <li><a href="{:url('Administrator/changeClasses')}">教师换课调课</a></li> -->
+                <li><a href="{:url('Classroom/index')}">教室管理</a></li>
+                <li><a href="{:url('Course/index')}">课程管理</a></li>
+                <li><a href="{:url('Semester/index')}">学期管理</a></li>
+                <li><a href="{:url('College/index')}">学院管理</a></li>
+                <li><a href="{:url('Major/index')}">专业管理</a></li>
+                <li><a href="{:url('Grade/index')}">年级管理</a></li>
+                <li><a href="{:url('Klass/index')}">班级管理</a></li>
+                <li><a href="{:url('Administrator/message')}">换课请求</a></li>
+                <li><a href="{:url('logout')}">注销登录</a></li>
+            </ul>
+        </div><!-- /.navbar-collapse -->
+    </div><!-- /.container-fluid -->
 </nav>
 {block name="content"}
 
