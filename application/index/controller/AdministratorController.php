@@ -131,12 +131,6 @@ class AdministratorController extends Controller
         return $this->success('操作成功', url('index'));
     }
 
-    //生成二维码
-    public function creatcode()
-    {
-        return $this->fetch("creatcode");
-    }
-
     //换课申请消息界面
     public function message()
     {
