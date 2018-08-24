@@ -110,8 +110,7 @@ class AdministratorController extends Controller
     //管理员个人信息界面
     public function personalinformation()
     {
-        $Administrator = new Administrator();
-        $Administrator = Administrator::get(1);
+        $Administrator = $this->administrator;
 
         //向v层传数据
         $this->assign('Administrator', $Administrator);
