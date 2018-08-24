@@ -16,17 +16,17 @@
 
             <!--选择所教的班级-->
             <div class="form-group">
-                <label>所教班级：</label><br>
                 <button type="button" class="btn btn-primary " data-toggle="modal" data-target="#addKlass">
                     <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
                     添加班级
                 </button>
-                <!--//删除课程的按钮-->
+                <!--//删除班级的按钮-->
                 <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#deleteKlass">
                     <span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
                     删除班级
                 </button>
                 <br><br>
+                <label>所教班级：</label><br>
                 {volist name="tcolleges" id="College"}
                 <label>{$College->name}:</label><br>
                 <div>
@@ -67,7 +67,7 @@
         <span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
         删除课程
     </button>
-    <br>
+    <br><br>
     <label>所教课程：</label><br>
     {volist name="courses" id="Course"}
     <label>
