@@ -352,6 +352,7 @@ class TeacherController extends Controller
 
 
 
+        if ((empty($teacherId)||$teacherId === 0 ||empty($secheduleId)|| $secheduleId === 0 || empty($klassIds) || $courseId === 0 ||empty($courseId))) {
             throw new \Exception('id有误', 1);
         }
 
