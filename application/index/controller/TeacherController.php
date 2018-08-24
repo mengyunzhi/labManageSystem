@@ -378,7 +378,7 @@ class TeacherController extends Controller
 
 
         foreach ($klassIds as $id) {
-
+            var_dump($id);
                 $Sechedule->klasses()->save($id);
         }
 
