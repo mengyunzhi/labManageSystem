@@ -564,19 +564,22 @@ class TeacherController extends Controller
 
         //判断目标教室时间是否有课，如果没课，直接调换
         if ($TargetSechedule->teacher_id === null) {
-            Sechedule::exchange($applyid, $targetid);
+            Sechedule::exchangenull($applyid, $targetid);
             return $this->success('换课成功', 'takelessonInterface');
         } //如果有课，判断是否是申请者自己的课，如果是，且目标课未处于换课状态，则直接进行交换
         else if ($TargetSechedule->teacher_id === $applyid) {
-            if (Changelesson::ischange($targetid) === false) {
+            if (Changelesson::ischangeLesson($targetid) === false) {
                 Sechedule::exchange($applyid, $targetid);
-                return $this->success('换课成功', 'takelessonInterface');
+                die();
+                return; //$this->success('换课成功', 'takelessonInterface');
             } else {
                 return $this->error('换课失败，目标课正在换课中', 'takelessonInterface');
             }
 
-        } //如果不是申请者自己的课，则判断目标课是否处于换课状态,如果不是，则向目标课的教师发送消息，取得同意后再向管理员发送请求，通过后进行交换
-        else if (Changelesson::ischange($targetid) === false) {
+        }
+
+        //如果不是申请者自己的课，则判断目标课是否处于换课状态,如果不是，则向目标课的教师发送消息，取得同意后再向管理员发送请求，通过后进行交换
+        else if (Changelesson::ischangeLesson($targetid) === false) {
             //生成请求消息
             $message = new Changelesson();
             $message->applysechedule_id = $applyid;
@@ -592,7 +595,7 @@ class TeacherController extends Controller
     public function message()
     {
         //获取当前老师的id
-        $id = 1;
+        $id = $this->teacher->id;
 
         //从换课表中找到所有换课申请
         $Changelessons = new Changelesson;
@@ -612,6 +615,7 @@ class TeacherController extends Controller
         $this->assign('applymessages', $applymessages);
         $this->assign('requestmessages', $requestmessages);
         $this->assign('resultmessages', $resultmessages);
+        $this->assign('teacher', $this->teacher);
         return $this->fetch("message");
     }
 
