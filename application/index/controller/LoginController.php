@@ -91,7 +91,6 @@ class LoginController extends Controller
      */
     public function register()
     {
-        var_dump($_POST);
         $postData = Request::instance()->post();
         $username = $postData['username'];
         $password = $postData['password'];
