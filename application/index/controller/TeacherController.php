@@ -57,7 +57,8 @@ class TeacherController extends Controller
         }
         $this->currentSemester = Semester::currentSemester(Semester::select());
         $this->currentWeekorder = $this->currentSemester->getWeekorder();
-        $this->currentClassroom = Classroom::get(1);
+        $classrooms=Classroom::select();
+        $this->currentClassroom=$classrooms[0];
         $this->setRange($this->currentSemester->id, $this->currentWeekorder);
         //寻找和老师有关的信息的条件
         $map['teacher_id'] = $this->teacher->id;
@@ -77,7 +78,7 @@ class TeacherController extends Controller
     {
         $postData = Request::instance()->post();
         if (!empty($postData)) {
-            $this->setRange((int) $postData['semester_id'], (int) $postData['weekorder']);
+            $this->setRange((int)$postData['semester_id'], (int)$postData['weekorder']);
         }
         $secheduleList = $this->editIndexSechedule();
         //像v层传送老师数据
@@ -166,9 +167,9 @@ class TeacherController extends Controller
         if ($time >= $this->currentSemester->getData('starttaketime') && $time <= $this->currentSemester->getData('endtaketime')) {
             $postData = Request::instance()->post();
             if (!empty($postData)) {
-                $this->setRange($this->currentSemester->id, (int) $postData['weekorder'], (int) $postData['classroom_id']);
-                $this->currentClassroom = Classroom::get((int) $postData['classroom_id']);
-            } else {
+                $this->setRange($this->currentSemester->id, (int)$postData['weekorder'], (int)$postData['classroom_id']);
+                $this->currentClassroom=Classroom::get((int)$postData['classroom_id']);
+            }else{
                 $this->setRange($this->currentSemester->id, $this->currentWeekorder, $this->currentClassroom->id);
             }
             $secheduleList = $this->editSechedule();
@@ -349,9 +350,9 @@ class TeacherController extends Controller
         $teacherId = Request::instance()->post('teacherId/d');
         $secheduleId = Request::instance()->post('secheduleId/d');
         $courseId = Request::instance()->post('courseId/d');
-        $klassIds = (array) Request::instance()->post('klassIds');
+        $klassIds = (array)Request::instance()->post('klassIds');
 
-        if (($teacherId === 0 || $secheduleId === 0 || empty($klassIds) || $courseId === 0 || is_null($courseId))) {
+        if (($teacherId === 0 || $secheduleId === 0 || empty($klassIds) || $courseId === 0||is_null($courseId))) {
             $this->error("请填写完整信息");
 
         }
@@ -376,9 +377,10 @@ class TeacherController extends Controller
         $Sechedule->teacher_id = $teacherId;
         $Sechedule->course_id = $courseId;
 
+
         foreach ($klassIds as $id) {
 
-            $Sechedule->klasses()->save($id);
+                $Sechedule->klasses()->save($id);
         }
 
         $Sechedule->save();
