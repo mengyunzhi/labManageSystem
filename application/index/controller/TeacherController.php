@@ -164,11 +164,13 @@ class TeacherController extends Controller
         // 判断是否为选课系统开放时间
         $time = time();
         if ($time >= $this->currentSemester->getData('starttaketime') && $time <= $this->currentSemester->getData('endtaketime')) {
+            $this->currentSemester=Semester::getOpenSemester(Semester::select());
             $postData = Request::instance()->post();
             if (!empty($postData)) {
-                $this->setRange($this->currentSemester->id, (int) $postData['weekorder'], (int) $postData['classroom_id']);
-                $this->currentClassroom = Classroom::get((int) $postData['classroom_id']);
-            } else {
+                $this->setRange($this->currentSemester->id, (int)$postData['weekorder'], (int)$postData['classroom_id']);
+                $this->currentClassroom=Classroom::get((int)$postData['classroom_id']);
+            }else{
+                $this->currentWeekorder=$this->currentSemester->startweekorder;
                 $this->setRange($this->currentSemester->id, $this->currentWeekorder, $this->currentClassroom->id);
             }
             $secheduleList = $this->editSechedule();
@@ -529,6 +531,7 @@ class TeacherController extends Controller
     public function changeLesson()
     {
         //接收要换课的id
+        $semesterid = $this->currentSemester=Semester::getOpenSemester(Semester::select())->id;
         $applyid = Request::instance()->post('id');
         $ApplySechedule = Sechedule::get($applyid); //通过id，找到Sechedule表里对应的对象
 
@@ -537,7 +540,7 @@ class TeacherController extends Controller
         $week = Request::instance()->post('week');
         $node = Request::instance()->post('node');
         $classroom_id = Request::instance()->post('classroom_id');
-        $targetid = Sechedule::findtarget($weekorder, $week, $node, $classroom_id);
+        $targetid = Sechedule::findtarget($weekorder, $week, $node, $classroom_id,$semesterid);
 
         //实例化目标课对象
         $TargetSechedule = Sechedule::get($targetid);
@@ -548,7 +551,8 @@ class TeacherController extends Controller
         }
 
         //判断目标是否为换课中
-        if (Changelesson::ischangeLesson($targetid)) {
+        if (Changelesson::isChangeLesson($targetid)) {
+            return ;
             return $this->error('换课失败，目标正在换课中', 'takelessonInterface');
         }
 
