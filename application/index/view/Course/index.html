@@ -15,7 +15,6 @@
                     </form>
                 </div>
                 <div class="col-md-4 text-right">
-                    <button class="btn btn-primary" data-toggle="modal" data-target="#mymodal-data"><i class="glyphicon glyphicon-plus"></i>&nbsp;增加</button>
                     <div class="modal" id="mymodal-data" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel" aria-hidden="true">
                         <div class="modal-dialog">
                             <div class="modal-content">
@@ -45,13 +44,15 @@
             <table class="table table-hover table-bordered" style="margin-bottom: 0">
                 <tr class="info">
                     <th width="10%">ID</th>
-                    <th width="70%">课程名</th>
+                    <th width="35%">课程名</th>
+                    <th width="35%">教师</th>
                     <th width="20%">操作</th>
                 </tr>
                 {volist name="courses" id="course" key="key"}
                 <tr>
                     <td>{$key}</td>
                     <td>{$course->getData('name')}</td>
+                    <td>{$course->teacher->getData('name')}</td>
                     <td>
                     <button type="button" class="btn btn-sm btn-primary" data-toggle="modal" data-target=".bs-example-modal-lg{$key}"><i class="glyphicon glyphicon-pencil"></i>&nbsp;编辑</button>
 

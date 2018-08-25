@@ -8,5 +8,9 @@ use think\Model;
  */
 class Course extends Model
 {
-	
+	//一对多课程与老师关联
+	public function Teacher()
+    {
+        return $this->belongsTo('Teacher');
+    }
 }
