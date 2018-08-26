@@ -415,7 +415,7 @@ class TeacherController extends Controller
         }
 
         //成功进行跳转
-        return $this->success('删除成功', url('index'));
+        return $this->success('删除成功', url('information'));
     }
 
     //老师增加课程的方法
@@ -429,7 +429,12 @@ class TeacherController extends Controller
         $NewCourse->save();
 
         //成功返回结果
-        return $this->success('课程增加成功', url('information'));
+        if (Request::instance()->param('isTakelesson') == true) {
+            return $this->success('课程增加成功', url('takelessonInterface'));
+        } else {
+           return $this->success('课程增加成功', url('information'));
+        }
+        
     }
 
     //老师增加班级
@@ -551,7 +556,6 @@ class TeacherController extends Controller
 
         //判断目标是否为换课中
         if (Changelesson::isChangeLesson($targetid)) {
-            return ;
             return $this->error('换课失败，目标正在换课中', 'takelessonInterface');
         }
 
