@@ -6,6 +6,9 @@ use think\Model;
 
 class Grade extends Model
 {
-
+    public function major()
+    {
+        return $this->belongsTo('Major');
+    }
 
 }
