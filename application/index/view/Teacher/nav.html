@@ -9,6 +9,7 @@
     <!-- 最新的 Bootstrap 核心 JavaScript 文件 -->
     <script src="http://cdn.bootcss.com/bootstrap/3.3.0/js/bootstrap.min.js"></script>
     <link rel="stylesheet" type="text/css" href="/labManageSystem/public/static/css/index.css">
+    <link rel="stylesheet" type="text/css" href="/labManageSystem/public/message.css">
 </head>
 <body>
 <!--导航栏-->
@@ -28,7 +29,7 @@
 		<div style="float: right;">
 			<ul class="nav navbar-nav">
 				<li><a ><span class="glyphicon glyphicon-user"></span> 欢迎您,{$teacher->name}老师</a></li>
-        <li><a href="{:url('message')}">消息</a></li>
+        <li><a href="{:url('message')}" class="nav-link"><i class="glyphicon glyphicon-bell"></i><div class="nav-counter nav-counter-red">5</div></a></li>    
         <li><a href="{:url('logout')}">注销</a></li>
 
 			</ul>

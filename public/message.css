@@ -1,0 +1,73 @@
+.nav-link {
+    position: relative;
+    padding: 0 14px;
+    line-height: 34px;
+    font-size: 17px;
+    font-weight: bold;
+    color: #555;
+    text-decoration: none;
+}
+
+.nav-link:hover {
+    color: #333;
+    text-decoration: underline;
+}
+
+.nav-counter {
+    position: absolute;
+    top: 10px;
+    right: 1px;
+    min-width: 8px;
+    height: 20px;
+    line-height: 20px;
+    margin-top: -11px;
+    padding: 0 6px;
+    font-weight: normal;
+    color: white;
+    text-align: center;
+    text-shadow: 0 1px rgba(0, 0, 0, 0.2);
+    background: #e23442;
+    border: 1px solid #911f28;
+    border-radius: 11px;
+    background-image: -webkit-linear-gradient(top, #e8616c, #dd202f);
+    background-image: -moz-linear-gradient(top, #e8616c, #dd202f);
+    background-image: -o-linear-gradient(top, #e8616c, #dd202f);
+    background-image: linear-gradient(to bottom, #e8616c, #dd202f);
+    -webkit-box-shadow: inset 0 0 1px 1px rgba(255, 255, 255, 0.1), 0 1px rgba(0, 0, 0, 0.12);
+    box-shadow: inset 0 0 1px 1px rgba(255, 255, 255, 0.1), 0 1px rgba(0, 0, 0, 0.12);
+}
+
+.nav-counter-green {
+    background: #75a940;
+    border: 1px solid #42582b;
+    background-image: -webkit-linear-gradient(top, #8ec15b, #689739);
+    background-image: -moz-linear-gradient(top, #8ec15b, #689739);
+    background-image: -o-linear-gradient(top, #8ec15b, #689739);
+    background-image: linear-gradient(to bottom, #8ec15b, #689739);
+}
+
+.nav-counter-blue {
+    background: #E82C0C;
+    border: 1px solid #215a96;
+    background-image: -webkit-linear-gradient(top, #67a7e9, #2580df);
+    background-image: -moz-linear-gradient(top, #67a7e9, #2580df);
+    background-image: -o-linear-gradient(top, #67a7e9, #2580df);
+    background-image: linear-gradient(to bottom, #67a7e9, #2580df);
+}
+
+.red-point {
+    position: relative;
+}
+
+.red-point::before {
+    content: " ";
+    border: 3px solid red;
+    /*设置红色*/
+    border-radius: 3px;
+    /*设置圆角*/
+    position: absolute;
+    z-index: 1000;
+    right: 0%;
+    margin-right: -10px;
+    margin-top: -2px;
+}
