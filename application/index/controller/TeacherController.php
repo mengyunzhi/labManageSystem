@@ -554,7 +554,6 @@ class TeacherController extends Controller
 
         //判断目标是否为换课中
         if (Changelesson::isChangeLesson($targetid)) {
-            return ;
             return $this->error('换课失败，目标正在换课中', 'takelessonInterface');
         }
 
