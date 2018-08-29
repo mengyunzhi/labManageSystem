@@ -284,5 +284,12 @@ class Sechedule extends Model
         $result = array_unique($sameKlassIds);
         return $result;
     }
+
+    //获取器，转义week字段
+    public function getWeekAttr($value)
+    {
+        $week = [1 => '一', 2 => '二', 3 => '三',4 => '四',5 => '五',6 =>'六',7 =>'日'];
+        return $week[$value];
+    }
 }
 
