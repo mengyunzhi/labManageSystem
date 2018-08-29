@@ -17,7 +17,7 @@
                     <div class="col-md-4">
                         <label>周次：</label>
                         <select class="btn btn-default dropdown-toggle" name="weekorder">
-                            {for start="$startweekorder" end="$endweekorder+1" }
+                            {for start="$currentSemester->startweekorder" end="($currentSemester->endweekorder)+1" }
                             <option value="{$i}" {eq name="$i" value="$currentWeekorder" } selected="selected" {/eq}>第{$i}周</option>
                             {/for}
                         </select>
@@ -147,7 +147,7 @@
 <div class="modal fade" id="addCourse" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
     <div class="modal-dialog" role="document">
         <div class="modal-content">
-            <form action="{:url('addCourse')}" class="form-inline" method="post">
+            <form action="{:url('addCourse?isTakelesson=true')}" class="form-inline" method="post">
                 <div class="modal-body">
                     <label>课程名称:</label>
                     <input name="newCourseName" placeholder="请输入要增加的课程名">
@@ -187,7 +187,7 @@ $('#TakeLessons').on('show.bs.modal', function(event) {
                     <div class="form-group">
                         <label>周次</label>
                         <select class="btn btn-default dropdown-toggle" name="weekorder">
-                            {for start="$startweekorder" end="$endweekorder+1" }
+                            {for start="$currentSemester->startweekorder" end="($currentSemester->endweekorder)+1" }
                             <option value="{$i}" {eq name="$i" value="$currentWeekorder" } selected="selected" {/eq}>第{$i}周</option>
                             {/for}
                         </select>

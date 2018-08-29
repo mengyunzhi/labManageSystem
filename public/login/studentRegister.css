@@ -1,0 +1,49 @@
+body{
+	background-color:#e7e8eb;
+}
+.studentRegister .header{
+	margin-top: 30px;
+}
+.studentRegister .header span{
+	font-size: 25px;
+}
+.registerContent{
+	background-color: white;
+	margin-top: 30px;
+	border-radius: 10px;
+}
+.registerContent .inputGroup{
+	margin: 20px;
+}
+.registerContent .firstInputGroup{
+	margin-top: 50px;
+	margin-left: 20px;
+	margin-bottom: 20px;
+}
+.firstInputGroup .inputBox{
+	width: 300px;
+	height: 50px;
+}
+.inputGroup .inputBox{
+	width: 300px;
+	height: 50px;
+}
+.registerContent .logo{
+	background-color:#5bc0de;
+	float: left;
+	height: 50px;
+	width: 50px;
+	text-align: center;
+	border-radius: 7px;
+}
+.registerContent .logo span{
+	font-size: 20px;
+	line-height: 45px;
+}
+#registerButton{
+	margin: 20px 20px 50px 20px;
+}
+#registerButton button{
+	 width: 350px;
+	 height: 50px;
+}
