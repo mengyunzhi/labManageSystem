@@ -4,14 +4,7 @@
         <div class="container">
             <div class="row">
                 <div class="col-md-12">
-                    <form class="form-inline" action="{:url()}">
-                        <div class="form-group">
-                            <label class="sr-only" for="name">换课请求</label>
-                            <input name="name" type="text" class="form-control" placeholder="名称..." value="">
-                        </div>
-                        <button type="submit" class="btn btn-default"><i class="glyphicon glyphicon-search"></i>&nbsp;查询</button>
-                        <a href="{:url('log')}" class="btn btn-default"><i class="glyphicon glyphicon-list-alt">&nbsp;换课日志</i></a>
-                    </form>
+                    <a href="{:url('log')}" class="btn btn-default"><i class="glyphicon glyphicon-list-alt">&nbsp;换课日志</i></a>
                     <hr />
                 </div>
             </div>
@@ -22,21 +15,21 @@
                     <th class="text-center">目标时刻表</th>
                     <th class="text-center">操作</th>
                 </tr>
-                {volist name="changelessons" id="changelesson" key="key"}
+                {volist name="messages" id="message" key="key"}
                 <tr>
                     <td width="10%">{$key}</td>
-                    <td class="warning text-center" width="35%">{$changelesson->getApply()->teacher->name} 第{$changelesson->getApply()->weekorder}周 星期{$changelesson->getApply()->week} 第{$changelesson->getApply()->node}节 {$changelesson->getApply()->classroom->name}
+                    <td class="warning text-center" width="35%">{$message->getApplyTeacher()->name} 第{$message->getApply()->weekorder}周 星期{$message->getApply()->week} 第{$message->getApply()->node}节 {$message->getApply()->classroom->name} {$message->getApplyCourse()->name}
                     </td>
-                    <td class="success text-center" width="35%">{$changelesson->getTarget()->teacher->name} 第{$changelesson->getTarget()->weekorder}周 星期{$changelesson->getTarget()->week} 第{$changelesson->getTarget()->node}节 {$changelesson->getTarget()->classroom->name}
+                    <td class="success text-center" width="35%">{$message->getTargetTeacher()->name} 第{$message->getTarget()->weekorder}周 星期{$message->getTarget()->week} 第{$message->getTarget()->node}节 {$message->getTarget()->classroom->name} {$message->getTargetCourse()->name}
                     </td>
                     <td class="text-center" width="20%">
-                        <a href="{:url('handlemessage', ['request' => 1,'id' => " $changelesson->id"])}" class="btn btn-md btn-primary"><i class="glyphicon glyphicon-ok" aria-hidden="true">&nbsp;同意</i></a>&nbsp
-                        <a href="{:url('handlemessage', ['request' => 0,'id' => " $changelesson->id"])}" class="btn btn-md btn-danger"><i class="glyphicon glyphicon-remove" aria-hidden="true">&nbsp;拒绝</i></a>
+                        <a href="{:url('handlemessage', ['request' => 1,'id' => " $message->id"])}" class="btn btn-md btn-primary"><i class="glyphicon glyphicon-ok" aria-hidden="true">&nbsp;同意</i></a>&nbsp
+                        <a href="{:url('handlemessage', ['request' => 0,'id' => " $message->id"])}" class="btn btn-md btn-danger"><i class="glyphicon glyphicon-remove" aria-hidden="true">&nbsp;拒绝</i></a>
                     </td>
                 </tr>
                 {/volist}
             </table>
-            {:$changelessons->render()}
+            {:$messages->render()}
         </div>
     </div>
 </div>
