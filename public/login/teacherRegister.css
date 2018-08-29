@@ -1,0 +1,31 @@
+#scrollBox{
+	position: fixed;
+	top: 0px;
+	left: 0px;
+}
+#scrollBox .item{
+	width: 100%;
+	height: 100%;
+}
+#registerContent{
+	margin-top: 100px;
+}
+#registerContent #header{
+	font-size: 50px;
+}
+#registerContent .form{
+	width: 400px;
+	margin-top: 20px;
+}
+#registerContent .form .registermessage{
+	text-align: left;
+	margin: 10px 0px 10px 0px;
+}
+#registerContent .form .registermessage input{
+	height: 60px;
+	width: 500px;
+}
+#registerContent .form .registerButton{
+	width: 500px;
+	height: 70px;
+}

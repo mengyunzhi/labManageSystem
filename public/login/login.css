@@ -1,0 +1,32 @@
+.background{
+	background-image:url('./loginPicture.jpg'); 
+	background-size:cover; 
+	height: 1000px;
+	width: 100%;
+}
+.header{
+	text-align: center;
+	color: black;
+}
+#loginBorder{
+	position: absolute;
+	top: 210px;
+	right: 200px;
+	background-color: rgba(0,0,0,.5);
+	margin: 45px;
+}
+#loginBorder .content{
+	margin: 45px;
+}
+#welcomLogin{
+	color:#0AE;
+	text-align:center;
+}
+
+#loginBorder .content label{
+	color: white;
+}
+#loginBorder .content #footer{
+	color: white;
+	margin-top: 10px;
+}

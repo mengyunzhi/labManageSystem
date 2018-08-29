@@ -4,49 +4,42 @@
     <title>学生注册首页</title>
     <meta charset="utf-8">
     <link rel="stylesheet" href="http://cdn.bootcss.com/bootstrap/3.3.0/css/bootstrap.min.css">
-    <!-- jQuery文件。务必在bootstrap.min.js 之前引入 -->
     <script src="http://cdn.bootcss.com/jquery/1.11.1/jquery.min.js"></script>
-    <!-- 最新的 Bootstrap 核心 JavaScript 文件 -->
     <script src="http://cdn.bootcss.com/bootstrap/3.3.0/js/bootstrap.min.js"></script>
+    <link rel="stylesheet" type="text/css" href="/labManageSystem/public/login/studentRegister.css">
 </head>
-<body style="background-color:#e7e8eb ">
+<body>
 <div class="container-fluid">
     <div class="row">
         <div class="col-md-2"></div>
-        <div class="col-md-8">
-            <div class="row" style="margin-top: 30px;">
-                <div class="col-md-12"><span class="glyphicon glyphicon-plus" style="font-size: 25px;">|课表系统注册</span>
+        <div class="col-md-8 studentRegister">
+            <div class="row header">
+                <div class="col-md-12"><span class="glyphicon glyphicon-plus">|课表系统注册</span>
                 </div>
             </div>
-            <div class="row" style="background-color: white;margin-top: 30px;border-radius: 10px;">
+            <div class="row registerContent">
                 <div class="col-md-12">
                     <div class="row">
                         <div class="col-md-3"><span>您现在的位置>>学生注册</span></div>
                         <div class="col-md-6">
                             <form class="form-inline" action="{:url('register')}" method="post">
                                 <input type="hidden" name="role" value="学生">
-                                <div class="form-group" style="margin-top: 50px;margin-left: 20px;margin-bottom: 20px;">
-                                    <div style="background-color:#5bc0de;float: left;height: 50px;width: 50px;text-align: center;border-radius: 7px;">
-                                        <span class="glyphicon glyphicon-pencil"
-                                              style="font-size: 20px;line-height: 45px;"></span></div>
-                                    <input type="text" class="form-control" placeholder="您的名字"
-                                           style="width: 300px;height: 50px;" name="name">
+                                <div class="form-group firstInputGroup">
+                                    <div class="logo">
+                                        <span class="glyphicon glyphicon-pencil"></span></div>
+                                    <input type="text" class="form-control inputBox" placeholder="您的名字" name="name">
                                 </div>
                                 <br>
-                                <div class="form-group" style="margin: 20px;">
-                                    <div style="background-color:#5bc0de;float: left;height: 50px;width: 50px;text-align: center;border-radius: 7px;">
-                                        <span class="glyphicon glyphicon-user"
-                                              style="font-size: 20px;line-height: 45px;"></span></div>
-                                    <input type="text" class="form-control" placeholder="账号"
-                                           style="width: 300px;height: 50px;" name="username">
+                                <div class="form-group inputGroup">
+                                    <div class="logo">
+                                        <span class="glyphicon glyphicon-user"></span></div>
+                                    <input type="text" class="form-control inputBox" placeholder="账号" name="username">
                                 </div>
                                 <br>
-                                <div class="form-group" style="margin: 20px;">
-                                    <div style="background-color:#5bc0de;float: left;height: 50px;width: 50px;text-align: center;border-radius: 7px;">
-                                        <span class="glyphicon glyphicon-lock"
-                                              style="font-size: 20px;line-height: 45px;"></span></div>
-                                    <input type="password" class="form-control" placeholder="密码"
-                                           style="width: 300px;height: 50px;" name="password">
+                                <div class="form-group inputGroup">
+                                    <div class="logo">
+                                        <span class="glyphicon glyphicon-lock"></span></div>
+                                    <input type="password" class="form-control inputBox" placeholder="密码" name="password">
                                 </div>
                                 <div class="row">
                                     <p id="major1" class="hide">1</p>
@@ -96,10 +89,8 @@
                                     </div>
                                 </div>
                                 <br>
-                                <div style="margin: 20px 20px 50px 20px;">
-                                    <button type="submit" class="btn btn-default btn-info"
-                                            style="width: 350px;height: 50px;">免费注册
-                                    </button>
+                                <div  id="registerButton">
+                                    <button type="submit" class="btn btn-default btn-info">免费注册</button>
                                 </div>
                             </form>
                         </div>
@@ -111,123 +102,7 @@
         <div class="col-md-2"></div>
     </div>
 </div>
-
-<script>
-    //onchang的方法完成级联表单操作
-    function getMajor() {
-        var major1 = document.getElementById('major1').innerHTML;
-        var collegeNode = document.getElementById('college');
-        var majorNode = document.getElementById('major');
-        var name = "aCollege";//建立的input的name
-        clear(majorNode);
-        var collegeIndex = collegeNode.selectedIndex;
-        var value = collegeNode[collegeIndex].value;
-        var url = "/labmanagesystem/public/index/login/getMajor?college=" + value;
-        ajaxGet(url, function (response) {
-            var majors = response;
-            createOption(majorNode, majors);
-            setSelected(majorNode, major1);
-            console.log(majors);
-        });
-        creatInput(value, name, collegeNode);
-    }
-
-    function getGrade() {
-        var grade1 = document.getElementById('grade1').innerHTML;
-        var majorNode = document.getElementById('major');
-        var gradeNode = document.getElementById('grade');
-        var name = "aMajor";//建立的input的name
-
-        clear(gradeNode);
-
-        var majorIndex = majorNode.selectedIndex;
-        var value = majorNode[majorIndex].value;
-        var url = "/labmanagesystem/public/index/login/getGrade?major=" + value;
-        ajaxGet(url, function (response) {
-            var grades = response;
-            createOption(gradeNode, grades);
-            setSelected(gradeNode, grade1);
-        });
-        creatInput(value, name, majorNode);
-    }
-
-    function getKlass() {
-        var klass1 = document.getElementById('klass1').innerHTML;
-        var gradeNode = document.getElementById('grade');
-        var klassNode = document.getElementById('aklass');
-        var name = "aGrade";//建立的input的name
-
-        clear(klassNode);
-
-        var gradeIndex = gradeNode.selectedIndex;
-        var value = gradeNode[gradeIndex].value;
-        var url = "/labmanagesystem/public/index/login/getKlass?grade=" + value;
-        ajaxGet(url, function (response) {
-            var klasses = response;
-            createOption(klassNode, klasses);
-            setSelected(klassNode, klass1);
-        });
-        creatInput(value, name, gradeNode);
-    }
-
-    function getKlassId() {
-        var klassNode = document.getElementById('aklass');
-        var klassIndex = klassNode.selectedIndex;
-        var klassId = klassNode[klassIndex].value;
-        var name = "klassId"//建立的input的name
-        alert(1);
-        creatInput(klassId, name, klassNode);
-    }
-
-    //访问php函数，一个对象数组的返回值
-    function ajaxGet(url, callback) {
-        $.ajax({
-            url: url,
-            type: "get",
-            success: function (response) {
-                callback(response);
-            },
-            error: function (xhr) {
-                console.log('server error');
-            }
-        });
-    }
-
-    //清除
-    function clear(node) {
-        node.length = 0;
-    }
-
-    //创建选项
-    function createOption(node, inners, values) {
-        for (var i = 0; i < inners.length; i++) {
-            var option = document.createElement('option');
-
-            option.value = inners[i].id;
-            option.name = node;
-            option.innerHTML = inners[i].name;
-            node.appendChild(option);
-        }
-    }
-
-    //设置选中状态
-    function setSelected(node, value) {
-        for (var i = 0; i < node.options.length; i++) {
-            if (node.options[i].innerHTML == value) {
-                node.options[i].setAttribute("selected", "true");
-            }
-        }
-    }
-
-    //创建一个input按钮
-    function creatInput(value, name, position) {
-        var newInput = document.createElement("input");
-        newInput.name = name;
-        newInput.value = value;
-        position.appendChild(newInput);
-    }
-
-</script>
+<script type="text/javascript" src="/labManageSystem/public/login/studentRegister.js"></script>
 </body>
 </html>
 
