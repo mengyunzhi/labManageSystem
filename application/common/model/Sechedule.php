@@ -34,21 +34,6 @@ class Sechedule extends Model
         return $this->belongsTo('Classroom');
     }
 
-    /**
-     *判断行程是否在换课中
-     * @return boolean
-     */
-    public function isChangeLesson()
-    {
-        $applySechedule = Changelesson::get(['applysechedule_id' => $this->id]);
-        $targetSechedule = Changelesson::get(['targetsechedule_id' => $this->id]);
-        if (isset($applySechedule) || isset($targetSechedule)) {
-            return true;
-        } else {
-            return false;
-        }
-    }
-
     //判断中间表中是否存在该关联
     public function getKlassesIsChecked(Klass &$Klass)
     {
@@ -298,6 +283,13 @@ class Sechedule extends Model
         //移除$sameKlassIds中重复的值,将时间冲突的班级id返回
         $result = array_unique($sameKlassIds);
         return $result;
+    }
+
+    //获取器，转义week字段
+    public function getWeekAttr($value)
+    {
+        $week = [1 => '一', 2 => '二', 3 => '三',4 => '四',5 => '五',6 =>'六',7 =>'日'];
+        return $week[$value];
     }
 }
 

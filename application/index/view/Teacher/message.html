@@ -9,217 +9,197 @@
                     <ul class="nav nav-tabs">
                         <li class="active">
                             <a data-toggle="tab" href="#my" class="nav-link">我的换课申请
+                                {eq name="my_number" value="0"}
+                                {else/}
                                 <!-- 右上角红圈数字 -->
-                                <div class="nav-counter nav-counter-red">1</div>
+                                <div class="nav-counter nav-counter-red">{$my_number}</div>
+                                {/eq}  
                             </a>
                         </li>
                         <li>
                             <a data-toggle="tab" href="#other" class="nav-link">谁向我换课
+                                {eq name="other_number" value="0"}
+                                 {else/}
                                 <!-- 右上角红圈数字 -->
-                                <div class="nav-counter nav-counter-red">1</div>
-                            </a>
-                        </li>
-                        <li>
-                            <a data-toggle="tab" href="#compelete" class="nav-link">管理员已处理
-                                <!-- 右上角红圈数字 -->
-                                <div class="nav-counter nav-counter-red">3</div>
+                                <div class="nav-counter nav-counter-red">{$other_number}</div>
+                                {/eq}
                             </a>
                         </li>
                     </ul>
                     <div class="tab-content">
                         <!-- 我的换课申请 -->
                         <div class="tab-pane active" id="my">
-                            {volist name="applymessages" id="applymessage" key="key"}
-                            <div class="accordion" id="parent1">
-                                <div class="accordion-group">
-                                    <div class="accordion-heading">
-                                        <!-- 新消息右上角有小红点 -->
-                                        <span class="red-point">
-                                            我向{$applymessage->getTarget()->teacher->name}老师发送了一个换课请求
-                                        </span> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                                        <a class="accordion-toggle collapsed btn btn-default" data-toggle="collapse" data-parent="#parent1" href="#{$key}"> 查看详情&nbsp;
-                                            <!-- 下拉图标 -->
-                                            <span class="glyphicon glyphicon-arrow-down"></span> 
-                                        </a>
-                                    </div>
-                                    <div id="{$key}" class="accordion-body collapse" style="height: 0px;">
-                                        <div class="accordion-inner">
-                                            <table class="table table-hover table-bordered">
-                                                <tr class="info">
-                                                    <th style="text-align: center">申请者时刻表</th>
-                                                    <th style="text-align: center">目标时刻表</th>
-                                                    <th style="text-align: center">状态</th>
-                                                </tr>
-                                                <tr>
-                                                    <td class="warning text-center" width="40%">
-                                                        {$applymessage->getApply()->teacher->name} 
-                                                        第{$applymessage->getApply()->weekorder}周 
-                                                        星期{$applymessage->getApply()->week} 
-                                                        第{$applymessage->getApply()->node}节 
-                                                        {$applymessage->getApply()->classroom->name} 
-                                                        {$applymessage->getApply()->course->name}
-                                                    </td>
-                                                    <td class="success text-center" width="40%">
-                                                        {$applymessage->getTarget()->teacher->name} 
-                                                        第{$applymessage->getTarget()->weekorder}周 
-                                                        星期{$applymessage->getTarget()->week} 
-                                                        第{$applymessage->getTarget()->node}节 
-                                                        {$applymessage->getTarget()->classroom->name} 
-                                                        {$applymessage->getTarget()->course->name}
-                                                    </td>
-                                                    <td class="text-center" width="20%">{$applymessage->state}</td>
-                                                </tr>
-                                            </table>
+                            {volist name="applyMessages" id="applyMessage" key="key"}
+                                {eq name="applyMessage->isReadStatus" value="0"}
+                                <!-- 新消息右上角有小红点 -->
+                                <span class="red-point">
+                                    我向{$applyMessage->getTargetTeacher()->name}老师发送的换课请求有了新动态
+                                </span>
+                                {else/}
+                                 <span>
+                                    我向{$applyMessage->getTargetTeacher()->name}老师发送的换课请求
+                                </span>
+                                {/eq}
+                                <!-- 模态框触发按钮 -->
+                                <button type="button" class="btn btn-default" data-toggle="modal" data-target="#{$key}" data-whatever="{$applyMessage->id}">查看详情
+                                </button>
+                                <!-- 模态框 -->
+                                <div class="modal fade" id="{$key}" tabindex="-1" role="dialog" aria-labelledby="{$key}Label">
+                                  <div class="modal-dialog" role="document">
+                                    <div class="modal-content">
+                                      <div class="modal-header">
+                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                                        <h4 class="modal-title" id="{$key}Label">我向{$applyMessage->getTargetTeacher()->name}老师发送的换课请求</h4>
+                                      </div>
+                                        <div class="modal-body">
+                                            <input type="hidden" class="form-control" id="id" name="message_id">
+                                            <div class="container">
+                                                <div class="col-md-3">                
+                                                    <dl contenteditable="true" class="dl-horizontal">
+                                                      <dt>申请换课教师</dt>
+                                                      <dd>{$applyMessage->getApplyTeacher()->name}</dd>
+                                                      <dt>时间</dt>
+                                                      <dd>第{$applyMessage->getApply()->weekorder}周</dd>
+                                                      <dd>星期{$applyMessage->getApply()->week}</dd>
+                                                      <dd>第{$applyMessage->getApply()->node}节 </dd>
+                                                      <dt>教室</dt>
+                                                      <dd>{$applyMessage->getApply()->classroom->name} </dd>
+                                                      <dt>课程</dt>
+                                                      <dd>{$applyMessage->getApplyCourse()->name}</dd>
+                                                    </dl>
+                                                </div>
+                                                <div class="col-md-3">
+                                                    <dl class="dl-horizontal">
+                                                      <dt>换课目标教师</dt>
+                                                      <dd>{$applyMessage->getTargetTeacher()->name}</dd>
+                                                      <dt>时间</dt>
+                                                      <dd>第{$applyMessage->getTarget()->weekorder}周</dd>
+                                                      <dd>星期{$applyMessage->getTarget()->week} </dd>
+                                                      <dd>第{$applyMessage->getTarget()->node}节</dd>
+                                                      <dt>教室</dt>
+                                                      <dd>{$applyMessage->getTarget()->classroom->name} </dd>
+                                                      <dt>课程</dt>
+                                                      <dd>{$applyMessage->getTargetCourse()->name}</dd>
+                                                    </dl>
+                                                </div>
+                                            </div>
+                                            <dl class="text-center">
+                                                <dt>状态</dt>
+                                                <dd>{$applyMessage->isAgreeStatus}</dd>
+                                            </dl>
+                                        </div>
+                                        <div class="modal-footer">
+                                            <a href="{:url('handleRead', ['request' => 1,'id' => " $applyMessage->id"])}" class="btn btn-md btn-default">已读</a>
+                                            <a href="{:url('handleRead', ['request' => 0,'id' => " $applyMessage->id"])}" class="btn btn-md btn-danger">删除</a>
                                         </div>
                                     </div>
+                                  </div>
                                 </div>
-                            </div>
+                                <script type="text/javascript">
+                                    $('#{$key}').on('show.bs.modal', function (event) {
+                                      var button = $(event.relatedTarget) 
+                                      var recipient = button.data('whatever') 
+                                      var modal = $(this)
+                                      modal.find('.modal-body input').val(recipient)
+                                    })
+                                </script>
+                                <br>
                             {/volist}
                         </div>
                         <!-- 谁向我换课 -->
                         <div class="tab-pane" id="other">
-                            {volist name="requestmessages" id="requestmessage" key="key"}
-                            <div class="accordion" id="parent2">
-                                <div class="accordion-group">
-                                    <div class="accordion-heading">
-                                        <!-- 新消息右上角有小红点 -->
-                                        <span class="red-point">                                               
-                                            {$requestmessage->getApply()->teacher->name}老师向我发送了一个换课请求
-                                        </span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                                        <a class="accordion-toggle collapsed btn btn-default" data-toggle="collapse" data-parent="#parent2" href="#{$key}1">查看详情&nbsp;
-                                            <!-- 下拉图标 -->
-                                            <span class="glyphicon glyphicon-arrow-down"></span>
-                                        </a>
-                                    </div>
-                                    <div id="{$key}1" class="accordion-body collapse" style="height: 0px;">
-                                        <div class="accordion-inner">
-                                            <table class="table table-hover table-bordered">
-                                                <tr class="info">
-                                                    <th>ID</th>
-                                                    <th class="text-center">申请者时刻表</th>
-                                                    <th class="text-center">目标时刻表</th>
-                                                    <th class="text-center">操作</th>
-                                                </tr>
-                                                <tr>
-                                                    <td>{$key}</td>
-                                                    <td class="warning" width="40%">
-                                                        {$requestmessage->getApply()->teacher->name} 
-                                                        第{$requestmessage->getApply()->weekorder}周 
-                                                        星期{$requestmessage->getApply()->week} 
-                                                        第{$requestmessage->getApply()->node}节 
-                                                        {$requestmessage->getApply()->classroom->name} 
-                                                        {$requestmessage->getApply()->course->name}
-                                                    </td>
-                                                    <td class="success" width="40%">
-                                                        {$requestmessage->getTarget()->teacher->name} 
-                                                        第{$requestmessage->getTarget()->weekorder}周 
-                                                        星期{$requestmessage->getTarget()->week} 
-                                                        第{$requestmessage->getTarget()->node}节 
-                                                        {$requestmessage->getTarget()->course->name}
-                                                    </td>
-                                                    <td class="text-center" width="20%">
-                                                        {switch name="$requestmessage->getData('state')"} 
-                                                            {case value="0"}
-                                                                <a href="{:url('handlemessage', ['request' => 1,'id' => " $requestmessage->id"])}" class="btn btn-md btn-primary">
-                                                                    <i class="glyphicon glyphicon-ok" aria-hidden="true">&nbsp;同意</i>
-                                                                </a>&nbsp
-                                                                <a href="{:url('handlemessage', ['request' => 0,'id' => " $requestmessage->id"])}" class="btn btn-md btn-danger">
-                                                                    <i class="glyphicon glyphicon-remove" aria-hidden="true">&nbsp;拒绝</i>
-                                                                </a> 
-                                                            {/case} 
-                                                            {case value="1"}<p>你已同意，等待管理员审核</p>{/case}
-                                                            {case value="2"}<p>你已拒绝</p>{/case}
-                                                            {case value="3"}<p>管理员已同意，换课成功</p>{/case} 
-                                                            {case value="4"}<p>管理员已拒绝，换课失败</p>{/case}              
-                                                        {/switch}
-                                                    </td>
-                                                </tr>
-                                            </table>
+                            {volist name="requestMessages" id="requestMessage" key="key"}
+                                {eq name="requestMessage->isReadStatus" value="0"}
+                                <!-- 新消息右上角有小红点 -->
+                                <span class="red-point">
+                                    我向{$requestMessage->getTargetTeacher()->name}老师发送的换课请求有了新动态
+                                </span>
+                                {else/}
+                                 <span>
+                                    我向{$requestMessage->getTargetTeacher()->name}老师发送的换课请求有了新动态
+                                </span>
+                                {/eq}
+                                <!-- 模态框触发按钮 -->
+                                <button type="button" class="btn btn-default" data-toggle="modal" data-target="#{$key}" data-whatever="{$requestMessage->id}">查看详情
+                                </button>
+                                <!-- 模态框 -->
+                                <div class="modal fade" id="{$key}" tabindex="-1" role="dialog" aria-labelledby="{$key}Label">
+                                  <div class="modal-dialog" role="document">
+                                    <div class="modal-content">
+                                      <div class="modal-header">
+                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                                        <h4 class="modal-title" id="{$key}Label">我向{$requestMessage->getTargetTeacher()->name}老师发送的换课请求</h4>
+                                      </div>
+                                        <div class="modal-body">
+                                            <input type="hidden" class="form-control" id="id" name="message_id">
+                                            <div class="container">
+                                                <div class="col-md-3">                
+                                                    <dl contenteditable="true" class="dl-horizontal">
+                                                      <dt>申请换课教师</dt>
+                                                      <dd>{$requestMessage->getApplyTeacher()->name}</dd>
+                                                      <dt>时间</dt>
+                                                      <dd>第{$requestMessage->getApply()->weekorder}周</dd>
+                                                      <dd>星期{$requestMessage->getApply()->week}</dd>
+                                                      <dd>第{$requestMessage->getApply()->node}节 </dd>
+                                                      <dt>教室</dt>
+                                                      <dd>{$requestMessage->getApply()->classroom->name} </dd>
+                                                      <dt>课程</dt>
+                                                      <dd>{$requestMessage->getApplyCourse()->name}</dd>
+                                                    </dl>
+                                                </div>
+                                                <div class="col-md-3">
+                                                    <dl class="dl-horizontal">
+                                                      <dt>换课目标教师</dt>
+                                                      <dd>{$requestMessage->getTargetTeacher()->name}</dd>
+                                                      <dt>时间</dt>
+                                                      <dd>第{$requestMessage->getTarget()->weekorder}周</dd>
+                                                      <dd>星期{$requestMessage->getTarget()->week} </dd>
+                                                      <dd>第{$requestMessage->getTarget()->node}节</dd>
+                                                      <dt>教室</dt>
+                                                      <dd>{$requestMessage->getTarget()->classroom->name} </dd>
+                                                      <dt>课程</dt>
+                                                      <dd>{$requestMessage->getTargetCourse()->name}</dd>
+                                                    </dl>
+                                                </div>
+                                            </div>
+                                            <dl class="text-center">
+                                                <dt>状态</dt>
+                                                <dd>
+                                                {switch name="$requestMessage->getData('isAgreeStatus')"} 
+                                                    {case value="0"}
+                                                        <a href="{:url('handlemessage', ['request' => 1,'id' => " $requestMessage->id"])}" class="btn btn-md btn-primary">
+                                                            <i class="glyphicon glyphicon-ok" aria-hidden="true">&nbsp;同意</i>
+                                                        </a>&nbsp
+                                                        <a href="{:url('handlemessage', ['request' => 0,'id' => " $requestMessage->id"])}" class="btn btn-md btn-danger">
+                                                            <i class="glyphicon glyphicon-remove" aria-hidden="true">&nbsp;拒绝</i>
+                                                        </a> 
+                                                    {/case} 
+                                                    {case value="1"}<p>你已同意，等待管理员审核</p>{/case}
+                                                    {case value="2"}<p>你已拒绝</p>{/case}
+                                                    {case value="3"}<p>管理员已同意，换课成功</p>{/case} 
+                                                    {case value="4"}<p>管理员已拒绝，换课失败</p>{/case}              
+                                                {/switch}
+                                                </dd>
+                                            </dl>
+                                        </div>
+                                        <div class="modal-footer">
+                                            <div class="modal-footer">
+                                                <a href="{:url('handleRead', ['request' => 1,'id' => " $requestMessage->id"])}" class="btn btn-md btn-default">已读</a>
+                                                <a href="{:url('handleRead', ['request' => 0,'id' => " $requestMessage->id"])}" class="btn btn-md btn-danger">删除</a>
+                                            </div>
                                         </div>
                                     </div>
+                                  </div>
                                 </div>
-                            </div>
-                            {/volist}
-                        </div>
-                        <!-- 已完成 -->
-                        <div class="tab-pane" id="compelete">
-                            {volist name="resultmessages" id="resultmessage" key="key"}
-                            <div class="accordion" id="parent1">
-                                <div class="accordion-group">
-                                    <div class="accordion-heading">
-                                        {switch name="$resultmessage->getData('state')"} 
-                                            {case value="3"}
-                                                <!-- 新消息右上角有小红点 -->
-                                                <span class="red-point">
-                                                    {$resultmessage->getTarget()->teacher->name}老师向{$resultmessage->getApply()->teacher->name}老师发送的换课请求已由管理员处理
-                                                </span> 
-                                            {/case} 
-                                            {case value="4"}
-                                                <!-- 新消息右上角有小红点 -->
-                                                <span class="red-point">{$resultmessage->getApply()->teacher->name}老师向 {$resultmessage->getTarget()->teacher->name}老师 发送的换课请求已由管理员处理
-                                                </span> 
-                                            {/case} 
-                                        {/switch}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                                        <a class="accordion-toggle collapsed btn btn-default" data-toggle="collapse" data-parent="#parent1" href="#{$key}2">查看详情&nbsp;
-                                            <!-- 下拉图标 -->
-                                            <span class="glyphicon glyphicon-arrow-down"></span> 
-                                        </a>
-                                    </div>
-                                    <div id="{$key}2" class="accordion-body collapse" style="height: 0px;">
-                                        <div class="accordion-inner">
-                                            <table class="table table-hover table-bordered">
-                                                <tr class="info">
-                                                    <th style="text-align: center">申请者时刻表</th>
-                                                    <th style="text-align: center">目标时刻表</th>
-                                                    <th style="text-align: center">状态</th>
-                                                </tr>
-                                                <tr>
-                                                    {switch name="$resultmessage->getData('state')"} 
-                                                        {case value="3"}
-                                                            <td class="warning text-center" width="40%">
-                                                                {$resultmessage->getTarget()->teacher->name} 
-                                                                第{$resultmessage->getApply()->weekorder}周 
-                                                                星期{$resultmessage->getApply()->week} 
-                                                                第{$resultmessage->getApply()->node}节 
-                                                                {$resultmessage->getApply()->classroom->name} 
-                                                                {$resultmessage->getTarget()->course->name}
-                                                            </td>
-                                                            <td class="success text-center" width="40%">
-                                                                {$resultmessage->getApply()->teacher->name} 
-                                                                第{$resultmessage->getTarget()->weekorder}周 
-                                                                星期{$resultmessage->getTarget()->week} 
-                                                                第{$resultmessage->getTarget()->node}节 
-                                                                {$resultmessage->getTarget()->classroom->name} 
-                                                                {$resultmessage->getApply()->course->name}
-                                                            </td>
-                                                            <td class="text-center" width="20%">{$resultmessage->state}</td>
-                                                        {/case} 
-                                                        {case value="4"}
-                                                            <td class="warning text-center" width="40%">
-                                                                {$resultmessage->getApply()->teacher->name} 
-                                                                第{$resultmessage->getApply()->weekorder}周 
-                                                                星期{$resultmessage->getApply()->week} 
-                                                                第{$resultmessage->getApply()->node}节 
-                                                                {$resultmessage->getApply()->classroom->name} 
-                                                                {$resultmessage->getApply()->course->name}
-                                                            </td>
-                                                            <td class="success text-center" width="40%">
-                                                                {$resultmessage->getTarget()->teacher->name} 
-                                                                第{$resultmessage->getTarget()->weekorder}周 
-                                                                星期{$resultmessage->getTarget()->week} 
-                                                                第{$resultmessage->getTarget()->node}节 
-                                                                {$resultmessage->getTarget()->classroom->name} 
-                                                                {$resultmessage->getTarget()->course->name}
-                                                            </td>
-                                                            <td class="text-center" width="20%">{$resultmessage->state}</td>
-                                                        {/case} 
-                                                    {/switch}
-                                                </tr>
-                                            </table>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
+                                <script type="text/javascript">
+                                    $('#{$key}').on('show.bs.modal', function (event) {
+                                      var button = $(event.relatedTarget) 
+                                      var recipient = button.data('whatever') 
+                                      var modal = $(this)
+                                      modal.find('.modal-body input').val(recipient)
+                                    })
+                                </script>
+                                <br>
                             {/volist}
                         </div>
                     </div>

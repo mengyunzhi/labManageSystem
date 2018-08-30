@@ -51,6 +51,8 @@ class KlassController extends Controller
             order('id desc')->paginate($pageSize,false);
         }
 
+        $total_number = action($url = 'Administrator\noReadMessageNumber', $vars = "app\index\controller", $layer = 'controller', $appendSuffix = true);
+        $this->assign('total_number', $total_number);
         //向V层传数据
         $this->assign('klasses', $klasses);
         $this->assign('grades', $grades);

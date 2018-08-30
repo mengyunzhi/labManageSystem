@@ -2,13 +2,13 @@
 
 namespace app\index\controller;
 
-use app\common\model\Changelesson;
 use app\common\model\Classroom;
 use app\common\model\College;
 use app\common\model\Course;
 use app\common\model\Grade;
 use app\common\model\Klass;
 use app\common\model\Major;
+use app\common\model\Message;
 use app\common\model\Sechedule;
 use app\common\model\Semester;
 use app\common\model\Teacher;
@@ -16,6 +16,7 @@ use app\common\model\TeacherCollege;
 use app\common\model\TeacherGrade;
 use app\common\model\TeacherKlass;
 use app\common\model\TeacherMajor;
+use app\common\model\User;
 use think\Controller;
 use think\facade\Request;
 
@@ -57,8 +58,8 @@ class TeacherController extends Controller
         }
         $this->currentSemester = Semester::currentSemester(Semester::select());
         $this->currentWeekorder = $this->currentSemester->getWeekorder();
-        $classrooms=Classroom::select();
-        $this->currentClassroom=$classrooms[0];
+        $classrooms = Classroom::select();
+        $this->currentClassroom = $classrooms[0];
         $this->setRange($this->currentSemester->id, $this->currentWeekorder);
         //寻找和老师有关的信息的条件
         $map['teacher_id'] = $this->teacher->id;
@@ -78,9 +79,10 @@ class TeacherController extends Controller
     {
         $postData = Request::instance()->post();
         if (!empty($postData)) {
-            $this->setRange((int)$postData['semester_id'], (int)$postData['weekorder']);
+            $this->setRange((int) $postData['semester_id'], (int) $postData['weekorder']);
         }
         $secheduleList = $this->editIndexSechedule();
+        $total_number = $this->noReadMessageNumber();
         //像v层传送老师数据
         $this->assign([
             'secheduleList' => $secheduleList,
@@ -92,6 +94,7 @@ class TeacherController extends Controller
             'allClassroom' => Classroom::select(),
             'null' => null,
             'teacher' => $this->teacher,
+            'total_number' => $total_number
         ]);
         return $this->fetch();
     }
@@ -165,13 +168,13 @@ class TeacherController extends Controller
         // 判断是否为选课系统开放时间
         $time = time();
         if ($time >= $this->currentSemester->getData('starttaketime') && $time <= $this->currentSemester->getData('endtaketime')) {
-            $this->currentSemester=Semester::getOpenSemester(Semester::select());
+            $this->currentSemester = Semester::getOpenSemester(Semester::select());
             $postData = Request::instance()->post();
             if (!empty($postData)) {
-                $this->setRange($this->currentSemester->id, (int)$postData['weekorder'], (int)$postData['classroom_id']);
-                $this->currentClassroom=Classroom::get((int)$postData['classroom_id']);
-            }else{
-                $this->currentWeekorder=$this->currentSemester->startweekorder;
+                $this->setRange($this->currentSemester->id, (int) $postData['weekorder'], (int) $postData['classroom_id']);
+                $this->currentClassroom = Classroom::get((int) $postData['classroom_id']);
+            } else {
+                $this->currentWeekorder = $this->currentSemester->startweekorder;
                 $this->setRange($this->currentSemester->id, $this->currentWeekorder, $this->currentClassroom->id);
             }
 
@@ -223,6 +226,10 @@ class TeacherController extends Controller
             if (is_null($tgrades)) {
                 $tgrades = 0;
             }
+
+            //我的未读消息总数
+            $total_number = $this->noReadMessageNumber();
+
             $this->assign([
                 'currentSemester' => $this->currentSemester,
                 'currentWeekorder' => $this->currentWeekorder,
@@ -237,7 +244,8 @@ class TeacherController extends Controller
                 'tmajors' => $tmajors,
                 'tklasses' => $tklasses,
                 'tcourses' => $this->tcourses,
-                'changelesson' => new Changelesson,
+                'message' => new Message,
+                'total_number' => $total_number
             ]);
             return $this->fetch('takelessonInterface');
         } else {
@@ -296,6 +304,8 @@ class TeacherController extends Controller
             $id = $gradeId->getData('grade_id');
             $tgrades[$i++] = Grade::get($id);
         }
+        //我的未读消息总数
+        $total_number = $this->noReadMessageNumber();
 
         //把信息传递给V层
         $this->assign('tklass', $tklass);
@@ -308,6 +318,7 @@ class TeacherController extends Controller
         $this->assign('tmajors', $tmajors);
         $this->assign('tcolleges', $tcolleges);
         $this->assign('tgrades', $tgrades);
+        $this->assign('total_number', $total_number);
         //取回打包的数据
         return $this->fetch('information');
 
@@ -349,9 +360,9 @@ class TeacherController extends Controller
         $teacherId = Request::instance()->post('teacherId/d');
         $secheduleId = Request::instance()->post('secheduleId/d');
         $courseId = Request::instance()->post('courseId/d');
-        $klassIds = (array)Request::instance()->post('klassIds');
+        $klassIds = (array) Request::instance()->post('klassIds');
 
-        if (($teacherId === 0 || $secheduleId === 0 || empty($klassIds) || $courseId === 0||is_null($courseId))) {
+        if (($teacherId === 0 || $secheduleId === 0 || empty($klassIds) || $courseId === 0 || is_null($courseId))) {
             $this->error("请填写完整信息");
 
         }
@@ -376,10 +387,9 @@ class TeacherController extends Controller
         $Sechedule->teacher_id = $teacherId;
         $Sechedule->course_id = $courseId;
 
-
         foreach ($klassIds as $id) {
 
-                $Sechedule->klasses()->save($id);
+            $Sechedule->klasses()->save($id);
         }
 
         $Sechedule->save();
@@ -535,7 +545,7 @@ class TeacherController extends Controller
     public function changeLesson()
     {
         //接收要换课的id
-        $semesterid = $this->currentSemester=Semester::getOpenSemester(Semester::select())->id;
+        $semesterid = $this->currentSemester = Semester::getOpenSemester(Semester::select())->id;
         $applyid = Request::instance()->post('id');
         $ApplySechedule = Sechedule::get($applyid); //通过id，找到Sechedule表里对应的对象
 
@@ -544,7 +554,7 @@ class TeacherController extends Controller
         $week = Request::instance()->post('week');
         $node = Request::instance()->post('node');
         $classroom_id = Request::instance()->post('classroom_id');
-        $targetid = Sechedule::findtarget($weekorder, $week, $node, $classroom_id,$semesterid);
+        $targetid = Sechedule::findtarget($weekorder, $week, $node, $classroom_id, $semesterid);
 
         //实例化目标课对象
         $TargetSechedule = Sechedule::get($targetid);
@@ -555,7 +565,7 @@ class TeacherController extends Controller
         }
 
         //判断目标是否为换课中
-        if (Changelesson::isChangeLesson($targetid)) {
+        if ($TargetSechedule->isChangeLesson == 1) {
             return $this->error('换课失败，目标正在换课中', 'takelessonInterface');
         }
 
@@ -598,13 +608,21 @@ class TeacherController extends Controller
             return $this->error('换课失败，目标老师或班级换课后会时间冲突', 'takelessonInterface');
         }
 
-        //如果不是申请者自己的课,且目标老师换课=后时间不冲突，则向目标课的教师发送消息，取得同意后再向管理员发送请求，通过后进行交换
+        //如果不是申请者自己的课,且目标老师换课后时间不冲突，则向目标课的教师发送消息，并将要换的两节课置为换课状态，取得同意后再向管理员发送请求，通过后进行交换
         if ($TargetSechedule->teacher_id !== $applyTeacherId) {
             //生成请求消息
-            $message = new Changelesson();
-            $message->applysechedule_id = $applyid;
-            $message->targetsechedule_id = $targetid;
-            $message->save();
+            $this->createRequest($ApplySechedule, $TargetSechedule);
+
+            //向目标发送消息
+            $this->requsetToTarget($ApplySechedule, $TargetSechedule);
+
+            //将两节课置为换课状态
+            $ApplySechedule->isChangeLesson = 1;
+            $ApplySechedule->save();
+            $TargetSechedule->isChangeLesson = 1;
+            $TargetSechedule->save();
+
+
             return $this->success('目标已被其他老师抢占，发送换课请求成功，请等待审核', 'takelessonInterface');
         }
     }
@@ -612,50 +630,92 @@ class TeacherController extends Controller
     //消息界面
     public function message()
     {
-        //获取当前老师的id
-        $id = $this->teacher->id;
+        //登陆教师user_id
+        $user_id = $this->teacher->user_id;
 
-        //从换课表中找到所有换课申请
-        $Changelessons = new Changelesson;
-        $changelessons = $Changelessons->where('state', '<', 3)->order('id', 'desc')->select();
-        $changeresults = $Changelessons->where('state', '>', 2)->order('id', 'desc')->select();
+        //我向别人换课的申请
+        $applyMessages = Message::where('user_id', '=', $user_id)->where('isApplyStatus', '=', 1)->order('id desc')->select();
 
-        //筛选出登陆的教师向他人换课的请求信息
-        $applymessages = Changelesson::findapply($changelessons, $id);
+        //别人向我换课的申请
+        $requestMessages = Message::where('user_id', '=', $user_id)->where('isApplyStatus', '=', 0)->order('id desc')->select();
 
-        //筛选他人向登陆的教师换课的请求信息
-        $requestmessages = Changelesson::findrequest($changelessons, $id);
+        //"我向别人换课的申请”未读消息数
+        $my_number = count(Message::where('user_id', '=', $user_id)->where('isApplyStatus', '=', 1)->where('isReadStatus','=','0')->select());
 
-        //筛选出管理员处理的请求结果
-        $resultmessages = Changelesson::findresult($changeresults, $id);
+        //"别人向我换课的申请”未读消息数
+        $other_number = count(Message::where('user_id', '=', $user_id)->where('isApplyStatus', '=', 0)->where('isReadStatus','=','0')->select());
 
-        //向v层传送数据
-        $this->assign('applymessages', $applymessages);
-        $this->assign('requestmessages', $requestmessages);
-        $this->assign('resultmessages', $resultmessages);
+        //我的未读消息总数
+        $total_number = $my_number + $other_number;
+        //向V层传递数据
+        $this->assign('applyMessages', $applyMessages);
+        $this->assign('requestMessages', $requestMessages);
         $this->assign('teacher', $this->teacher);
-        return $this->fetch("message");
+        $this->assign('my_number', $my_number);
+        $this->assign('other_number', $other_number);
+        $this->assign('total_number', $total_number);
+
+        return $this->fetch('message');
+    }
+
+    public function noReadMessageNumber()
+    {
+        //登陆教师user_id
+        $user_id = $this->teacher->user_id;
+        //"我向别人换课的申请”未读消息数
+        $my_number = count(Message::where('user_id', '=', $user_id)->where('isApplyStatus', '=', 1)->where('isReadStatus','=','0')->select());
+
+        //"别人向我换课的申请”未读消息数
+        $other_number = count(Message::where('user_id', '=', $user_id)->where('isApplyStatus', '=', 0)->where('isReadStatus','=','0')->select());
+        //我的未读消息总数
+        $total_number = $my_number + $other_number;
+
+        return $total_number;
     }
 
     //处理请求
     public function handlemessage($id, $request)
     {
-        //实例化换课请求对象
-        $Changelesson = Changelesson::get($id);
+        //获取消息对象
+        $requestMessage = Message::get($id);
 
-        //如果request为1，则同意换课请求
-        if ($request == 1) {
-            $Changelesson->state = 1; //修改状态为教师已同意
-            $Changelesson->save(); //保存修改
-            return $this->success('操作成功,已同意该请求', url('message'));
-        } //如果request为0，则拒绝换课请求
-        else if ($request == 0) {
-            $Changelesson->state = 2; //修改状态为教师不同意
-            $Changelesson->save(); //保存修改
-            return $this->success('操作成功,已拒绝该请求', url('message'));
-        } else {
-            return $this->error('操作失败,请重试', url('message'));
+        //消息设置为已读
+        $requestMessage->isReadStatus = 1;
+        $requestMessage->save();
+        
+        //根据消息对象获取要换的两节课
+        $applySechedule = Sechedule::get($requestMessage->apply_sechedule_id);
+        $targetSechedule = Sechedule::get($requestMessage->target_sechedule_id);
+
+        //如果不同意，则修改状态为对方已拒绝,并向申请者发送一条消息
+        if ($request == 0) {
+            //修改状态为对方已拒绝
+            $requestMessage->isAgreeStatus = 2;
+            $requestMessage->save();
+
+            //取消两节课的换课状态
+            $ApplySechedule->isChangeLesson = 0;
+            $ApplySechedule->save();
+            $TargetSechedule->isChangeLesson = 0;
+            $TargetSechedule->save();
+
+            //向申请者发送一条消息
+            $this->disagreeToApply($applySechedule, $targetSechedule);
+
+            return $this->redirect('message');
+
         }
+        //如果同意，则修改状态为“对方已同意，等待系统审核中”,并向管理发送一条消息
+        else {
+            //修改状态为“对方已同意等待系统审核中”
+            $requestMessage->isAgreeStatus = 1;
+            $requestMessage->save();
+
+            //向管理发送一条消息
+            $this->agreeToAdministrator($applySechedule, $targetSechedule);
+
+            return $this->redirect('message');
+        }       
     }
 
     public function getMajor()
@@ -685,7 +745,7 @@ class TeacherController extends Controller
         return $klasses;
     }
 
-    /*根据输入的ID数组，输出相应的班级名称*/
+    //根据输入的ID数组，输出相应的班级名称
     public function getklassname($ids)
     {
         $i = 0;
@@ -697,4 +757,99 @@ class TeacherController extends Controller
         return $names;
     }
 
+    //申请者生成请求消息
+    public function createRequest($applySechedule, $targetSechedule)
+    {
+        $Message = new Message();
+        $Message->user_id = $applySechedule->teacher->user_id;
+        $Message->apply_sechedule_id = $applySechedule->id;
+        $Message->target_sechedule_id = $targetSechedule->id;
+        $Message->apply_teacher_id = $applySechedule->teacher_id;
+        $Message->target_teacher_id = $targetSechedule->teacher_id;
+        $Message->apply_course_id = $applySechedule->course_id;
+        $Message->target_course_id = $targetSechedule->course_id;
+        $Message->isApplyStatus = 1;
+        $Message->isReadStatus = 1;
+        $Message->save();
+    }
+
+    //申请者向目标发送一条请求消息
+    public function requsetToTarget($applySechedule, $targetSechedule)
+    {
+        $Message = new Message();
+        $Message->user_id = $targetSechedule->teacher->user_id;
+        $Message->apply_sechedule_id = $applySechedule->id;
+        $Message->target_sechedule_id = $targetSechedule->id;
+        $Message->apply_teacher_id = $applySechedule->teacher_id;
+        $Message->target_teacher_id = $targetSechedule->teacher_id;
+        $Message->apply_course_id = $applySechedule->course_id;
+        $Message->target_course_id = $targetSechedule->course_id;
+        $Message->isApplyStatus = 0;
+        $Message->isReadStatus = 0;
+        $Message->save();
+    }
+
+    //目标向申请者发送一条拒绝消息
+    public function disagreeToApply($applySechedule, $targetSechedule)
+    {
+        $Message = new Message();
+        $Message->user_id = $applySechedule->teacher->user_id;
+        $Message->apply_sechedule_id = $applySechedule->id;
+        $Message->target_sechedule_id = $targetSechedule->id;
+        $Message->apply_teacher_id = $applySechedule->teacher_id;
+        $Message->target_teacher_id = $targetSechedule->teacher_id;
+        $Message->apply_course_id = $applySechedule->course_id;
+        $Message->target_course_id = $targetSechedule->course_id;
+        $Message->isApplyStatus = 1;
+        $Message->isAgreeStatus = 2;
+        $Message->isReadStatus = 0;
+        $Message->save();
+    }
+
+    //目标向所有管理员发送一条同意换课的消息
+    public function agreeToAdministrator($applySechedule, $targetSechedule)
+    {
+        //找到大管理员
+        $Administrator = User::get('63');
+        //向大管理员发消息
+        $Message = new Message();
+        $Message->user_id = $Administrator->id;
+        $Message->apply_sechedule_id = $applySechedule->id;
+        $Message->target_sechedule_id = $targetSechedule->id;
+        $Message->apply_teacher_id = $applySechedule->teacher_id;
+        $Message->target_teacher_id = $targetSechedule->teacher_id;
+        $Message->apply_course_id = $applySechedule->course_id;
+        $Message->target_course_id = $targetSechedule->course_id;
+        $Message->isApplyStatus = 0;
+        $Message->isAgreeStatus = 1;
+        $Message->isReadStatus = 0;
+        $Message->save();
+    }
+
+    //判断是否处于换课
+    public function isChangeLesson($id)
+    {
+        $result = Message::where('isAgreeStatus', '=', '0')->where('apply_sechedule_id|target_sechedule_id', '=', $id)->select();
+        if (empty($result[0])) {
+            return false;
+        } else {
+            return true;
+        }
+    }
+
+    //已阅读消息
+    public function handleRead($id, $request)
+    {
+        $message = Message::get($id);
+        if ($request == 1) {
+            $message->isReadStatus = 1;
+            $message->save();
+            
+        }
+        elseif ($request == 0) {
+            $message->delete();
+        }
+
+        return $this->redirect('message');
+    }
 }

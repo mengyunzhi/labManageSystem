@@ -23,9 +23,11 @@ class ClassroomController extends Controller
             'query'=>[
                 'name' => $name,
                 ],
-            ]);              	
+            ]);
+        $total_number = action($url = 'Administrator\noReadMessageNumber', $vars = "app\index\controller", $layer = 'controller', $appendSuffix = true);              	
         // 向V层传数据
         $this->assign('classrooms', $classrooms);
+        $this->assign('total_number', $total_number);
 
         // 取回打包后的数据
         $htmls = $this->fetch();

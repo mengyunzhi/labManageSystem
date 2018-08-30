@@ -29,9 +29,12 @@ class CourseController extends Controller
             'query'=>[
                 'name' => $name,
                 ],
-            ]); 
+            ]);
+             
+        $total_number = action($url = 'Administrator\noReadMessageNumber', $vars = "app\index\controller", $layer = 'controller', $appendSuffix = true);
 
         // 向V层传数据
+        $this->assign('total_number', $total_number);
         $this->assign('courses', $courses);
         return $this->fetch();
     }
