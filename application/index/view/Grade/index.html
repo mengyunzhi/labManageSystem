@@ -29,7 +29,7 @@
                                     <h4 class="modal-title text-left">增加年级</h4>
                                 </div>
                                 <div class="modal-body text-left">
-                                    <form action="{:url('insert')}" method="post">
+                                    <form action="{:url('insert')}" method="post" class="form-inline">
                                         <br>
                                         <p id="major1" class="hide">1</p>
                                         <p id="grade1" class="hide">1</p>
@@ -38,7 +38,7 @@
                                         <div class="col-md-3 row">
                                             <label class="col-md-4 select_label">学院</label>
                                             <div class="col-md-8">
-                                                <select id="college" class="form-control" onclick="getMajor()">
+                                                <select id="college" class="form-control from-group" onclick="getMajor()">
                                                     {volist name="colleges" id = "College"}
                                                     <option value="{$College->id}">
                                                         {$College->name}
@@ -50,14 +50,14 @@
                                         <div class="col-md-3 row">
                                             <label class="col-md-4 select_label">专业</label>
                                             <div class="col-md-8">
-                                                <select id="major" class="form-control" onclick="getGrade()">
+                                                <select id="major" class="form-control from-group" onclick="getGrade()">
                                                     <option>
                                                     </option>
                                                 </select>
                                             </div>
                                         </div>
                                         <label>年级名称：</label>
-                                        <input type="text" name="name">
+                                        <input type="text" name="name" class="from-group">
                                         <br>
                                         <div class="modal-footer">
                                             <button type="submit" class="btn btn-primary">保存</button>

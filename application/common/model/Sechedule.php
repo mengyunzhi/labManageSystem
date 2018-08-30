@@ -154,7 +154,7 @@ class Sechedule extends Model
         $map = array();
         $map['weekorder'] = $Sechedule->weekorder;
         $map['node'] = $Sechedule->node;
-        $map['week'] = $Sechedule->week;
+        $map['week'] = $Sechedule->getData("week");
         $map['semester_id'] = $Sechedule->semester_id;
 
         //找到相同时间的教室
@@ -191,12 +191,14 @@ class Sechedule extends Model
                 foreach ($klassIds as $klassId) {
 
                     if ($currentSechedule->klass_id == $klassId) {
+
                         $flag = false;
                     }
 
                     //判断标记
                     if (!$flag)
-                        return true;
+
+                    return true;
                 }
             }
         } else {
