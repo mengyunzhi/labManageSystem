@@ -55,7 +55,7 @@
                                             <input type="hidden" class="form-control" id="id" name="message_id">
                                             <div class="container">
                                                 <div class="col-md-3">                
-                                                    <dl contenteditable="true" class="dl-horizontal">
+                                                    <dl class="dl-horizontal">
                                                       <dt>申请换课教师</dt>
                                                       <dd>{$applyMessage->getApplyTeacher()->name}</dd>
                                                       <dt>时间</dt>
@@ -112,11 +112,11 @@
                                 {eq name="requestMessage->isReadStatus" value="0"}
                                 <!-- 新消息右上角有小红点 -->
                                 <span class="red-point">
-                                    {$requestMessage->getTargetTeacher()->name}老师向我发送的换课请求有了新动态
+                                    {$requestMessage->getApplyTeacher()->name}老师向我发送的换课请求有了新动态
                                 </span>
                                 {else/}
                                  <span>
-                                    {$requestMessage->getTargetTeacher()->name}老师向我发送的换课请求有了
+                                    {$requestMessage->getApplyTeacher()->name}老师向我发送的换课请求
                                 </span>
                                 {/eq}
                                 <!-- 模态框触发按钮 -->
@@ -134,7 +134,7 @@
                                             <input type="hidden" class="form-control" id="id" name="message_id">
                                             <div class="container">
                                                 <div class="col-md-3">                
-                                                    <dl contenteditable="true" class="dl-horizontal">
+                                                    <dl class="dl-horizontal">
                                                       <dt>申请换课教师</dt>
                                                       <dd>{$requestMessage->getApplyTeacher()->name}</dd>
                                                       <dt>时间</dt>
@@ -183,10 +183,10 @@
                                             </dl>
                                         </div>
                                         <div class="modal-footer">
-                                            <div class="modal-footer">
-                                                <a href="{:url('handleRead', ['request' => 1,'id' => " $requestMessage->id"])}" class="btn btn-md btn-default">已读</a>
-                                                <a href="{:url('handleRead', ['request' => 0,'id' => " $requestMessage->id"])}" class="btn btn-md btn-danger">删除</a>
-                                            </div>
+                                              <a href="{:url('handleRead', ['request' => 1,'id' => " $requestMessage->id"])}" class="btn btn-md btn-default">已读</a>
+                                              {eq name="$requestMessage->getData('isAgreeStatus')" value="0"}
+                                              {else/}<a href="{:url('handleRead', ['request' => 0,'id' => " $requestMessage->id"])}" class="btn btn-md btn-danger">删除</a>
+                                              {/eq}
                                         </div>
                                     </div>
                                   </div>

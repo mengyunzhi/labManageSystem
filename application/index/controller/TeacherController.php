@@ -152,7 +152,7 @@ class TeacherController extends Controller
             $temp = $temp->where('node', '=', $i);
             $weeklyList = $temp->select();
             foreach ($weeklyList as $weekly) {
-                $nodeList[$weekly['week']] = $weekly;
+                $nodeList[$weekly->getData('week')] = $weekly;
             }
             ksort($nodeList);
             array_push($weekList, $nodeList);
@@ -691,10 +691,10 @@ class TeacherController extends Controller
             $requestMessage->save();
 
             //取消两节课的换课状态
-            $ApplySechedule->isChangeLesson = 0;
-            $ApplySechedule->save();
-            $TargetSechedule->isChangeLesson = 0;
-            $TargetSechedule->save();
+            $applySechedule->isChangeLesson = 0;
+            $applySechedule->save();
+            $targetSechedule->isChangeLesson = 0;
+            $targetSechedule->save();
 
             //向申请者发送一条消息
             $this->disagreeToApply($applySechedule, $targetSechedule);
@@ -838,13 +838,14 @@ class TeacherController extends Controller
     public function handleRead($id, $request)
     {
         $message = Message::get($id);
+        
         if ($request == 1) {
             $message->isReadStatus = 1;
             $message->save();
             
         }
         elseif ($request == 0) {
-            $message->delete();
+            Message::destroy($id);
         }
         return $this->redirect('message');
     }
