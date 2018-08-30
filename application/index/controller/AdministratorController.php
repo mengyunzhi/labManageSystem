@@ -321,7 +321,7 @@ class AdministratorController extends Controller
 
         // 按条件查询数据并调用分页
         $logs = $Log
-            ->where('applyinformation', 'like', '%' . $information . '%')
+            ->where('applyinformation|targetinformation', 'like', '%' . $information . '%')
             ->order('id', 'desc')
             ->paginate($pageSize, false, [
                 'query' => [

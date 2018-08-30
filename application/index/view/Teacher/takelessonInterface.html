@@ -97,48 +97,46 @@
                         <input type="hidden" name="teacherId" value="{$teacher->id}">
                     </div>
                     {volist name="tcolleges" id="College"}
-                    <label>{$College->name}:</label><br>
+                    <label>{$College->name}:</label>
+                    <br>
                     <div>
                         {volist name="tmajors" id="Major"}
                         <div {neq name="$Major->college_id" value="$College->id" } hidden="hidden" {/neq}>
-                        <div>
-                            {volist name="tgrades" id="Grade"}
-                            <div {neq name="$Grade->major_id" value="$Major->id" } hidden="hidden" {/neq}>
                             <div>
-                                {volist name="tklasses" id="Klass"}
-                                <div {neq name="$Klass->grade_id" value="$Grade->id" } hidden="hidden" {/neq}>
-                                &nbsp&nbsp&nbsp&nbsp&nbsp&nbsp
-                                &nbsp&nbsp&nbsp&nbsp&nbsp&nbsp
-                                {$Klass->name}
-                                <input type="checkbox" id="klass" value="{$Klass->id}" name="klassIds[{$key}]"  {neq name="$Klass->grade_id" value="$Grade->id" } hidden="hidden" {/neq}>
-                            </div><br>
-                            {/volist}
+                                {volist name="tgrades" id="Grade"}
+                                <div {neq name="$Grade->major_id" value="$Major->id" } hidden="hidden" {/neq}>
+                                    <div>
+                                        {volist name="tklasses" id="Klass"}
+                                        <div {neq name="$Klass->grade_id" value="$Grade->id" } hidden="hidden" {/neq}>
+                                            &nbsp&nbsp&nbsp&nbsp&nbsp&nbsp &nbsp&nbsp&nbsp&nbsp&nbsp&nbsp {$Klass->name}
+                                            <input type="checkbox" id="klass" value="{$Klass->id}" name="klassIds[{$key}]" {neq name="$Klass->grade_id" value="$Grade->id" } hidden="hidden" {/neq}>
+                                        </div>
+                                        <br> {/volist}
+                                    </div>
+                                </div>
+                                {/volist}
+                            </div>
                         </div>
+                        {/volist}
                     </div>
                     {/volist}
+                    <hr/> &nbsp&nbsp&nbsp&nbsp&nbsp&nbsp
+                    <label>课程名称:</label>
+                    <br>
+                    <label>
+                        {volist name="tcourses" id="Course" key="key"} &nbsp&nbsp&nbsp&nbsp&nbsp&nbsp &nbsp&nbsp&nbsp&nbsp&nbsp &nbsp&nbsp&nbsp&nbsp&nbsp {$Course->name}
+                        <input type="radio" value="{$Course->id}" name="courseId">
+                        <br> {/volist}
+                    </label>
                 </div>
-            </div>
-            {/volist}
-        </div>
-        {/volist}
-
-                    </div>
-                <hr/> &nbsp&nbsp&nbsp&nbsp&nbsp&nbsp
-                <label>课程名称:</label>
-                <br>
-                <label>
-                    {volist name="tcourses" id="Course" key="key"} &nbsp&nbsp&nbsp&nbsp&nbsp&nbsp &nbsp&nbsp&nbsp&nbsp&nbsp &nbsp&nbsp&nbsp&nbsp&nbsp {$Course->name}
-                    <input type="radio" value="{$Course->id}" name="courseId">
-                    <br> {/volist}
-                </label>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#addCourse" style="margin-right: 330px">
-                    <span class="glyphicon glyphicon-plus" aria-hidden="true"></span> 添加课程
-                </button>
-                <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
-                <button type="submit" class="btn btn-primary">保存</button>
-            </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#addCourse" style="margin-right: 330px">
+                        <span class="glyphicon glyphicon-plus" aria-hidden="true"></span> 添加课程
+                    </button>
+                    <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+                    <button type="submit" class="btn btn-primary">保存</button>
+                </div>
+            </div>   
         </div>
     </div>
     </div>
