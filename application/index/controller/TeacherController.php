@@ -177,8 +177,8 @@ class TeacherController extends Controller
                 $this->currentWeekorder = $this->currentSemester->startweekorder;
                 $this->setRange($this->currentSemester->id, $this->currentWeekorder, $this->currentClassroom->id);
             }
-
             $secheduleList = $this->editSechedule();
+
             //得到老师教的班级
 
             $tklasses = [];
@@ -233,6 +233,8 @@ class TeacherController extends Controller
             $this->assign([
                 'currentSemester' => $this->currentSemester,
                 'currentWeekorder' => $this->currentWeekorder,
+                'startweekorder' => $this->currentSemester->startweekorder,
+                'endweekorder' => $this->currentSemester->endweekorder,
                 'currentClassroom' => $this->currentClassroom,
                 'allClassroom' => Classroom::select(),
                 'Klasses' => Klass::select(),
@@ -425,7 +427,7 @@ class TeacherController extends Controller
         }
 
         //成功进行跳转
-        return $this->success('删除成功', url('information'));
+        return $this->success('删除成功', url('index'));
     }
 
     //老师增加课程的方法
@@ -439,12 +441,7 @@ class TeacherController extends Controller
         $NewCourse->save();
 
         //成功返回结果
-        if (Request::instance()->param('isTakelesson') == true) {
-            return $this->success('课程增加成功', url('takelessonInterface'));
-        } else {
-           return $this->success('课程增加成功', url('information'));
-        }
-        
+        return $this->success('课程增加成功', url('takelessonInterface'));
     }
 
     //老师增加班级
@@ -682,7 +679,7 @@ class TeacherController extends Controller
         //消息设置为已读
         $requestMessage->isReadStatus = 1;
         $requestMessage->save();
-        
+
         //根据消息对象获取要换的两节课
         $applySechedule = Sechedule::get($requestMessage->apply_sechedule_id);
         $targetSechedule = Sechedule::get($requestMessage->target_sechedule_id);
@@ -849,7 +846,6 @@ class TeacherController extends Controller
         elseif ($request == 0) {
             $message->delete();
         }
-
         return $this->redirect('message');
     }
 }

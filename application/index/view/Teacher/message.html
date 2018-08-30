@@ -112,23 +112,23 @@
                                 {eq name="requestMessage->isReadStatus" value="0"}
                                 <!-- 新消息右上角有小红点 -->
                                 <span class="red-point">
-                                    我向{$requestMessage->getTargetTeacher()->name}老师发送的换课请求有了新动态
+                                    {$requestMessage->getTargetTeacher()->name}老师向我发送的换课请求有了新动态
                                 </span>
                                 {else/}
                                  <span>
-                                    我向{$requestMessage->getTargetTeacher()->name}老师发送的换课请求有了新动态
+                                    {$requestMessage->getTargetTeacher()->name}老师向我发送的换课请求有了
                                 </span>
                                 {/eq}
                                 <!-- 模态框触发按钮 -->
-                                <button type="button" class="btn btn-default" data-toggle="modal" data-target="#{$key}" data-whatever="{$requestMessage->id}">查看详情
+                                <button type="button" class="btn btn-default" data-toggle="modal" data-target="#{$key}1" data-whatever="{$requestMessage->id}">查看详情
                                 </button>
                                 <!-- 模态框 -->
-                                <div class="modal fade" id="{$key}" tabindex="-1" role="dialog" aria-labelledby="{$key}Label">
+                                <div class="modal fade" id="{$key}1" tabindex="-1" role="dialog" aria-labelledby="{$key}1Label">
                                   <div class="modal-dialog" role="document">
                                     <div class="modal-content">
                                       <div class="modal-header">
                                         <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                                        <h4 class="modal-title" id="{$key}Label">我向{$requestMessage->getTargetTeacher()->name}老师发送的换课请求</h4>
+                                        <h4 class="modal-title" id="{$key}1Label">我向{$requestMessage->getTargetTeacher()->name}老师发送的换课请求</h4>
                                       </div>
                                         <div class="modal-body">
                                             <input type="hidden" class="form-control" id="id" name="message_id">
