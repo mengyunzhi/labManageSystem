@@ -1,7 +1,7 @@
 {extend name="Teacher/nav"}
 {block name="title"}个人信息{/block}
 {block name="content"}
-<div style="margin: 100px 600px;">
+<div style="height:1000px;width:280px; margin:auto;">
     <form class="form-inline" action="{:url('saveInformation')}" method="post">
         <div class="form-group" style="padding-top: 50px">
             <label >姓名：</label>
@@ -26,8 +26,9 @@
                     删除班级
                 </button>
                 <br><br>
-                <label>所教班级：</label><br>
+                <label><h4>所教班级：</h4></label><br>
                 {volist name="tcolleges" id="College"}
+                &nbsp;&nbsp;&nbsp;&nbsp;
                 <label>{$College->name}:</label><br>
                 <div>
                     {volist name="tmajors" id="Major"}
@@ -38,12 +39,12 @@
                         <div>
                             {volist name="tklass" id="Klass"}
                             <div {neq name="$Klass->grade_id" value="$Grade->id" } hidden="hidden" {/neq}>
-                            &nbsp&nbsp&nbsp&nbsp&nbsp&nbsp
-                            &nbsp&nbsp&nbsp&nbsp&nbsp&nbsp
+                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                             {$Klass->name}
-                            </div><br>
+                            </div>
                             {/volist}
-                        </div>
+                        </div><br/>
                         </div>
                         {/volist}
                     </div>
@@ -68,7 +69,7 @@
         删除课程
     </button>
     <br><br>
-    <label>所教课程：</label><br>
+    <label><h4>所教课程：</h4></label><br>
     {volist name="courses" id="Course"}
     <label>
         &nbsp&nbsp&nbsp&nbsp&nbsp&nbsp
@@ -129,10 +130,6 @@
             <div class="modal-content">
                 <div class="modal-body">
                     <br>
-                    <p id="major1" class="hide">1</p>
-                    <p id="grade1" class="hide">1</p>
-                    <p id="klass1" class="hide">1</p>
-
                     <div class="col-md-3 row">
                         <label class="col-md-4 select_label">学院</label>
                         <div class="col-md-8">
@@ -172,7 +169,7 @@
                             </select>
                         </div>
                     </div>
-                </div>
+                </div><br/>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
                     <button type="submit" class="btn btn-primary">确定</button>
@@ -227,7 +224,6 @@
 <script>
     //onchang的方法完成级联表单操作
     function getMajor() {
-        var major1      = document.getElementById('major1').innerHTML;
         var collegeNode = document.getElementById('college');
         var majorNode   = document.getElementById('major');
         var name = "aCollege";//建立的input的name
@@ -240,12 +236,13 @@
         ajaxGet(url, function (response) {
             var majors = response;
             createOption(majorNode,majors);
-            setSelected(majorNode,major1);
+            setSelected(majorNode);
+            getGrade();
+
         });
         creatInput(value,name,collegeNode);
     }
     function getGrade() {
-        var grade1      = document.getElementById('grade1').innerHTML;
         var majorNode = document.getElementById('major');
         var gradeNode   = document.getElementById('grade');
         var name = "aMajor";//建立的input的name
@@ -258,12 +255,14 @@
         ajaxGet(url, function (response) {
             var grades = response;
             createOption(gradeNode,grades);
-            setSelected(gradeNode,grade1);
+           setSelected(gradeNode);
+           getKlass();
+
         });
         creatInput(value,name,majorNode);
     }
+
     function getKlass() {
-        var klass1      = document.getElementById('klass1').innerHTML;
         var gradeNode = document.getElementById('grade');
         var klassNode   = document.getElementById('aklass');
         var name = "aGrade";//建立的input的name
@@ -276,9 +275,10 @@
         ajaxGet(url, function (response) {
             var klasses = response;
             createOption(klassNode,klasses);
-            setSelected(klassNode,klass1);
+            setSelected(klassNode);
         });
         creatInput(value,name,gradeNode);
+        getKlassId();
     }
     function getKlassId() {
         var klassNode = document.getElementById('aklass');
@@ -321,12 +321,8 @@
     }
 
     //设置选中状态
-    function setSelected(node, value) {
-        for (var i = 0; i < node.options.length; i++) {
-            if (node.options[i].innerHTML == value) {
-                node.options[i].setAttribute("selected", "true");
-            }
-        }
+    function setSelected(node) {
+        node.options[0].setAttribute("selected", "true");
     }
 
     //创建一个input按钮
@@ -336,6 +332,6 @@
          newInput.value = value;
          position.appendChild(newInput);
     }
-
+    getMajor();
 </script>
 {/block}
