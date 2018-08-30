@@ -152,7 +152,7 @@ class TeacherController extends Controller
             $temp = $temp->where('node', '=', $i);
             $weeklyList = $temp->select();
             foreach ($weeklyList as $weekly) {
-                $nodeList[$weekly['week']] = $weekly;
+                $nodeList[$weekly->getData('week')] = $weekly;
             }
             ksort($nodeList);
             array_push($weekList, $nodeList);
