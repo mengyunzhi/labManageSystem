@@ -1,7 +1,6 @@
 
     //onchang的方法完成级联表单操作
 function getMajor() {
-    var major1 = document.getElementById('major1').innerHTML;
     var collegeNode = document.getElementById('college');
     var majorNode = document.getElementById('major');
     var name = "aCollege";//建立的input的name
@@ -12,14 +11,13 @@ function getMajor() {
     ajaxGet(url, function (response) {
         var majors = response;
         createOption(majorNode, majors);
-        setSelected(majorNode, major1);
-        console.log(majors);
+        setSelected(majorNode);
+        getGrade();
     });
     creatInput(value, name, collegeNode);
 }
 
 function getGrade() {
-    var grade1 = document.getElementById('grade1').innerHTML;
     var majorNode = document.getElementById('major');
     var gradeNode = document.getElementById('grade');
     var name = "aMajor";//建立的input的name
@@ -32,13 +30,15 @@ function getGrade() {
     ajaxGet(url, function (response) {
         var grades = response;
         createOption(gradeNode, grades);
-        setSelected(gradeNode, grade1);
+        setSelected(gradeNode);
+        getKlass();
+        console.log(111111);
+
     });
     creatInput(value, name, majorNode);
 }
 
 function getKlass() {
-    var klass1 = document.getElementById('klass1').innerHTML;
     var gradeNode = document.getElementById('grade');
     var klassNode = document.getElementById('aklass');
     var name = "aGrade";//建立的input的name
@@ -51,7 +51,8 @@ function getKlass() {
     ajaxGet(url, function (response) {
         var klasses = response;
         createOption(klassNode, klasses);
-        setSelected(klassNode, klass1);
+        setSelected(klassNode);
+        getKlassId();
     });
     creatInput(value, name, gradeNode);
 }
@@ -60,7 +61,7 @@ function getKlassId() {
     var klassNode = document.getElementById('aklass');
     var klassIndex = klassNode.selectedIndex;
     var klassId = klassNode[klassIndex].value;
-    var name = "klassId"//建立的input的name
+    var name = "klassId"; //建立的input的name
     creatInput(klassId, name, klassNode);
 }
 
@@ -96,12 +97,8 @@ function createOption(node, inners, values) {
 }
 
 //设置选中状态
-function setSelected(node, value) {
-    for (var i = 0; i < node.options.length; i++) {
-        if (node.options[i].innerHTML == value) {
-            node.options[i].setAttribute("selected", "true");
-        }
-    }
+function setSelected(node) {
+    node.options[0].setAttribute("selected", "true");
 }
 
 //创建一个input按钮
@@ -111,3 +108,5 @@ function creatInput(value, name, position) {
     newInput.value = value;
     position.appendChild(newInput);
 }
+
+  getMajor();

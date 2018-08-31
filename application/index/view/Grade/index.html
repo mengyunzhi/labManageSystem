@@ -136,9 +136,10 @@
         ajaxGet(url, function (response) {
             var majors = response;
             createOption(majorNode, majors);
-            setSelected(majorNode, major1);
+            setSelected(majorNode);
+            getGrade();
         });
-        creatInput(value, name, collegeNode);
+        createInput(value, name, collegeNode);
     }
 
     function getGrade() {
@@ -147,7 +148,6 @@
         var name = "aMajor";//建立的input的name
         var majorIndex = majorNode.selectedIndex;
         var value = majorNode[majorIndex].value;
-
 
         creatInput(value,name,majorNode);
     }
@@ -184,21 +184,19 @@
     }
 
     //设置选中状态
-    function setSelected(node, value) {
-        for (var i = 0; i < node.options.length; i++) {
-            if (node.options[i].innerHTML == value) {
-                node.options[i].setAttribute("selected", "true");
-            }
-        }
+    function setSelected(node) {
+        node.options[0].setAttribute("selected", "true");
+
     }
 
     //创建一个input按钮
-    function creatInput(value, name, position) {
+    function createInput(value, name, position) {
         var newInput = document.createElement("input");
         newInput.name = name;
         newInput.value = value;
         position.appendChild(newInput);
     }
 
+    getMajor();
 </script>
 {/block}
