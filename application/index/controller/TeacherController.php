@@ -79,7 +79,7 @@ class TeacherController extends Controller
     {
         $postData = Request::instance()->post();
         if (!empty($postData)) {
-            $this->setRange((int) $postData['semester_id'], (int) $postData['weekorder']);
+            $this->setRange((int)$postData['semester_id'], (int)$postData['weekorder']);
         }
         $secheduleList = $this->editIndexSechedule();
         $total_number = $this->noReadMessageNumber();
@@ -171,8 +171,8 @@ class TeacherController extends Controller
             $this->currentSemester = Semester::getOpenSemester(Semester::select());
             $postData = Request::instance()->post();
             if (!empty($postData)) {
-                $this->setRange($this->currentSemester->id, (int) $postData['weekorder'], (int) $postData['classroom_id']);
-                $this->currentClassroom = Classroom::get((int) $postData['classroom_id']);
+                $this->setRange($this->currentSemester->id, (int)$postData['weekorder'], (int)$postData['classroom_id']);
+                $this->currentClassroom = Classroom::get((int)$postData['classroom_id']);
             } else {
                 $this->currentWeekorder = $this->currentSemester->startweekorder;
                 $this->setRange($this->currentSemester->id, $this->currentWeekorder, $this->currentClassroom->id);
@@ -362,7 +362,7 @@ class TeacherController extends Controller
         $teacherId = Request::instance()->post('teacherId/d');
         $secheduleId = Request::instance()->post('secheduleId/d');
         $courseId = Request::instance()->post('courseId/d');
-        $klassIds = (array) Request::instance()->post('klassIds');
+        $klassIds = (array)Request::instance()->post('klassIds');
 
         if (($teacherId === 0 || $secheduleId === 0 || empty($klassIds) || $courseId === 0 || is_null($courseId))) {
             $this->error("请填写完整信息");
@@ -373,13 +373,15 @@ class TeacherController extends Controller
         $Sechedule = Sechedule::get($secheduleId);
 
         if (is_null($Sechedule)) {
-            throw new \Exception('不存在处于这个时间段的这个教室', 1);
+            return $this->error('不存在处于这个时间段的这个教室');
+
         }
 
         $theTameTimeSechedules = $Sechedule->findTheSameTimeSechedule($Sechedule);
 
         //判断相同时间段内老师或学生是否在其他地方上课
         foreach ($theTameTimeSechedules as $theTameTimeSechedule) {
+
             if ($Sechedule->isExist($theTameTimeSechedule, $teacherId, $klassIds)) {
                 return $this->error('抢课失败，您或学生当前时间在其他地方已经有课了', 'takelessonInterface');
             }
@@ -427,7 +429,7 @@ class TeacherController extends Controller
         }
 
         //成功进行跳转
-        return $this->success('删除成功', url('index'));
+        return $this->success('删除成功', url('information'));
     }
 
     //老师增加课程的方法
@@ -438,10 +440,15 @@ class TeacherController extends Controller
         //保存数据
         $NewCourse->name = Request::instance()->param('newCourseName');
         $NewCourse->teacher_id = Request::instance()->param('teacherId');
+        $from = Request::instance()->param('fromInformation/d');
         $NewCourse->save();
 
         //成功返回结果
+        if ($from)
+            return $this->success('课程增加成功', url('information'));
+
         return $this->success('课程增加成功', url('takelessonInterface'));
+
     }
 
     //老师增加班级
@@ -692,10 +699,10 @@ class TeacherController extends Controller
         $requestMessages = Message::where('user_id', '=', $user_id)->where('isApplyStatus', '=', 0)->order('id desc')->select();
 
         //"我向别人换课的申请”未读消息数
-        $my_number = count(Message::where('user_id', '=', $user_id)->where('isApplyStatus', '=', 1)->where('isReadStatus','=','0')->select());
+        $my_number = count(Message::where('user_id', '=', $user_id)->where('isApplyStatus', '=', 1)->where('isReadStatus', '=', '0')->select());
 
         //"别人向我换课的申请”未读消息数
-        $other_number = count(Message::where('user_id', '=', $user_id)->where('isApplyStatus', '=', 0)->where('isReadStatus','=','0')->select());
+        $other_number = count(Message::where('user_id', '=', $user_id)->where('isApplyStatus', '=', 0)->where('isReadStatus', '=', '0')->select());
 
         //我的未读消息总数
         $total_number = $my_number + $other_number;
@@ -715,10 +722,10 @@ class TeacherController extends Controller
         //登陆教师user_id
         $user_id = $this->teacher->user_id;
         //"我向别人换课的申请”未读消息数
-        $my_number = count(Message::where('user_id', '=', $user_id)->where('isApplyStatus', '=', 1)->where('isReadStatus','=','0')->select());
+        $my_number = count(Message::where('user_id', '=', $user_id)->where('isApplyStatus', '=', 1)->where('isReadStatus', '=', '0')->select());
 
         //"别人向我换课的申请”未读消息数
-        $other_number = count(Message::where('user_id', '=', $user_id)->where('isApplyStatus', '=', 0)->where('isReadStatus','=','0')->select());
+        $other_number = count(Message::where('user_id', '=', $user_id)->where('isApplyStatus', '=', 0)->where('isReadStatus', '=', '0')->select());
         //我的未读消息总数
         $total_number = $my_number + $other_number;
 
@@ -756,8 +763,7 @@ class TeacherController extends Controller
 
             return $this->redirect('message');
 
-        }
-        //如果同意，则修改状态为“对方已同意，等待系统审核中”,并向管理发送一条消息
+        } //如果同意，则修改状态为“对方已同意，等待系统审核中”,并向管理发送一条消息
         else {
             //修改状态为“对方已同意等待系统审核中”
             $requestMessage->isAgreeStatus = 1;
@@ -767,7 +773,7 @@ class TeacherController extends Controller
             $this->agreeToAdministrator($applySechedule, $targetSechedule);
 
             return $this->redirect('message');
-        }       
+        }
     }
 
     public function getMajor()
@@ -893,13 +899,12 @@ class TeacherController extends Controller
     public function handleRead($id, $request)
     {
         $message = Message::get($id);
-        
+
         if ($request == 1) {
             $message->isReadStatus = 1;
             $message->save();
-            
-        }
-        elseif ($request == 0) {
+
+        } elseif ($request == 0) {
             Message::destroy($id);
         }
         return $this->redirect('message');
