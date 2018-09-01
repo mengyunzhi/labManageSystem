@@ -555,6 +555,7 @@ class TeacherController extends Controller
 
         //实例化目标课对象
         $TargetSechedule = Sechedule::get($targetid);
+        $applyTeacherId = $ApplySechedule->teacher_id; //申请换课教师的ID
 
         //判断是否是同一教室时间
         if ($applyid == $targetid) {
@@ -566,12 +567,44 @@ class TeacherController extends Controller
             return $this->error('换课失败，目标正在换课中', 'takelessonInterface');
         }
 
+        //判断是否同一时间不同教室
+        if ($this->isSameTime($applyid,$targetid)) {
+            //判断目标教室时间是否有课，如果没课，直接调换
+            if ($TargetSechedule->teacher_id === null) {
+                Sechedule::exchangenull($applyid, $targetid);
+                return $this->success('目标无课，换课成功', 'takelessonInterface');
+            }
+
+            //如果有课，判断是否是申请者自己的课，如果是，则直接进行交换
+            if ($TargetSechedule->teacher_id == $applyTeacherId) {
+                Sechedule::exchange($applyid, $targetid);
+                return $this->success('目标为您已抢的课，换课成功', 'takelessonInterface');
+            }
+
+            //如果不是申请者自己的课,则向目标课的教师发送消息，并将要换的两节课置为换课状态，取得同意后再向管理员发送请求，通过后进行交换
+            if ($TargetSechedule->teacher_id !== $applyTeacherId) {
+                //生成请求消息
+                $this->createRequest($ApplySechedule, $TargetSechedule);
+
+                //向目标发送消息
+                $this->requsetToTarget($ApplySechedule, $TargetSechedule);
+
+                //将两节课置为换课状态
+                $ApplySechedule->isChangeLesson = 1;
+                $ApplySechedule->save();
+                $TargetSechedule->isChangeLesson = 1;
+                $TargetSechedule->save();
+
+                return $this->success('目标已有课，发送换课请求成功，请等待审核', 'takelessonInterface');
+            }
+
+        }
+
         //判断教师和班级与目标课是否时间冲突，避免同一时间在不同教室上课这种情况
         $allSameSechedule = $TargetSechedule->findTheSameTimeSechedule($TargetSechedule); //将同一时间所有sechedule查出来
-        $applyTeacherId = $ApplySechedule->teacher_id; //申请换课教师的ID
         $applyKlassIds = $ApplySechedule->getKlasses()->column('klass_id'); //申请换课的班级的ID数组
         $result = $TargetSechedule->isChangeExist($allSameSechedule, $applyTeacherId, $applyKlassIds, $TargetSechedule);
-
+    
         //如果班级冲突，则输出时间冲突的班级，并返回抢课换课界面
         if (is_array($result)) {
             $klassName = $this->getklassname($result);
@@ -620,8 +653,30 @@ class TeacherController extends Controller
             $TargetSechedule->save();
 
 
-            return $this->success('目标已被其他老师抢占，发送换课请求成功，请等待审核', 'takelessonInterface');
+            return $this->success('目标已有课，发送换课请求成功，请等待审核', 'takelessonInterface');
         }
+    }
+
+    public function isSameTime($applyid,$targetid)
+    {
+        $ApplySechedule = Sechedule::get($applyid);
+        $TargetSechedule = Sechedule::get($targetid);
+        $apply[0] = $ApplySechedule->weekorder;
+        $apply[1] = $ApplySechedule->week;
+        $apply[2] = $ApplySechedule->node;
+        $apply[3] = $ApplySechedule->classroom_id;
+        $target[0] = $TargetSechedule->weekorder;
+        $target[1] = $TargetSechedule->week;
+        $target[2] = $TargetSechedule->node;
+        $target[3] = $TargetSechedule->classroom_id;
+        if ($apply[0] == $target[0]&&$apply[1] == $target[1]&&$apply[2] == $target[2]) {
+            if ($apply[3] != $target[3]) {
+                return true;
+            }
+        }
+        else {
+            return false;
+        }        
     }
 
     //消息界面
