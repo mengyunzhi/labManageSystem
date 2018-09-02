@@ -60,7 +60,7 @@ class AdministratorController extends Controller
             'secheduleList' => $secheduleList,
             'Klasses' => Klass::select(),
             'Courses' => Course::select(),
-            'currentSemester' => Semester::currentSemester(Semester::select()),
+            'todayWeek' => Semester::currentSemester(Semester::select()),
             'allSemester' => Semester::select(),
             'currentClassroom' => $this->currentClassroom,
             'currentSemester' => $this->currentSemester,
