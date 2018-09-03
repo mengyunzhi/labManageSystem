@@ -40,15 +40,16 @@ class StudentController extends Controller
     */
     public function index()
     { 
-        $postData=Request::instance()->post();
-        if (!empty($postData)) {
-          $this->setRange((int)$postData['semester_id'],(int)$postData['weekorder']);
+        $getData=Request::instance()->get();
+        if (!empty($getData)) {
+          $this->setRange((int)$getData['semester_id'],(int)$getData['weekorder']);
         }
         $secheduleList=$this->editIndexSechedule();
         //像v层传送老师数据
         $this->assign([
           'secheduleList'=>$secheduleList,
           'Klasses'=>Klass::select(),
+          'todayWeek' => Semester::currentSemester(Semester::select()),
           'Courses'=>Course::select(),
           'currentSemester'=>$this->currentSemester,
           'currentWeekorder'=>$this->currentWeekorder,
