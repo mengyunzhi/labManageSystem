@@ -29,7 +29,7 @@
                 <label><h4>所教班级：</h4></label><br>
                 {volist name="tcolleges" id="College"}
                 &nbsp;&nbsp;&nbsp;&nbsp;
-                <label>{$College->name}:</label><br>
+                <label>{$College->name}:</label>
                 <div>
                     {volist name="tmajors" id="Major"}
                     <div {neq name="$Major->college_id" value="$College->id" } hidden="hidden" {/neq}>
@@ -39,12 +39,11 @@
                         <div>
                             {volist name="tklass" id="Klass"}
                             <div {neq name="$Klass->grade_id" value="$Grade->id" } hidden="hidden" {/neq}>
-                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+
                             {$Klass->name}
                             </div>
                             {/volist}
-                        </div><br/>
+                        </div>
                         </div>
                         {/volist}
                     </div>
@@ -72,8 +71,8 @@
     <label><h4>所教课程：</h4></label><br>
     {volist name="courses" id="Course"}
     <label>
-        &nbsp&nbsp&nbsp&nbsp&nbsp&nbsp
-        &nbsp&nbsp&nbsp&nbsp&nbsp&nbsp
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
         {$Course->name}
     </label><br>
     {/volist}
@@ -188,7 +187,7 @@
             <div class="modal-content">
                 <div class="modal-body">
                     {volist name="tcolleges" id="College"}
-                    <label>{$College->name}:</label><br>
+                    <label>{$College->name}:</label>
                     <div>
                         {volist name="tmajors" id="Major"}
                         <div {neq name="$Major->college_id" value="$College->id" } hidden="hidden" {/neq}>
@@ -202,7 +201,7 @@
                                 &nbsp&nbsp&nbsp&nbsp&nbsp&nbsp
                                 {$Klass->name}
                                 <input type="checkbox" id="klass" value="{$Klass->id}" name="ids[{$key}]"  {neq name="$Klass->grade_id" value="$Grade->id" } hidden="hidden" {/neq}>
-                            </div><br>
+                            </div>
                             {/volist}
                         </div>
                     </div>
