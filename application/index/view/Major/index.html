@@ -9,7 +9,7 @@
                     <form class="form-inline" action="{:url()}">
                         <div class="form-group">
                             <label class="sr-only" for="name">专业管理</label>
-                            <input name="name" type="text" class="form-control" placeholder="名称..." value="{:input('get.name')}">
+                            <input name="name" type="text" class="form-control" placeholder="专业名..." value="{:input('get.name')}">
                         </div>
                         <button type="submit" class="btn btn-default"><i class="glyphicon glyphicon-search"></i>&nbsp;查询</button>
                     </form>
@@ -24,11 +24,11 @@
                                     <h4 class="modal-title text-left">增加专业</h4>
                                 </div>
                                 <div class="modal-body text-left">
-                                    <form action="{:url('save')}" method="post">
+                                    <form action="{:url('save')}" method="post" class="form-inline">
                                         <label>专业名称：</label>
                                         <input type="text" name="name">
                                         <label>学院名称：</label>
-                                        <select  class="btn btn-default dropdown-toggle" name="college_id" id="college">
+                                        <select  class="form-control" name="college_id" id="college">
                                               {volist name="colleges" id="_college"}
                                               <option value="{$_college->getData('id')}">{$_college->getData('name')}</option>
                                               {/volist}
@@ -45,35 +45,36 @@
             <table  class="table table-hover table-bordered">
                 <tr class="info" >
                     <th width="10%">ID</th>
-                    <th width="35%">所属学院</th>
                     <th width="35%">专业名</th>
+                    <th width="35%">所属学院</th>
                     <th width="20%">操作</th>
                 </tr>
                 {volist name="majors" id="major" key="key"}
                 <tr>
                     <td>{$key}</td>
-                    <td>{$major->college->getData('name')}</td>
                     <td>{$major->getData('name')}</td>
+                    <td>{$major->college->getData('name')}</td>
                     <td>
-                    <button type="button" class="btn btn-sm btn-primary" data-toggle="modal" data-target=".bs-example-modal-lg{$key}"><i class="glyphicon glyphicon-pencil"></i>&nbsp;编辑</button>
+                        <button class="btn btn-sm btn-primary" data-toggle="modal" data-target="#editMajor{$key}"><i class="glyphicon glyphicon-pencil"></i>&nbsp;编辑</button>
 
                     <a class="btn btn-sm btn-danger" href="{:url('delete?id=' . $major->getData('id'))}"><i class="glyphicon glyphicon-trash"></i>&nbsp;删除</a>
-                     
-                    <div class="modal fade bs-example-modal-lg{$key}" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel">
-                        <div class="modal-dialog modal-lg{$key}" role="document">
-                            <div class="modal-content">
-                                <div class="modal-header">
-                                    <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+
+
+                        <div class="modal" id="editMajor{$key}" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel" aria-hidden="true">
+                            <div class="modal-dialog">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only"></span></button>
                                     <h4 class="modal-title">编辑专业</h4>
                                 </div>
 
                                 <div class="modal-body">
-                                    <form action="{:url('update')}" method="post">
+                                    <form action="{:url('update')}" method="post" class="form-inline">
                                         <label>专业名称：</label>
                                         <input type="hidden" name="id" value="{$major->getData('id')}" />
                                         <input type="text" name="name" id="name" value="{$major->getData('name')}">
                                         <label>学院名称：</label>
-                                        <select  class="btn btn-default dropdown-toggle" name="college_id" id="college" >
+                                        <select  class="form-control" name="college_id" id="college" >
                                               {volist name="colleges" id="_college"}
                                               <option value="{$_college->getData('id')}" {eq name="_college->getData('id')" value="$major->getData('college_id')"} selected="selected" {/eq}>{$_college->getData('name')}</option>
                                               {/volist}

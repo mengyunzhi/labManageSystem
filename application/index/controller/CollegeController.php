@@ -81,12 +81,16 @@ class CollegeController extends controller
         if (is_null($College)) {
             return $this->error('不存在id为' . $id . '的学院，删除失败');
         }
-        // 删除对象
-        if (!$College->delete()) {
-            return $this->error('删除失败:' . $College->getError());
+        try {
+            // 删除对象
+            if (!$College->delete()) {
+                return $this->error('删除失败:' . $College->getError());
+            }
+            // 删除成功进行跳转
+            return $this->success($College->name .'删除成功', url('index'));
+        }catch (\think\exception\PDOException $e) {
+        return $this->error('此学院与其他信息有关联，无法删除');
         }
-        // 删除成功进行跳转
-        return $this->success($College->name .'删除成功', url('index'));
 	}
 
 }

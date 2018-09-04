@@ -77,9 +77,9 @@ class TeacherController extends Controller
      */
     public function index()
     {
-        $postData = Request::instance()->post();
-        if (!empty($postData)) {
-            $this->setRange((int)$postData['semester_id'], (int)$postData['weekorder']);
+        $getData = Request::instance()->get();
+        if (!empty($getData)) {
+            $this->setRange((int)$getData['semester_id'], (int)$getData['weekorder']);
         }
         $secheduleList = $this->editIndexSechedule();
         $total_number = $this->noReadMessageNumber();
@@ -88,6 +88,7 @@ class TeacherController extends Controller
             'secheduleList' => $secheduleList,
             'Klasses' => Klass::select(),
             'allSemester' => Semester::select(),
+            'todayWeek' => Semester::currentSemester(Semester::select()),
             'currentClassroom' => $this->currentClassroom,
             'currentSemester' => $this->currentSemester,
             'currentWeekorder' => $this->currentWeekorder,
@@ -169,10 +170,10 @@ class TeacherController extends Controller
         $time = time();
         if ($time >= $this->currentSemester->getData('starttaketime') && $time <= $this->currentSemester->getData('endtaketime')) {
             $this->currentSemester = Semester::getOpenSemester(Semester::select());
-            $postData = Request::instance()->post();
-            if (!empty($postData)) {
-                $this->setRange($this->currentSemester->id, (int)$postData['weekorder'], (int)$postData['classroom_id']);
-                $this->currentClassroom = Classroom::get((int)$postData['classroom_id']);
+            $getData = Request::instance()->get();
+            if (!empty($getData)) {
+                $this->setRange($this->currentSemester->id, (int)$getData['weekorder'], (int)$getData['classroom_id']);
+                $this->currentClassroom = Classroom::get((int)$getData['classroom_id']);
             } else {
                 $this->currentWeekorder = $this->currentSemester->startweekorder;
                 $this->setRange($this->currentSemester->id, $this->currentWeekorder, $this->currentClassroom->id);
@@ -695,11 +696,14 @@ class TeacherController extends Controller
         //登陆教师user_id
         $user_id = $this->teacher->user_id;
 
+        //设置每页大小
+        $pageSize = 5;
+
         //我向别人换课的申请
-        $applyMessages = Message::where('user_id', '=', $user_id)->where('isApplyStatus', '=', 1)->order('id desc')->select();
+        $applyMessages = Message::where('user_id', '=', $user_id)->where('isApplyStatus', '=', 1)->order('id desc')->paginate($pageSize, false);
 
         //别人向我换课的申请
-        $requestMessages = Message::where('user_id', '=', $user_id)->where('isApplyStatus', '=', 0)->order('id desc')->select();
+        $requestMessages = Message::where('user_id', '=', $user_id)->where('isApplyStatus', '=', 0)->order('id desc')->paginate( $pageSize, false);
 
         //"我向别人换课的申请”未读消息数
         $my_number = count(Message::where('user_id', '=', $user_id)->where('isApplyStatus', '=', 1)->where('isReadStatus', '=', '0')->select());
@@ -709,6 +713,7 @@ class TeacherController extends Controller
 
         //我的未读消息总数
         $total_number = $my_number + $other_number;
+
         //向V层传递数据
         $this->assign('applyMessages', $applyMessages);
         $this->assign('requestMessages', $requestMessages);

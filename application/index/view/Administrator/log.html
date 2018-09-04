@@ -15,18 +15,18 @@
                     <hr />
                 </div>
             </div>
-            <table class="table table-hover table-bordered">
+            <table class="table table-hover table-striped">
                 <tr class="info">
                     <th>ID</th>
                     <th class="text-center">申请者时刻表</th>
                     <th class="text-center">目标时刻表</th>
-                    <th class="text-center">操作</th>
+                    <th class="text-center">状态</th>
                 </tr>
                 {volist name="logs" id="log" key="key"}
                 <tr>
                     <td>{$key}</td>
-                    <td class="warning text-center">{$log->applyinformation}</td>
-                    <td class="success text-center">{$log->targetinformation}</td>
+                    <td class="text-center">{$log->applyinformation}</td>
+                    <td class="text-center">{$log->targetinformation}</td>
                     <td class="text-center">{$log->isAgreeStatus}</td>
                 </tr>
                 {/volist}

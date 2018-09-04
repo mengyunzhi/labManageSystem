@@ -8,7 +8,7 @@ use think\Validate;
 class Semester extends Validate
 {
 	protected $rule = [
-        'name'  =>  'require',
+        'name'  =>  'require|token',
         'starttaketime'  =>  'require',
         'endtaketime'  =>  'require',
         'totalweek'  =>  'number|between:1,30',

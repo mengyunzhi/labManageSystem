@@ -5,32 +5,32 @@
             <h3>当前开放抢课学期:{$currentSemester->name}</h3></div>
     </div>
     <div class="row">
-        <div class="col-md-12" style="margin-bottom: 20px;"><span>您的位置:</span><span>{$currentSemester->name}-></span><span>第{$currentWeekorder}周-></span><span>{$currentClassroom->name}</span></div>
+        <div class="col-md-12" style="margin-bottom: 20px;"><span>当前位置:</span><span>{$currentSemester->name}-></span><span>第{$currentWeekorder}周-></span><span>{$currentClassroom->name}</span></div>
     </div>
     <div class="row ">
         <div class="col-md-12">
-            <form action="{:url('takelessonInterface')}" method="post">
+            <form action="{:url('takelessonInterface')}" method="get" class="form-inline">
                 <div class="row">
                     <div class="col-md-12">
                         <input type="hidden" name="semester_id">
                     </div>
-                    <div class="col-md-4">
+                    <div class="col-md-5">
                         <label>周次：</label>
-                        <select class="btn btn-default dropdown-toggle" name="weekorder">
+                        <select class="form-control" name="weekorder">
                             {for start="$currentSemester->startweekorder" end="($currentSemester->endweekorder)+1" }
                             <option value="{$i}" {eq name="$i" value="$currentWeekorder" } selected="selected" {/eq}>第{$i}周</option>
                             {/for}
                         </select>
                     </div>
-                    <div class="col-md-4">
+                    <div class="col-md-5">
                         <label>选择教室：</label>
-                        <select class="btn btn-default dropdown-toggle" name="classroom_id">
+                        <select class="form-control" name="classroom_id">
                             {volist name="allClassroom" id="classroom"}
                             <option value="{$classroom->id}" {eq name="$currentClassroom->id" value="$classroom->id" } selected="selected" {/eq}>{$classroom->name}</option>
                             {/volist}
                         </select>
                     </div>
-                    <div class="col-md-4">
+                    <div class="col-md-2">
                         <button type="submit" class="btn btn-default">搜索</button>
                     </div>
                 </div>
@@ -44,20 +44,20 @@
             <!-- 表格 -->
             <table class="table table-hover table-bordered">
                 <tr class="info">
-                    <th>星期/节次</th>
-                    <th>星期一</th>
-                    <th>星期二</th>
-                    <th>星期三</th>
-                    <th>星期四</th>
-                    <th>星期五</th>
-                    <th>星期六</th>
-                    <th>星期日</th>
+                    <th class="textCenter">星期/节次</th>
+                    <th class="firstTd">星期一</th>
+                    <th class="firstTd">星期二</th>
+                    <th class="firstTd">星期三</th>
+                    <th class="firstTd">星期四</th>
+                    <th class="firstTd">星期五</th>
+                    <th class="firstTd">星期六</th>
+                    <th class="firstTd">星期日</th>
                 </tr>
                 {volist name="secheduleList" id="sechedules" key="key"}
                 <tr>
-                    <td>第{$key}节</td>
+                    <td class="tableTd">第{$key}节</td>
                     {volist name="sechedules" id="sechedule"}
-                    <td style="text-align: center;">
+                    <td class="tableTd">
                         {eq name="sechedule->teacher_id" value="$null"}
                         <div>
                             <span>无课</span>
@@ -70,7 +70,7 @@
                         <br>
                         <span>课程:{$sechedule->course->name}</span>
                         <br>
-                        <span>班级:</span> {volist name="Klasses" id="Klass"} {eq name="$sechedule->getKlassesIsChecked($Klass)" value="true"}<span>{$Klass->name}</span>{else/}{/eq} {/volist}
+                        {volist name="Klasses" id="Klass"} {eq name="$sechedule->getKlassesIsChecked($Klass)" value="true"}<span>{$Klass->name}</span>{else/}{/eq} {/volist}
                         <br> {eq name="sechedule->isChangeLesson" value="1"}
                         <span style="border-bottom: 1px; text-decoration:underline;color: gray;">换课中</span> {else/} {eq name="$sechedule->teacher_id" value="$teacher->id"}
                         <div>
@@ -194,7 +194,7 @@ $('#TakeLessons').on('show.bs.modal', function(event) {
                     <!-- 选择目标周次 -->
                     <div class="form-group">
                         <label>周次</label>
-                        <select class="btn btn-default dropdown-toggle" name="weekorder">
+                        <select class="form-control" name="weekorder">
                             {for start="$currentSemester->startweekorder" end="($currentSemester->endweekorder)+1" }
                             <option value="{$i}" {eq name="$i" value="$currentWeekorder" } selected="selected" {/eq}>第{$i}周</option>
                             {/for}
@@ -227,7 +227,7 @@ $('#TakeLessons').on('show.bs.modal', function(event) {
                     <!-- 选择目标教室 -->
                     <div class="form-group">
                         <label>选择教室</label>
-                        <select class="btn btn-default dropdown-toggle" name="classroom_id">
+                        <select class="form-control" name="classroom_id">
                             {volist name="allClassroom" id="classroom"}
                             <option value="{$classroom->id}" {eq name="$currentClassroom->id" value="$classroom->id" } selected="selected" {/eq}>{$classroom->name}</option>
                             {/volist}
