@@ -1,8 +1,6 @@
 .background{
 	background-image:url('./loginPicture.jpg'); 
 	background-size:cover; 
-	height: 1000px;
-	width: 100%;
 }
 .header{
 	text-align: center;
@@ -10,23 +8,24 @@
 }
 #loginBorder{
 	position: absolute;
-	top: 210px;
-	right: 200px;
-	background-color: rgba(0,0,0,.5);
-	margin: 45px;
+	border: 1px gray solid;
+	border-radius: 6px;
+	margin: 25px;
 }
 #loginBorder .content{
 	margin: 45px;
 }
 #welcomLogin{
-	color:#0AE;
+	color:black;
+	margin-top: -25px;
+	margin-bottom: 40px;
 	text-align:center;
 }
 
 #loginBorder .content label{
-	color: white;
+	color: black;
 }
 #loginBorder .content #footer{
-	color: white;
 	margin-top: 10px;
+	height: 10px;
 }
