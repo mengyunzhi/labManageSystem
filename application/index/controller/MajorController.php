@@ -86,12 +86,16 @@ class MajorController extends controller
         if (is_null($Major)) {
             return $this->error('不存在id为' . $id . '的学院，删除失败');
         }
-        // 删除对象
-        if (!$Major->delete()) {
-            return $this->error('删除失败:' . $Major->getError());
+        try {
+            // 删除对象
+            if (!$Major->delete()) {
+                return $this->error('删除失败:' . $Major->getError());
+            }
+            // 删除成功进行跳转
+            return $this->success($Major->name . '删除成功', url('index'));
+        } catch (\think\exception\PDOException $e) {
+            return $this->error('此专业与其他信息有关联，无法删除');
         }
-        // 删除成功进行跳转
-        return $this->success($Major->name .'删除成功', url('index'));
 	}
 
 }

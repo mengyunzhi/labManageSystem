@@ -10,33 +10,36 @@
 </head>
 <body>
 <div class="container-fluid background" >
-	<div class="row">
-		<div class="col-md-12 header" >
-			<h2 >课表查询管理系统</h2>		
-		</div>
-	</div>
 	<div id="loginBorder">
 		<div class="content">
 			<h3 id="welcomLogin">欢迎登录</h3>
 			<form class="form-inline" action="{:url('login')}" method="post">
   			<div class="form-group">
     		<label >账号:</label>
-    		<input type="text" class="form-control"  placeholder="12542..." name="username">
+    		<input type="text" class="form-control"  placeholder="请输入账号" name="username">
   			</div>
   			<hr>
   			<div class="form-group">
     		<label >密码:</label>
-    		<input type="password" class="form-control"  name="password">
+    		<input type="password" class="form-control" placeholder="密码" name="password">
   			</div>
   			<hr>
- 		 	<button type="submit" class="btn btn-info btn-lg btn-block" >登录</button>
+ 		 	<button type="submit" class="btn btn btn-primary btn-lg btn-block" >登录</button>
 			</form>
 			<div id="footer">
-				<span >第三方登录</span>
+				<span ></span>
 				<span  style="float:right;"><a href="{:url('studentRegister')}">学生注册</a></span>
 			</div>
 		</div>
 	</div>
 </div>
 </body>
+<script type="text/javascript">
+	var background = document.getElementsByClassName('background')[0];
+	background.style.height = window.innerHeight + 'px';
+	background.style.width = window.innerWidth + 'px';
+	var loginBorder = document.getElementById('loginBorder');
+	loginBorder.style.top = window.innerHeight / 5 + 'px';
+	loginBorder.style.right = window.innerWidth / 16 + 'px';
+</script>
 </html>

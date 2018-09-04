@@ -80,12 +80,16 @@ class CourseController extends Controller
             return $this->error('不存在id为' . $id . '的课程，删除失败');
         }
 
-        // 删除对象
-        if (!$Course->delete()) {
-            return $this->error('删除失败:' . $Course->getError());
-        }
+       try {
+           // 删除对象
+           if (!$Course->delete()) {
+               return $this->error('删除失败:' . $Course->getError());
+           }
 
-        // 进行跳转
-        return $this->success('删除成功', url('index'));
+           // 进行跳转
+           return $this->success('删除成功', url('index'));
+       }catch (\think\exception\PDOException $e) {
+            return $this->error('此课程与其他信息有关联，无法删除');
+       }
     }
 }
