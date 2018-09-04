@@ -45,16 +45,16 @@ class KlassController extends Controller
                     'name' => $name,
                 ]
             ]);
-            $this->assign('searchCollegeId', 0);
-            $this->assign('searchMajorId', 0);
-            $this->assign('searchGradeId', 0);
         } else {
-
-            $this->assign('searchCollegeId', $postData['searchCollegeId']);
-            $this->assign('searchMajorId', $postData['searchMajor']);
-            $this->assign('searchGradeId', $postData['searchGradeId']);
             $klasses = $Klass->where('grade_id', 'like', '%' . $postData['searchGradeId'] . '%')->
-            order('id desc')->paginate($pageSize, false
+            order('id desc')->paginate($pageSize, false,
+                [
+                    'query' => [
+                        'searchCollegeId' => $postData['searchCollegeId'],
+                        'searchMajor' => $postData['searchMajor'],
+                        'searchGradeId' => $postData['searchGradeId']
+                    ]
+                ]
                                );
         }
 
@@ -65,7 +65,6 @@ class KlassController extends Controller
         $this->assign('grades', $grades);
         $this->assign('colleges', $colleges);
         $this->assign('majors', $majors);
-
         //渲染数据
         return $this->fetch();
     }
