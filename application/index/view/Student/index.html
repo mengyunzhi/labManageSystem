@@ -22,7 +22,7 @@
 	    <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
 	      	<ul class="nav navbar-nav navbar-right">
 	      		<li><a href="#">欢迎您:{$student->klass->name},{$student->name}同学</a></li>
-		       	<li><a href="{:url('student')}">个人信息修改</a></li>
+		       	<!--<li><a href="{:url('student')}">个人信息修改</a></li>-->
 		       	<li><a href="{:url('logout')}">注销登录</a></li>
 	        </ul>
 	    </div><!-- /.navbar-collapse -->
@@ -34,11 +34,11 @@
 <div class="container">
     <div class="row">
         <div class="col-md-12">
-            <form action="{:url('index')}" method="post">
+            <form action="{:url('index')}" method="post" class="form-inline">
                 <div class="row">
                     <div class="col-md-4">
                         <label>学期:</label>
-                        <select class="btn btn-default dropdown-toggle" name="semester_id">
+                        <select class="form-control" name="semester_id">
                             {volist name="allSemester" id="semester"}
                                 <option value="{$semester->id}" {eq name="$semester->id" value="$currentSemester->id"} selected="selected"{/eq}>{$semester->name}</option>
                             {/volist}
@@ -46,7 +46,7 @@
                     </div>
                     <div class="col-md-4">
                         <label>周次：</label>
-                        <select class="btn btn-default dropdown-toggle" name="weekorder">
+                        <select class="form-control" name="weekorder">
                             {for start="1" end="$currentSemester->totalweek+1" }
                                 <option value="{$i}" {eq name="$i" value="$currentWeekorder"} selected="selected" {/eq}>第{$i}周</option>
                             {/for}

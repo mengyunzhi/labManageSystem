@@ -9,14 +9,14 @@
     </div>
     <div class="row ">
         <div class="col-md-12">
-            <form action="{:url('takelessonInterface')}" method="post">
+            <form action="{:url('takelessonInterface')}" method="post" class="form-inline">
                 <div class="row">
                     <div class="col-md-12">
                         <input type="hidden" name="semester_id">
                     </div>
                     <div class="col-md-4">
                         <label>周次：</label>
-                        <select class="btn btn-default dropdown-toggle" name="weekorder">
+                        <select class="form-control" name="weekorder">
                             {for start="$currentSemester->startweekorder" end="($currentSemester->endweekorder)+1" }
                             <option value="{$i}" {eq name="$i" value="$currentWeekorder" } selected="selected" {/eq}>第{$i}周</option>
                             {/for}
@@ -24,7 +24,7 @@
                     </div>
                     <div class="col-md-4">
                         <label>选择教室：</label>
-                        <select class="btn btn-default dropdown-toggle" name="classroom_id">
+                        <select class="form-control" name="classroom_id">
                             {volist name="allClassroom" id="classroom"}
                             <option value="{$classroom->id}" {eq name="$currentClassroom->id" value="$classroom->id" } selected="selected" {/eq}>{$classroom->name}</option>
                             {/volist}
@@ -185,7 +185,7 @@ $('#TakeLessons').on('show.bs.modal', function(event) {
                     <!-- 选择目标周次 -->
                     <div class="form-group">
                         <label>周次</label>
-                        <select class="btn btn-default dropdown-toggle" name="weekorder">
+                        <select class="form-control" name="weekorder">
                             {for start="$currentSemester->startweekorder" end="($currentSemester->endweekorder)+1" }
                             <option value="{$i}" {eq name="$i" value="$currentWeekorder" } selected="selected" {/eq}>第{$i}周</option>
                             {/for}
@@ -218,7 +218,7 @@ $('#TakeLessons').on('show.bs.modal', function(event) {
                     <!-- 选择目标教室 -->
                     <div class="form-group">
                         <label>选择教室</label>
-                        <select class="btn btn-default dropdown-toggle" name="classroom_id">
+                        <select class="form-control" name="classroom_id">
                             {volist name="allClassroom" id="classroom"}
                             <option value="{$classroom->id}" {eq name="$currentClassroom->id" value="$classroom->id" } selected="selected" {/eq}>{$classroom->name}</option>
                             {/volist}
