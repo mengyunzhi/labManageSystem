@@ -197,6 +197,9 @@ class AdministratorController extends Controller
             $this->disagreeToApply($applySechedule, $targetSechedule);
             $this->disagreeToTarget($applySechedule, $targetSechedule);
 
+            //生成日志
+            $this->create_log($requestMessage);
+
             return $this->redirect('message');
         }
         //如果同意,则将isAgreeStatus置为3，然后向两位换课教师各发一条消息，最后进行换课
@@ -219,7 +222,8 @@ class AdministratorController extends Controller
                 Sechedule::exchange($requestMessage->apply_sechedule_id, $requestMessage->target_sechedule_id);
 
                 //生成日志
-                $this->creatlog($requestMessage);
+                $this->create_log($requestMessage);
+                
                 return $this->redirect('message');
         }
     }
@@ -293,7 +297,7 @@ class AdministratorController extends Controller
     }
 
     // 生成日志
-    public function creatlog($message)
+    public function create_log($message)
     {
         $log = new Log;
 
