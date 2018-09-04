@@ -96,45 +96,56 @@
                         <input type="hidden" name="secheduleId" id="secheduleId">
                         <input type="hidden" name="teacherId" value="{$teacher->id}">
                     </div>
-                    {volist name="tcolleges" id="College"}
-                    <label>{$College->name}:</label>
-                    <br>
+                    <span>请选择上课班级和课程：</span>
+                    <div class="container">
+                        {volist name="tcolleges" id="College"}
+                        <label>{$College->name}:</label>
                     <div>
-                        {volist name="tmajors" id="Major"}
-                        <div {neq name="$Major->college_id" value="$College->id" } hidden="hidden" {/neq}>
-                            <div>
-                                {volist name="tgrades" id="Grade"}
-                                <div {neq name="$Grade->major_id" value="$Major->id" } hidden="hidden" {/neq}>
-                                    <div>
-                                        {volist name="tklasses" id="Klass"}
-                                        <div {neq name="$Klass->grade_id" value="$Grade->id" } hidden="hidden" {/neq}>
-                                            &nbsp&nbsp&nbsp&nbsp&nbsp&nbsp &nbsp&nbsp&nbsp&nbsp&nbsp&nbsp {$Klass->name}
-                                            <input type="checkbox" id="klass" value="{$Klass->id}" name="klassIds[{$key}]" {neq name="$Klass->grade_id" value="$Grade->id" } hidden="hidden" {/neq}>
-                                        </div>
-                                        <br> {/volist}
+                     {volist name="tmajors" id="Major"}
+                     <div {neq name="$Major->college_id" value="$College->id" } hidden="hidden" {/neq}>
+                        <div>
+                            {volist name="tgrades" id="Grade"}
+                            <div {neq name="$Grade->major_id" value="$Major->id" } hidden="hidden" {/neq}>
+
+                                <div class="container">
+                                    {volist name="tklasses" id="Klass"}
+                                    <div {neq name="$Klass->grade_id" value="$Grade->id" } hidden="hidden" {/neq}>
+                                        {$Klass->name}
+                                        <input type="checkbox" id="klass" value="{$Klass->id}" name="klassIds[{$key}]" {neq name="$Klass->grade_id" value="$Grade->id" } hidden="hidden" {/neq}>
                                     </div>
+                                    {/volist}
                                 </div>
-                                {/volist}
                             </div>
+                            {/volist}
                         </div>
-                        {/volist}
                     </div>
                     {/volist}
-                    <hr/> &nbsp&nbsp&nbsp&nbsp&nbsp&nbsp
+                    </div>
+                   {/volist}
+                  </div>
+                    <hr/>
+                <div class="container">
                     <label>课程名称:</label>
                     <br>
-                    <label>
-                        {volist name="tcourses" id="Course" key="key"} &nbsp&nbsp&nbsp&nbsp&nbsp&nbsp &nbsp&nbsp&nbsp&nbsp&nbsp &nbsp&nbsp&nbsp&nbsp&nbsp {$Course->name}
-                        <input type="radio" value="{$Course->id}" name="courseId">
-                        <br> {/volist}
-                    </label>
+                    <div class="container">
+                        <div class="row col-md-6">
+                            {volist name="tcourses" id="Course" key="key"}
+                            <div class="col-md-4">
+                                {$Course->name}
+                                <input type="radio" value="{$Course->id}" name="courseId">
+                            </div>
+                            {/volist}
+                        </div>
+                    </div>
+                    <br />
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#addCourse" style="margin-right: 330px">
-                        <span class="glyphicon glyphicon-plus" aria-hidden="true"></span> 添加课程
-                    </button>
-                    <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
-                    <button type="submit" class="btn btn-primary">保存</button>
+                    <a type="button" class="btn btn-primary " data-toggle="modal" data-target="#addCourse" style="margin-right: 330px">
+                        <span class="glyphicon glyphicon-plus"></span>
+                        添加课程</a>
+                    <button type="submit" class="btn btn-primary">
+                        <span class="glyphicon glyphicon-ok" ></span>
+                        保存</button>
                 </div>
             </div>   
         </div>
@@ -142,7 +153,7 @@
     </div>
 </form>
 <!--老师可以在本页面增加课程-->
-<div class="modal fade" id="addCourse" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+<div class="modal fade" id="addCourse" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" style="padding-top: 10%">
     <div class="modal-dialog" role="document">
         <div class="modal-content">
             <form action="{:url('addCourse?isTakelesson=true')}" class="form-inline" method="post">
@@ -154,7 +165,7 @@
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
-                    <button type="submit" class="btn btn-primary">保存</button>
+                    <button type="submit" class="btn btn-primary">确认</button>
                 </div>
             </form>
         </div>

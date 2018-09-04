@@ -9,16 +9,16 @@
                     <form class="form-inline" action="{:url()}">
                         <div class="form-group">
                             <label class="sr-only" for="name">年级管理</label>
-                            <input name="name" type="text" class="form-control" placeholder="名称..." value="">
+
+                            <input name="name" type="text" class="form-control" placeholder="请输入要查询的关键字..." value="">
                         </div>
-                        <button type="submit" class="btn btn-default"><i class="glyphicon glyphicon-search"></i>&nbsp;查询
-                        </button>
+                        <button type="submit" class="btn btn-default"><i class="glyphicon glyphicon-search"></i>&nbsp;查询</button>
                     </form>
                 </div>
                 <div class="col-md-4 text-right">
                     <button class="btn btn-primary" data-toggle="modal" data-target="#mymodal-data"><i
-                            class="glyphicon glyphicon-plus"></i>&nbsp;增加
-                    </button>
+                            class="glyphicon glyphicon-plus"></i>&nbsp;增加</button>
+
                     <div class="modal bs-example-modal-lg" id="mymodal-data" tabindex="-1" role="dialog"
                          aria-labelledby="mySmallModalLabel" aria-hidden="true">
                         <div class="modal-dialog  modal-lg">
@@ -30,10 +30,7 @@
                                 </div>
                                 <div class="modal-body text-left">
                                     <form action="{:url('insert')}" method="post" class="form-inline">
-                                        <br>
-                                        <p id="major1" class="hide">1</p>
-                                        <p id="grade1" class="hide">1</p>
-                                        <p id="klass1" class="hide">1</p>
+
 
                                         <div class="col-md-3 row">
                                             <label class="col-md-4 select_label">学院</label>
@@ -54,14 +51,13 @@
                                                     <option>
                                                     </option>
                                                 </select>
+
+                                            <label>年级名称：</label>
+                                            <input type="text" name="name" class="from-group">
+                                            <br>
+                                            <div class="modal-footer">
+                                                <button type="submit" class="btn btn-primary">保存</button>
                                             </div>
-                                        </div>
-                                        <label>年级名称：</label>
-                                        <input type="text" name="name" class="from-group">
-                                        <br>
-                                        <div class="modal-footer">
-                                            <button type="submit" class="btn btn-primary">保存</button>
-                                        </div>
                                     </form>
                                 </div>
                             </div>
@@ -69,35 +65,31 @@
                     </div>
                 </div>
             </div>
+        </div>
             <hr/>
-
             <table class="table table-hover table-bordered">
                 <tr class="info">
                     <th width="10%">ID</th>
-                    <th width="10%">所属学院</th>
-                    <th width="40%">年级名称</th>
+                    <th width="35%">年级名称</th>
+                    <th width="35%">所属学院</th>
                     <th width="20%">操作</th>
                 </tr>
                 {volist name="grades" id="Grade" key="key"}
                 <tr>
                     <td>{$key}</td>
-                    <td>{$Grade->major->name}</td>
                     <td>{$Grade->getData('name')}</td>
-                    <td><a class="btn btn-sm btn-danger" href="{:url('delete?id=' . $Grade->getData('id'))}"><i
-                            class="glyphicon glyphicon-trash"></i>&nbsp删除</a>
-
+                    <td>
                         <button type="button" class="btn btn-sm btn-primary" data-toggle="modal"
                                 data-target=".bs-example-modal-lg{$key}"><i class="glyphicon glyphicon-pencil"></i>&nbsp;编辑
                         </button>
+                        <a class="btn btn-sm btn-danger" href="{:url('delete?id=' . $Grade->getData('id'))}"><i
+                            class="glyphicon glyphicon-trash"></i>&nbsp删除</a>
                     </td>
-                        <div class="modal fade bs-example-modal-lg{$key}" tabindex="-1" role="dialog"
-                             aria-labelledby="myLargeModalLabel">
-                            <div class="modal-dialog modal-lg{$key}" role="document">
-                                <div class="modal-content">
-                                    <div class="modal-header">
-                                        <button type="button" class="close" data-dismiss="modal"><span
-                                                aria-hidden="true">&times;</span><span class="sr-only">Close</span>
-                                        </button>
+                    <div class="modal" id="editGrade{$key}" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel" aria-hidden="true">
+                        <div class="modal-dialog">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only"></span></button>
                                         <h4 class="modal-title">编辑年级</h4>
                                     </div>
                                     <div class="modal-body">
@@ -116,14 +108,12 @@
                 {/volist}
             </table>
             {:$grades->render()}
-        </div>
     </div>
 </div>
 
 <script>
     //onchang的方法完成级联表单操作
     function getMajor() {
-        var major1 = document.getElementById('major1').innerHTML;
         var collegeNode = document.getElementById('college');
         var majorNode = document.getElementById('major');
         var name = "aCollege";//建立的input的name
@@ -149,7 +139,7 @@
         var majorIndex = majorNode.selectedIndex;
         var value = majorNode[majorIndex].value;
 
-        creatInput(value,name,majorNode);
+        createInput(value,name,majorNode);
     }
 
     //访问php函数，一个对象数组的返回值

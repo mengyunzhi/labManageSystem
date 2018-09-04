@@ -19,26 +19,37 @@
         
 
             <!--选择所教的班级-->
-                <div class="form-group" style="margin-bottom: 45px;">
-                    <label><h4>所教班级：</h4></label>
-                    {volist name="tcolleges" id="College"}
-                    <label>{$College->name}-></label>
-                        {volist name="tmajors" id="Major"}
-                        <span {neq name="$Major->college_id" value="$College->id" } hidden="hidden" {/neq}>
-                        <span>
+
+            <div class="form-group">
+                <button type="button" class="btn btn-primary " data-toggle="modal" data-target="#addKlass">
+                    <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
+                    添加班级
+                </button>
+                <!--//删除班级的按钮-->
+                <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#deleteKlass">
+                    <span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
+                    删除班级
+                </button>
+                <br><br>
+                <label><h4>所教班级：</h4></label><br>
+                {volist name="tcolleges" id="College"}
+                &nbsp;&nbsp;&nbsp;&nbsp;
+                <label>{$College->name}:</label>
+                <div>
+                    {volist name="tmajors" id="Major"}
+                    <div {neq name="$Major->college_id" value="$College->id" } hidden="hidden" {/neq}>
+                    <div>
                         {volist name="tgrades" id="Grade"}
-                        <span {neq name="$Grade->major_id" value="$Major->id" } hidden="hidden" {/neq}>
-                        <span>
-                        {volist name="tklass" id="Klass"}
-                        <span {neq name="$Klass->grade_id" value="$Grade->id" } hidden="hidden" {/neq}>
-                        {$Klass->name}
-                        </span>
-                        {/volist}
-                        </span>
-                        </span>
-                        {/volist}
-                        </span>
-                        </span>
+                        <div {neq name="$Grade->major_id" value="$Major->id" } hidden="hidden" {/neq}>
+                        <div>
+                            {volist name="tklass" id="Klass"}
+                            <div {neq name="$Klass->grade_id" value="$Grade->id" } hidden="hidden" {/neq}>
+
+                            {$Klass->name}
+                            </div>
+                            {/volist}
+                        </div>
+                        </div>
                         {/volist}
                     {/volist}
                     <br><br><br>
@@ -53,30 +64,38 @@
                         添加班级
                     </button>
                 </div>
-                <br>
-                <!--//展示所教的课程-->
-                <div class="form-group" style="margin-bottom: 45px;">
-                    <label><h4>所教课程：</h4></label>
-                    {volist name="courses" id="Course"}
-                    <label>{$Course->name}</label>
-                    {/volist}
-                    <br><br><br>
-                    <!--//添加课程的按钮-->
-                   
-                    <!--//删除课程的按钮-->
-                    <button style="float: right;margin-left: 10px;" type="button" class="btn btn-primary " data-toggle="modal" data-target="#deleteCourse">
-                        <span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
-                        删除课程
-                    </button>
-                     <button style="float: right;margin-left: 10px;" type="button" class="btn btn-primary " data-toggle="modal" data-target="#addCourse">
-                        <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
-                        添加课程
-                    </button>
-                </div>
-                <br>
-                <button type="submit" class="btn btn-primary" style="float: right;margin-bottom: 25px;">保存</button>
-            </form>
-        
+
+            {/volist}
+        </div>
+    </div>
+<hr>
+
+<!--//展示所教的课程-->
+<div class="form-group">
+    <!--//添加课程的按钮-->
+    <button type="button" class="btn btn-primary " data-toggle="modal" data-target="#addCourse">
+        <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
+        添加课程
+    </button>
+    <!--//删除课程的按钮-->
+    <button type="button" class="btn btn-primary " data-toggle="modal" data-target="#deleteCourse">
+        <span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
+        删除课程
+    </button>
+    <br><br>
+    <label><h4>所教课程：</h4></label><br>
+    {volist name="courses" id="Course"}
+    <label>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        {$Course->name}
+    </label><br>
+    {/volist}
+</div>
+<br><br><br>
+<button type="submit" class="btn btn-primary" style="margin-left: 100px;">保存</button>
+</form>
+</div>
 <!--增加课程的表单-->
 <div class="modal fade" id="addCourse" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
     <div class="modal-dialog" role="document">
@@ -183,7 +202,7 @@
             <div class="modal-content">
                 <div class="modal-body">
                     {volist name="tcolleges" id="College"}
-                    <label>{$College->name}:</label><br>
+                    <label>{$College->name}:</label>
                     <div>
                         {volist name="tmajors" id="Major"}
                         <div {neq name="$Major->college_id" value="$College->id" } hidden="hidden" {/neq}>
@@ -197,7 +216,7 @@
                                 &nbsp&nbsp&nbsp&nbsp&nbsp&nbsp
                                 {$Klass->name}
                                 <input type="checkbox" id="klass" value="{$Klass->id}" name="ids[{$key}]"  {neq name="$Klass->grade_id" value="$Grade->id" } hidden="hidden" {/neq}>
-                            </div><br>
+                            </div>
                             {/volist}
                         </div>
                     </div>

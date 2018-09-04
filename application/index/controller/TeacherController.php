@@ -459,7 +459,8 @@ class TeacherController extends Controller
         $collegeId = Request::instance()->post('aCollege');
         $majorId = Request::instance()->post('aMajor');
         $gradeId = Request::instance()->post('aGrade');
-        $klassId = Request::instance()->post('aKlass');
+        $klassId = Request::instance()->post('klassId');
+
 
         //定制查询条件
         $mapCollege['college_id'] = $collegeId;
