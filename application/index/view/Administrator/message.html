@@ -1,27 +1,29 @@
 {extend name="Administrator/nav"} {block name="title"}教师选课系统{/block} {block name="content"}
 <div class="row">
     <div class="col-md-12">
-        <div class="container">
+        <div class="container table-responsive">
             <div class="row">
                 <div class="col-md-12">
                     <a href="{:url('log')}" class="btn btn-default"><i class="glyphicon glyphicon-list-alt">&nbsp;换课日志</i></a>
                     <hr />
                 </div>
             </div>
-            <table class="table table-hover table-bordered">
+            <table class="table table-hover table-striped">
                 <tr class="info">
                     <th>ID</th>
                     <th class="text-center">申请者时刻表</th>
                     <th class="text-center">目标时刻表</th>
+                    <th class="text-center">时间</th>
                     <th class="text-center">操作</th>
                 </tr>
                 {volist name="messages" id="message" key="key"}
                 <tr>
                     <td width="10%">{$key}</td>
-                    <td class="warning text-center" width="35%">{$message->getApplyTeacher()->name} 第{$message->getApply()->weekorder}周 星期{$message->getApply()->week} 第{$message->getApply()->node}节 {$message->getApply()->classroom->name} {$message->getApplyCourse()->name}
+                    <td class="text-center" width="25%">{$message->getApplyTeacher()->name} 第{$message->getApply()->weekorder}周 星期{$message->getApply()->week} 第{$message->getApply()->node}节 {$message->getApply()->classroom->name} {$message->getApplyCourse()->name}
                     </td>
-                    <td class="success text-center" width="35%">{$message->getTargetTeacher()->name} 第{$message->getTarget()->weekorder}周 星期{$message->getTarget()->week} 第{$message->getTarget()->node}节 {$message->getTarget()->classroom->name} {$message->getTargetCourse()->name}
+                    <td class="text-center" width="25%">{$message->getTargetTeacher()->name} 第{$message->getTarget()->weekorder}周 星期{$message->getTarget()->week} 第{$message->getTarget()->node}节 {$message->getTarget()->classroom->name} {$message->getTargetCourse()->name}
                     </td>
+                    <td class="text-center" width="20%">{$message->create_time}</td>
                     <td class="text-center" width="20%">
                         <a href="{:url('handlemessage', ['request' => 1,'id' => " $message->id"])}" class="btn btn-md btn-primary"><i class="glyphicon glyphicon-ok" aria-hidden="true">&nbsp;同意</i></a>&nbsp
                         <a href="{:url('handlemessage', ['request' => 0,'id' => " $message->id"])}" class="btn btn-md btn-danger"><i class="glyphicon glyphicon-remove" aria-hidden="true">&nbsp;拒绝</i></a>

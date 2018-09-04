@@ -694,11 +694,14 @@ class TeacherController extends Controller
         //登陆教师user_id
         $user_id = $this->teacher->user_id;
 
+        //设置每页大小
+        $pageSize = 5;
+
         //我向别人换课的申请
-        $applyMessages = Message::where('user_id', '=', $user_id)->where('isApplyStatus', '=', 1)->order('id desc')->select();
+        $applyMessages = Message::where('user_id', '=', $user_id)->where('isApplyStatus', '=', 1)->order('id desc')->paginate($pageSize, false);
 
         //别人向我换课的申请
-        $requestMessages = Message::where('user_id', '=', $user_id)->where('isApplyStatus', '=', 0)->order('id desc')->select();
+        $requestMessages = Message::where('user_id', '=', $user_id)->where('isApplyStatus', '=', 0)->order('id desc')->paginate( $pageSize, false);
 
         //"我向别人换课的申请”未读消息数
         $my_number = count(Message::where('user_id', '=', $user_id)->where('isApplyStatus', '=', 1)->where('isReadStatus', '=', '0')->select());
@@ -708,6 +711,7 @@ class TeacherController extends Controller
 
         //我的未读消息总数
         $total_number = $my_number + $other_number;
+
         //向V层传递数据
         $this->assign('applyMessages', $applyMessages);
         $this->assign('requestMessages', $requestMessages);
