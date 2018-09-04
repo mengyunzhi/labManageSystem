@@ -77,9 +77,9 @@ class TeacherController extends Controller
      */
     public function index()
     {
-        $postData = Request::instance()->post();
-        if (!empty($postData)) {
-            $this->setRange((int)$postData['semester_id'], (int)$postData['weekorder']);
+        $getData = Request::instance()->get();
+        if (!empty($getData)) {
+            $this->setRange((int)$getData['semester_id'], (int)$getData['weekorder']);
         }
         $secheduleList = $this->editIndexSechedule();
         $total_number = $this->noReadMessageNumber();
@@ -88,6 +88,7 @@ class TeacherController extends Controller
             'secheduleList' => $secheduleList,
             'Klasses' => Klass::select(),
             'allSemester' => Semester::select(),
+            'todayWeek' => Semester::currentSemester(Semester::select()),
             'currentClassroom' => $this->currentClassroom,
             'currentSemester' => $this->currentSemester,
             'currentWeekorder' => $this->currentWeekorder,
@@ -169,10 +170,10 @@ class TeacherController extends Controller
         $time = time();
         if ($time >= $this->currentSemester->getData('starttaketime') && $time <= $this->currentSemester->getData('endtaketime')) {
             $this->currentSemester = Semester::getOpenSemester(Semester::select());
-            $postData = Request::instance()->post();
-            if (!empty($postData)) {
-                $this->setRange($this->currentSemester->id, (int)$postData['weekorder'], (int)$postData['classroom_id']);
-                $this->currentClassroom = Classroom::get((int)$postData['classroom_id']);
+            $getData = Request::instance()->get();
+            if (!empty($getData)) {
+                $this->setRange($this->currentSemester->id, (int)$getData['weekorder'], (int)$getData['classroom_id']);
+                $this->currentClassroom = Classroom::get((int)$getData['classroom_id']);
             } else {
                 $this->currentWeekorder = $this->currentSemester->startweekorder;
                 $this->setRange($this->currentSemester->id, $this->currentWeekorder, $this->currentClassroom->id);
@@ -458,7 +459,8 @@ class TeacherController extends Controller
         $collegeId = Request::instance()->post('aCollege');
         $majorId = Request::instance()->post('aMajor');
         $gradeId = Request::instance()->post('aGrade');
-        $klassId = Request::instance()->post('aKlass');
+        $klassId = Request::instance()->post('klassId');
+
 
         //定制查询条件
         $mapCollege['college_id'] = $collegeId;

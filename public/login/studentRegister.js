@@ -1,5 +1,4 @@
-
-    //onchang的方法完成级联表单操作
+//onchang的方法完成级联表单操作
 function getMajor() {
     var collegeNode = document.getElementById('college');
     var majorNode = document.getElementById('major');
@@ -32,7 +31,6 @@ function getGrade() {
         createOption(gradeNode, grades);
         setSelected(gradeNode);
         getKlass();
-        console.log(111111);
 
     });
     creatInput(value, name, majorNode);
@@ -81,7 +79,8 @@ function ajaxGet(url, callback) {
 
 //清除
 function clear(node) {
-    node.length = 0;
+    if (node !== null)
+        node.length = 0;
 }
 
 //创建选项
@@ -109,4 +108,4 @@ function creatInput(value, name, position) {
     position.appendChild(newInput);
 }
 
-  getMajor();
+getMajor();

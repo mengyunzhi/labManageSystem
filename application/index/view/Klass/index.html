@@ -145,7 +145,7 @@
             setSelected(majorNode);
             getGrade1();
         });
-        creatInput(value, name, collegeNode);
+        createInput(value, name, collegeNode);
     }
 
     function getGrade1() {
@@ -162,9 +162,8 @@
             var grades = response;
             createOption(gradeNode, grades);
             setSelected(gradeNode);
-            getKlass1();
         });
-        creatInput(value, name, majorNode);
+        createInput(value, name, majorNode);
     }
 
     function getKlass1() {
@@ -172,51 +171,7 @@
         var name = "aGrade";//建立的input的name
         var gradeIndex = gradeNode.selectedIndex;
         var value = gradeNode[gradeIndex].value;
-        creatInput(value, name, gradeNode);
-    }
-
-    //访问php函数，一个对象数组的返回值
-    function ajaxGet(url, callback) {
-        $.ajax({
-            url: url,
-            type: "get",
-            success: function (response) {
-                callback(response);
-            },
-            error: function (xhr) {
-                console.log('server error');
-            }
-        });
-    }
-
-    //清除
-    function clear(node) {
-        node.length = 0;
-    }
-
-    //创建选项
-    function createOption(node, inners, values) {
-        for (var i = 0; i < inners.length; i++) {
-            var option = document.createElement('option');
-
-            option.value = inners[i].id;
-            option.name = node;
-            option.innerHTML = inners[i].name;
-            node.appendChild(option);
-        }
-    }
-
-    //设置选中状态
-    function setSelected(node) {
-        node.options[0].setAttribute("selected", "true");
-    }
-
-    //创建一个input按钮
-    function creatInput(value, name, position) {
-        var newInput = document.createElement("input");
-        newInput.name = name;
-        newInput.value = value;
-        position.appendChild(newInput);
+       createInput(value, name, gradeNode);
     }
 
     getMajor1();

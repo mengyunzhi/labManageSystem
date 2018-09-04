@@ -49,9 +49,9 @@ class AdministratorController extends Controller
     }
     public function index()
     {
-        $postData = Request::instance()->post();
-        if (!empty($postData)) {
-            $this->setRange((int) $postData['semester_id'], (int) $postData['weekorder'], (int) $postData['classroom_id']);
+        $getData = Request::instance()->get();
+        if (!empty($getData)) {
+            $this->setRange((int) $getData['semester_id'], (int) $getData['weekorder'], (int) $getData['classroom_id']);
         }
         $secheduleList = $this->editSechedule();
         $total_number = $this->noReadMessageNumber();
@@ -60,7 +60,7 @@ class AdministratorController extends Controller
             'secheduleList' => $secheduleList,
             'Klasses' => Klass::select(),
             'Courses' => Course::select(),
-            'currentSemester' => Semester::currentSemester(Semester::select()),
+            'todayWeek' => Semester::currentSemester(Semester::select()),
             'allSemester' => Semester::select(),
             'currentClassroom' => $this->currentClassroom,
             'currentSemester' => $this->currentSemester,

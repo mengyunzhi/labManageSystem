@@ -93,7 +93,6 @@ class GradeController extends Controller
 
         //数据更新
         $Grade->name = Request::instance()->post('name');
-        $Grade->major_id = Request::instance()->post('aMajor');
         $result =  $Grade->save();
         return $result;
 
@@ -103,6 +102,7 @@ class GradeController extends Controller
     public function insert()
     {
         $message = '';//提示信息
+        var_dump($_POST);
 
         try{
             //实例化班级并赋值

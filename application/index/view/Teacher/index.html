@@ -1,15 +1,20 @@
 {extend name="Teacher/nav"} 
 {block name="title"}教师课表{/block} 
 {block name="content"}
-<div class="row">
-    <div class="col-md-12 header">当前课表:{$currentSemester->name}第{$currentWeekorder}周</div>
-</div>
 <div class="container">
+    <div class="row todayTime">
+        <div class="col-md-12"><h2>现在时间:{$todayWeek->name}第{$todayWeek->getWeekorder()}周</h2></div>
+    </div>
     <div class="row">
         <div class="col-md-12">
-            <form action="{:url('index')}" method="post" class="form-inline">
+            <div class="currentTime">当前位置:{$currentSemester->name}->第{$currentWeekorder}周</div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-12">
+            <form action="{:url('index')}" method="get" class="form-inline">
                 <div class="row">
-                    <div class="col-md-4">
+                    <div class="col-md-5">
                         <label>学期:</label>
                         <select class="form-control" name="semester_id">
                             {volist name="allSemester" id="semester"}
@@ -17,7 +22,7 @@
                             {/volist}
                         </select>
                     </div>
-                    <div class="col-md-4">
+                    <div class="col-md-5">
                         <label>周次：</label>
                         <select class="form-control" name="weekorder">
                             {for start="1" end="$currentSemester->totalweek+1" }
@@ -25,7 +30,7 @@
                             {/for}
                         </select>
                     </div>
-                    <div class="col-md-4">
+                    <div class="col-md-2">
                         <button type="submit" class="btn btn-default">搜索</button>
                     </div>
                 </div>
@@ -39,20 +44,20 @@
             <!-- 表格 -->
             <table class="table table-hover table-bordered">
                 <tr class="info">
-                    <th>星期/节次</th>
-                    <th>星期一</th>
-                    <th>星期二</th>
-                    <th>星期三</th>
-                    <th>星期四</th>
-                    <th>星期五</th>
-                    <th>星期六</th>
-                    <th>星期日</th>
+                    <th class="textCenter">星期/节次</th>
+                    <th class="firstTd">星期一</th>
+                    <th class="firstTd">星期二</th>
+                    <th class="firstTd">星期三</th>
+                    <th class="firstTd">星期四</th>
+                    <th class="firstTd">星期五</th>
+                    <th class="firstTd">星期六</th>
+                    <th class="firstTd">星期日</th>
                 </tr>
                 {volist name="secheduleList" id="sechedules" key="key"}
                     <tr>
-                        <td>第{$key}节</td>
+                        <td class="tableTd">第{$key}节</td>
                         {volist name="sechedules" id="sechedule"}
-                            <td style="text-align: center;">
+                            <td class="tableTd">
                                 {eq name="sechedule" value="$null"}
                                     <span>无课</span>
                                 {else/}
