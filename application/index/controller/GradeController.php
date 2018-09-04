@@ -48,7 +48,7 @@ class GradeController extends Controller
     //班级的删除功能
     public function delete()
     {
-        try{
+
             //实例化请求类
             $Request =  Request::instance();
 
@@ -68,22 +68,16 @@ class GradeController extends Controller
             if (is_null($Grade)) {
                 throw new \Exception('不存在id为' . $id . '的年级，删除失败');
             }
-
-            //删除对象
-            if (!$Grade->delete()) {
-                return $this->error('删除失败:' . $Grade->getError());
+            try {
+                if (!$Grade->delete()) {
+                    return $this->error('删除失败:' . $Grade->getError());
+                }
+                return $this->success('删除成功',url("index"));
+            }catch (\think\exception\PDOException $e) {
+                return $this->error('此年级与其他信息有关联，无法删除');
             }
-            //获取到ThinkPHP的内置异常时，直接向上抛出，交给ThinkPHP处理
-        }catch (HttpResponseException $exception) {
-            throw $exception;
+            //删除对象
 
-            //获取到正常的异常时，输出异常
-        } catch (\Exception $exception){
-            return $exception->getMessage();
-        }
-
-        //进行跳转
-        return $this->success('删除成功',url("index"));
     }
 
 
