@@ -48,9 +48,7 @@
                                         </select>
                                         <label>班级：</label>
                                         <input type="text" name="name">
-                                        <div class="modal-footer">
-                                            <button type="submit" class="btn btn-primary">保存</button>
-                                        </div>
+                                        <button type="submit" class="btn btn-primary">保存</button>
                                     </form>
                                 </div>
                             </div>
@@ -59,11 +57,11 @@
                 </div>
             </div>
             <br><br>
-            <form action="{:url('index')}" method="post">
+            <form action="{:url('index')}" method="post" class="form-inline">
                 <div class="row">
                     <div class="col-md-3">
                         <label>学院:</label>
-                        <select class="btn btn-default dropdown-toggle" name="searchCollegeId" id="college2" onclick="getMajor1()">
+                        <select class="form-control" name="searchCollegeId" id="college2" onclick="getMajor1()">
                             {volist name="colleges" id="College"}
                             <option value="{$College->id}">{$College->name}</option>
                             {/volist}
@@ -71,13 +69,13 @@
                     </div>
                     <div class="col-md-3">
                         <label>专业：</label>
-                        <select class="btn btn-default dropdown-toggle" name="searchMajor" id="major2" onclick="getGrade1()">
+                        <select class="form-control" name="searchMajor" id="major2" onclick="getGrade1()">
                            <option></option>
                         </select>
                     </div>
                     <div class="col-md-3">
                         <label>年级：</label>
-                        <select class="btn btn-default dropdown-toggle" name="searchGradeId" id="grade2" onclick="getKlass1()">
+                        <select class="form-control" name="searchGradeId" id="grade2" onclick="getKlass1()">
                             <option></option>
                         </select>
                     </div>

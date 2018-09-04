@@ -68,12 +68,12 @@
                                 </div>
 
                                 <div class="modal-body">
-                                    <form action="{:url('update')}" method="post">
+                                    <form action="{:url('update')}" method="post" class="form-inline">
                                         <label>课程名称：</label>
                                         <input type="hidden" name="id" value="{$course->getData('id')}" />
                                         <input type="text" name="name" id="name" value="{$course->getData('name')}">
                                         <label>教师：</label>
-                                        <select  class="btn btn-default dropdown-toggle" name="teacher_id" id="teacher">
+                                        <select  class="form-control" name="teacher_id" id="teacher">
                                               {volist name="teachers" id="_teacher"}
                                               <option value="{$_teacher->getData('id')}" {eq name="_teacher->getData('id')" value="$course->getData('teacher_id')"} selected="selected"{/eq}>{$_teacher->getData('name')}</option>
                                               {/volist}
