@@ -25,6 +25,7 @@
                                 </div>
                                 <div class="modal-body text-left">
                                     <form action="{:url('insert')}" method="post">
+                                        <input type="hidden" name="__token__" value="{$Request.token}" />
                                         <label>教室名称：</label>
                                         <input type="text" name="name">
                                         <button type="submit" class="btn btn-primary">保存</button> 

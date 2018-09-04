@@ -38,8 +38,15 @@ class ClassroomController extends Controller
 
     public function insert()
     {
-    	// 接收传入数据
+    	$validate = new \think\Validate;
+        $validate->rule([
+            'name'  => 'require|token'
+        ]);
+        // 接收传入数据
         $postData = Request::instance()->post();
+        if (!$validate->check($postData)) {
+            return $this->error($validate->getError());
+        }
         $Classroom = new Classroom();
         $Classroom->name = $postData['name'];
         // 新增对象至数据表

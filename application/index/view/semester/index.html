@@ -26,6 +26,7 @@
                                 </div>
                                 <div class="modal-body text-left">
                                     <form action="{:url('insert')}" method="post" class="form-inline">
+                                        <input type="hidden" name="__token__" value="{$Request.token}" />
                                         <div class="form-group">
                                             <label>学期名称：</label>
                                             <input type="text" class="form-control" name="name">
@@ -91,7 +92,7 @@
                          {else/}
                             <a class="btn btn-sm btn-info" href="{:url('setTakeSemester?id='.$semester->getData('id'))}"><i class="glyphicon glyphicon-asterisk"></i>&nbsp;设为开放选课学期</a>
                          {/eq}
-                         <button class="btn btn-primary" data-toggle="modal" data-target="#editSemester{$key}"><i class="glyphicon glyphicon-plus"></i>&nbsp;编辑</button>
+                         <button class="btn btn-primary" data-toggle="modal" data-target="#editSemester{$key}"><i class="glyphicon glyphicon-pencil"></i>&nbsp;编辑</button>
                          <a class="btn btn-sm btn-danger" href="{:url('delete?id=' . $semester->getData('id'))}"><i class="glyphicon glyphicon-trash"></i>&nbsp;删除</a>
 
                    
