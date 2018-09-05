@@ -1,44 +1,48 @@
+'use strict';
+
+window.yunzhi = {};
+
 //onchang的方法完成级联表单操作
-function getMajor() {
-    var collegeNode = document.getElementById('college');
-    var majorNode = document.getElementById('major');
+yunzhi.getMajor = function (collegeName, majorName, gradeName, klassName, searchCollege, searchMajor, searchGrade) {
+    var collegeNode = document.getElementById(collegeName);
+    var majorNode = document.getElementById(majorName);
     var name = "aCollege";//建立的input的name
     clear(majorNode);
     var collegeIndex = collegeNode.selectedIndex;
     var value = collegeNode[collegeIndex].value;
     var url = "/labmanagesystem/public/index/login/getMajor?college=" + value;
     ajaxGet(url, function (response) {
-        var majors = response;
-        createOption(majorNode, majors);
-        setSelected(majorNode);
-        getGrade();
+        createOption(majorNode, response);
+        setSelected(majorNode, searchMajor);
+        yunzhi.getGrade(majorName, gradeName, klassName, searchMajor, searchGrade);
     });
-    creatInput(value, name, collegeNode);
-}
+    createInput(value, name, collegeNode);
+};
 
-function getGrade() {
-    var majorNode = document.getElementById('major');
-    var gradeNode = document.getElementById('grade');
+yunzhi.getGrade = function (majorName, gradeName, klassName, searchMajor, searchGrade) {
+    var majorNode = document.getElementById(majorName);
+    var gradeNode = document.getElementById(gradeName);
     var name = "aMajor";//建立的input的name
 
     clear(gradeNode);
 
     var majorIndex = majorNode.selectedIndex;
     var value = majorNode[majorIndex].value;
+
     var url = "/labmanagesystem/public/index/login/getGrade?major=" + value;
     ajaxGet(url, function (response) {
-        var grades = response;
-        createOption(gradeNode, grades);
-        setSelected(gradeNode);
-        getKlass();
+        createOption(gradeNode, response);
+
+        setSelected(gradeNode,searchGrade);
+        yunzhi.getKlass(gradeName, klassName, searchGrade);
 
     });
-    creatInput(value, name, majorNode);
-}
+    createInput(value, name, majorNode);
+};
 
-function getKlass() {
-    var gradeNode = document.getElementById('grade');
-    var klassNode = document.getElementById('aklass');
+yunzhi.getKlass = function (gradeName, klassName, searchGrade) {
+    var gradeNode = document.getElementById(gradeName);
+    var klassNode = document.getElementById(klassName);
     var name = "aGrade";//建立的input的name
 
     clear(klassNode);
@@ -47,21 +51,20 @@ function getKlass() {
     var value = gradeNode[gradeIndex].value;
     var url = "/labmanagesystem/public/index/login/getKlass?grade=" + value;
     ajaxGet(url, function (response) {
-        var klasses = response;
-        createOption(klassNode, klasses);
-        setSelected(klassNode);
-        getKlassId();
+        createOption(klassNode, response);
+        setSelected(klassNode, searchGrade);
+        yunzhi.getKlassId(klassName);
     });
-    creatInput(value, name, gradeNode);
-}
+    createInput(value, name, gradeNode);
+};
 
-function getKlassId() {
-    var klassNode = document.getElementById('aklass');
+yunzhi.getKlassId = function (klassName) {
+    var klassNode = document.getElementById(klassName);
     var klassIndex = klassNode.selectedIndex;
     var klassId = klassNode[klassIndex].value;
     var name = "klassId"; //建立的input的name
-    creatInput(klassId, name, klassNode);
-}
+    createInput(klassId, name, klassNode);
+};
 
 //访问php函数，一个对象数组的返回值
 function ajaxGet(url, callback) {
@@ -84,7 +87,7 @@ function clear(node) {
 }
 
 //创建选项
-function createOption(node, inners, values) {
+function createOption(node, inners) {
     for (var i = 0; i < inners.length; i++) {
         var option = document.createElement('option');
 
@@ -96,16 +99,24 @@ function createOption(node, inners, values) {
 }
 
 //设置选中状态
-function setSelected(node) {
-    node.options[0].setAttribute("selected", "true");
+function setSelected(node, value) {
+
+    if (value === 0)
+        node.options[0].setAttribute("selected", "true");
+    for (var i = 0; i<node.length; i++ ) {
+        if (Number(node.options[i].value) === value) {
+            console.log('选中了');
+            node.options[i].setAttribute("selected", "true");
+            return;
+        }
+    }
 }
 
 //创建一个input按钮
-function creatInput(value, name, position) {
+function createInput(value, name, position) {
     var newInput = document.createElement("input");
     newInput.name = name;
     newInput.value = value;
     position.appendChild(newInput);
 }
 
-getMajor();

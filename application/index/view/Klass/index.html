@@ -9,6 +9,7 @@
                     <form class="form-inline" action="{:url()}">
                         <div class="form-group">
                             <label class="sr-only" for="name">班级管理</label>
+
                             <input name="name" type="text" class="form-control" placeholder="班级名称..." value="{:input('get.name')}">
                         </div>
                         <button type="submit" class="btn btn-default"><i class="glyphicon glyphicon-search"></i>&nbsp;查询
@@ -29,24 +30,41 @@
                                     <h4 class="modal-title text-left">增加班级</h4>
                                 </div>
                                 <div class="modal-body text-left">
-                                    <form action="{:url('insert')}" method="post" class="form-inline">
-                                        <label>学院</label>
-                                        <select id="college" class="form-control" onclick="getMajor()">
-                                            {volist name="colleges" id = "College"}
-                                            <option value="{$College->id}">{$College->name}</option>
-                                            {/volist}
-                                        </select>
-                                        <label>专业</label>
-                                        <select id="major" class="form-control" onclick="getGrade()">
-                                            <option>
-                                            </option>
-                                        </select>
-                                        <label>年级：</label>
-                                        <select id="grade" class="form-control" onclick="getKlass()">
-                                            <option>
-                                            </option>
-                                        </select>
-                                        <label>班级：</label>
+
+                                    <form action="{:url('insert')}" method="post">
+                                        <br>
+                                        <div class="col-md-3 row">
+                                            <label class="col-md-4 select_label">学院</label>
+                                            <div class="col-md-8">
+                                                <select id="college" class="form-control" onchange="yunzhi.getMajor('college', 'major', 'grade')">
+                                                    {volist name="colleges" id = "College"}
+                                                    <option value="{$College->id}">
+                                                        {$College->name}
+                                                    </option>
+                                                    {/volist}
+                                                </select>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-3 row">
+                                            <label class="col-md-4 select_label">专业</label>
+                                            <div class="col-md-8">
+                                                <select id="major" class="form-control" onchange="yunzhi.getGrade('major', 'grade', 'klass')">
+                                                    <option>
+                                                    </option>
+                                                </select>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-3 row">
+                                            <label class="col-md-4 select_label">年级</label>
+                                            <div class="col-md-8">
+                                                <select id="grade" class="form-control" onchange="yunzhi.getKlassId('grade')">
+                                                    <option>
+                                                    </option>
+                                                </select>
+                                            </div>
+                                        </div>
+                                        <label>班级名称：</label>
+
                                         <input type="text" name="name">
                                         <button type="submit" class="btn btn-primary">保存</button>
                                     </form>
@@ -61,21 +79,28 @@
                 <div class="row">
                     <div class="col-md-3">
                         <label>学院:</label>
-                        <select class="form-control" name="searchCollegeId" id="college2" onclick="getMajor1()">
+
+                        <select class="btn btn-default dropdown-toggle" name="searchCollegeId" id="searchCollege" onchange="yunzhi.getMajor('searchCollege', 'searchMajor', 'searchGrade')">
+
                             {volist name="colleges" id="College"}
-                            <option value="{$College->id}">{$College->name}</option>
+                            <option value="{$College->id}" {eq name="$College->id" value="searchCollegeId"} selected="selected"{/eq}>{$College->name}</option>
                             {/volist}
                         </select>
                     </div>
                     <div class="col-md-3">
                         <label>专业：</label>
-                        <select class="form-control" name="searchMajor" id="major2" onclick="getGrade1()">
-                           <option></option>
+
+                        <select class="btn btn-default dropdown-toggle" name="searchMajor" id="searchMajor" onchange="yunzhi.getGrade('searchMajor', 'searchGrade')">
+                            <option></option>
+
                         </select>
                     </div>
                     <div class="col-md-3">
                         <label>年级：</label>
-                        <select class="form-control" name="searchGradeId" id="grade2" onclick="getKlass1()">
+
+                        <select class="btn btn-default dropdown-toggle" name="searchGradeId" id="searchGrade"
+                               onchange="yunzhi.getKlassId('searchGrade')">
+
                             <option></option>
                         </select>
                     </div>
@@ -128,52 +153,13 @@
     </div>
 </div>
 <script type="text/javascript" src="/labManageSystem/public/login/studentRegister.js"></script>
+
 <script>
-    function getMajor1() {
-        var collegeNode = document.getElementById('college2');
-        var majorNode = document.getElementById('major2');
-        var name = "aCollege";//建立的input的name
 
-        clear(majorNode);
-
-        var collegeIndex = collegeNode.selectedIndex;
-        var value = collegeNode[collegeIndex].value;
-        var url = "/labmanagesystem/public/index/klass/getMajor?college=" + value;
-        ajaxGet(url, function (response) {
-            var majors = response;
-            createOption(majorNode, majors);
-            setSelected(majorNode);
-            getGrade1();
-        });
-        createInput(value, name, collegeNode);
-    }
-
-    function getGrade1() {
-        var majorNode = document.getElementById('major2');
-        var gradeNode = document.getElementById('grade2');
-        var name = "aMajor";//建立的input的name
-
-        clear(gradeNode);
-
-        var majorIndex = majorNode.selectedIndex;
-        var value = majorNode[majorIndex].value;
-        var url = "/labmanagesystem/public/index/klass/getGrade?major=" + value;
-        ajaxGet(url, function (response) {
-            var grades = response;
-            createOption(gradeNode, grades);
-            setSelected(gradeNode);
-        });
-        createInput(value, name, majorNode);
-    }
-
-    function getKlass1() {
-        var gradeNode = document.getElementById('grade2');
-        var name = "aGrade";//建立的input的name
-        var gradeIndex = gradeNode.selectedIndex;
-        var value = gradeNode[gradeIndex].value;
-       createInput(value, name, gradeNode);
-    }
-
-    getMajor1();
+    var searchCollegeId = {$searchCollegeId};
+    var searchMajorId = {$searchMajorId};
+    var searchGradeId = {$searchGradeId};
+    // yunzhi.getMajor('college', 'major', 'grade');
+    yunzhi.getMajor('searchCollege', 'searchMajor', 'searchGrade', 0, searchCollegeId, searchMajorId, searchGradeId);
 </script>
 {/block}
