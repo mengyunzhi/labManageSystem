@@ -63,7 +63,7 @@
                             <span>无课</span>
                             <br> {eq name="sechedule->isChangeLesson" value="1"}
                             <span>换课中</span> {else/}
-                            <span class="glyphicon glyphicon-circle-arrow-right" aria-hidden="true"><a data-toggle="modal" data-target="#TakeLessons" data-whatever="{$sechedule->id}">抢课</a></span> {/eq}
+                            <span class="glyphicon glyphicon-hand-right" aria-hidden="true"><a data-toggle="modal" data-target="#TakeLessons" data-whatever="{$sechedule->id}">抢课</a></span> {/eq}
                         </div>
                         {else/}
                         <span>教师:{$sechedule->teacher->name}</span>
