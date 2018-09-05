@@ -3,8 +3,8 @@
 {block name="content"}
 
 <div class="row" >
-    <div class="col-md-3" ></div>
-    <div class="col-md-6" style="border: 1px  dotted gray; border-radius: 5px;">
+    <div class="col-md-4" ></div>
+    <div class="col-md-3" style="border: 1px  dotted gray; border-radius: 5px;">
         <div style="margin: 0px 50px 0px 50px;">
             <form class="form-horizontal" action="{:url('saveInformation')}" method="post">
                 <div class="form-group" style="margin-top: 50px;margin-bottom: 30px;">
@@ -12,9 +12,8 @@
                     <label>老师</label>
                 </div>
                 <div class="form-group" style="margin-bottom: 45px;">
-                    <label >姓名：</label>
+                    <label >姓名:<input type="text" class="form-inline" name="name" value="{$teacher->name}"></label>
                     <input type="hidden" name="id" value="{$teacher->getData('id')}">
-                    <input type="text" class="form-control" name="name" value="{$teacher->name}">
                 </div>
                 <br>
             <!--选择所教的班级-->
@@ -56,44 +55,37 @@
                         </div>
                     </div>
                     {/volist}
-                    <br><br><br>
-                    
-                    <!--//删除班级的按钮-->
-                    <button style="float: right;margin-left: 10px;" type="button" class="btn btn-primary" data-toggle="modal" data-target="#deleteKlass">
-                        <span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
-                    删除班级
-                    </button>
-                    <button style="float: right;margin-left: 10px;" type="button" class="btn btn-primary " data-toggle="modal" data-target="#addKlass">
-                        <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
-                        添加班级
-                    </button>
                 </div>
-
             </div>
-        </div>
+
         <hr>
         <!--//展示所教的课程-->
         <div class="form-group">
-            <!--//添加课程的按钮-->
-            <button type="button" class="btn btn-primary " data-toggle="modal" data-target="#addCourse">
-                <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
-                添加课程
-            </button>
-            <!--//删除课程的按钮-->
-            <button type="button" class="btn btn-primary " data-toggle="modal" data-target="#deleteCourse">
-                <span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
-                删除课程
-            </button>
-            <br><br>
-            <label><h4>所教课程：</h4></label><br>
-            {volist name="courses" id="Course"}
-            <label>
-                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                {$Course->name}
-            </label><br>
-            {/volist}
+
+                <!--//添加课程的按钮-->
+                <button type="button" class="btn btn-primary " data-toggle="modal" data-target="#addCourse">
+                    <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
+                    添加课程
+                </button>
+                <!--//删除课程的按钮-->
+                <button type="button" class="btn btn-primary " data-toggle="modal" data-target="#deleteCourse">
+                    <span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
+                    删除课程
+                </button>
+                <br><br>
+               <div class="container">
+                   <h4>所教课程：</h4>
+                   <div class="container">
+                       {volist name="courses" id="Course"}
+                       <label>
+                           {$Course->name}
+                       </label><br>
+                       {/volist}
+                   </div>
+               </div>
+             </div>
         </div>
+
         <br><br><br>
         <button type="submit" class="btn btn-primary" style="margin-left: 100px;">保存</button>
     </form>
