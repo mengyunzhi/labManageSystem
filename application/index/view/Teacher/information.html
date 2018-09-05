@@ -1,6 +1,7 @@
 {extend name="Teacher/nav"}
 {block name="title"}个人信息{/block}
 {block name="content"}
+
 <div class="row" >
     <div class="col-md-3" ></div>
     <div class="col-md-6" style="border: 1px  dotted gray; border-radius: 5px;">
@@ -16,8 +17,6 @@
                     <input type="text" class="form-control" name="name" value="{$teacher->name}">
                 </div>
                 <br>
-        
-
             <!--选择所教的班级-->
 
             <div class="form-group">
@@ -31,26 +30,31 @@
                     删除班级
                 </button>
                 <br><br>
-                <label><h4>所教班级：</h4></label><br>
-                {volist name="tcolleges" id="College"}
-                &nbsp;&nbsp;&nbsp;&nbsp;
-                <label>{$College->name}:</label>
-                <div>
-                    {volist name="tmajors" id="Major"}
-                    <div {neq name="$Major->college_id" value="$College->id" } hidden="hidden" {/neq}>
-                    <div>
-                        {volist name="tgrades" id="Grade"}
-                        <div {neq name="$Grade->major_id" value="$Major->id" } hidden="hidden" {/neq}>
+                <div class="container">
+                    <label><h4>所教班级：</h4></label><br>
+                    {volist name="tcolleges" id="College"}
+                    <div class="container">
+                    <label>{$College->name}:</label>
                         <div>
-                            {volist name="tklass" id="Klass"}
-                            <div {neq name="$Klass->grade_id" value="$Grade->id" } hidden="hidden" {/neq}>
-
-                            {$Klass->name}
+                            {volist name="tmajors" id="Major"}
+                            <div {neq name="$Major->college_id" value="$College->id" } hidden="hidden" {/neq}>
+                                <div>
+                                    {volist name="tgrades" id="Grade"}
+                                    <div {neq name="$Grade->major_id" value="$Major->id" } hidden="hidden" {/neq}>
+                                        <div class="container">
+                                            {volist name="tklass" id="Klass"}
+                                            <div {neq name="$Klass->grade_id" value="$Grade->id" } hidden="hidden" {/neq}>
+                                                {$Klass->name}
+                                            </div>
+                                            {/volist}
+                                        </div>
+                                    </div>
+                                    {/volist}
+                                </div>
                             </div>
                             {/volist}
                         </div>
-                        </div>
-                        {/volist}
+                    </div>
                     {/volist}
                     <br><br><br>
                     
@@ -65,36 +69,34 @@
                     </button>
                 </div>
 
+            </div>
+        </div>
+        <hr>
+        <!--//展示所教的课程-->
+        <div class="form-group">
+            <!--//添加课程的按钮-->
+            <button type="button" class="btn btn-primary " data-toggle="modal" data-target="#addCourse">
+                <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
+                添加课程
+            </button>
+            <!--//删除课程的按钮-->
+            <button type="button" class="btn btn-primary " data-toggle="modal" data-target="#deleteCourse">
+                <span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
+                删除课程
+            </button>
+            <br><br>
+            <label><h4>所教课程：</h4></label><br>
+            {volist name="courses" id="Course"}
+            <label>
+                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                {$Course->name}
+            </label><br>
             {/volist}
         </div>
-    </div>
-<hr>
-
-<!--//展示所教的课程-->
-<div class="form-group">
-    <!--//添加课程的按钮-->
-    <button type="button" class="btn btn-primary " data-toggle="modal" data-target="#addCourse">
-        <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
-        添加课程
-    </button>
-    <!--//删除课程的按钮-->
-    <button type="button" class="btn btn-primary " data-toggle="modal" data-target="#deleteCourse">
-        <span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
-        删除课程
-    </button>
-    <br><br>
-    <label><h4>所教课程：</h4></label><br>
-    {volist name="courses" id="Course"}
-    <label>
-        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-        {$Course->name}
-    </label><br>
-    {/volist}
-</div>
-<br><br><br>
-<button type="submit" class="btn btn-primary" style="margin-left: 100px;">保存</button>
-</form>
+        <br><br><br>
+        <button type="submit" class="btn btn-primary" style="margin-left: 100px;">保存</button>
+    </form>
 </div>
 <!--增加课程的表单-->
 <div class="modal fade" id="addCourse" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
@@ -122,12 +124,16 @@
         <div class="modal-dialog" role="document">
             <div class="modal-content">
                 <div class="modal-body">
-                    <label>课程名称:</label>
-                    <br>
-                    {volist name="courses" id="Course" key="key"}
-                    <input type="checkbox" value="{$Course->id}" name="ids[{$key}]">
-                    <label>{$Course->name}</label><br>
-                    {/volist}
+                    <div class="container">
+                        <label>课程名称:</label>
+                        <div class="container">
+                            {volist name="courses" id="Course" key="key"}
+                            <input type="checkbox" value="{$Course->id}" name="ids[{$key}]" id="course{$key}">
+                            <label for="course{$key}">{$Course->name}</label>
+                            <br>
+                            {/volist}
+                        </div>
+                    </div>
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
@@ -140,7 +146,8 @@
 
 <!--添加班级-->
 <form action="{:url('addKlass')}" method="post">
-    <div class="modal fade bs-example-modal-lg" id="addKlass" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+    <div class="modal fade bs-example-modal-lg" id="addKlass" tabindex="-1" role="dialog"
+         aria-labelledby="myModalLabel">
         <div class="modal-dialog modal-lg " role="document">
             <div class="modal-content">
                 <div class="modal-body">
@@ -148,7 +155,7 @@
                     <div class="col-md-3 row">
                         <label class="col-md-4 select_label">学院</label>
                         <div class="col-md-8">
-                            <select id="college" class="form-control" onclick="getMajor()">
+                            <select id="college" class="form-control" onchange="yunzhi.getMajor('college', 'major', 'grade', 'klass')">
                                 {volist name="colleges" id = "College"}
                                 <option value="{$College->id}">
                                     {$College->name}
@@ -160,7 +167,7 @@
                     <div class="col-md-3 row">
                         <label class="col-md-4 select_label">专业</label>
                         <div class="col-md-8">
-                            <select id="major" class="form-control" onclick="getGrade()">
+                            <select id="major" class="form-control" onchange="yunzhi.getGrade('major', 'grade', 'klass')">
                                 <option>
                                 </option>
                             </select>
@@ -169,7 +176,7 @@
                     <div class="col-md-3 row">
                         <label class="col-md-4 select_label">年级</label>
                         <div class="col-md-8">
-                            <select id="grade" class="form-control" onclick="getKlass()">
+                            <select id="grade" class="form-control" onchange="yunzhi.getKlass('grade', 'klass')">
                                 <option>
                                 </option>
                             </select>
@@ -178,15 +185,15 @@
                     <div class="col-md-3 row">
                         <label class="col-md-4 select_label">班级</label>
                         <div class="col-md-8">
-                            <select id="aklass" class="form-control" onclick="getKlassId()">
+                            <select id="klass" class="form-control" onchange="yunzhi.getKlassId('klass')">
                                 <option>
                                 </option>
                             </select>
                         </div>
                     </div>
-                </div><br/>
+                </div>
+                <br/>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
                     <button type="submit" class="btn btn-primary">确定</button>
                 </div>
             </div>
@@ -200,35 +207,32 @@
     <div class="modal fade" id="deleteKlass" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
         <div class="modal-dialog" role="document">
             <div class="modal-content">
-                <div class="modal-body">
+                <div class="modal-body container">
                     {volist name="tcolleges" id="College"}
                     <label>{$College->name}:</label>
                     <div>
                         {volist name="tmajors" id="Major"}
                         <div {neq name="$Major->college_id" value="$College->id" } hidden="hidden" {/neq}>
-                        <div>
-                            {volist name="tgrades" id="Grade"}
-                            <div {neq name="$Grade->major_id" value="$Major->id" } hidden="hidden" {/neq}>
                             <div>
-                                {volist name="tklass" id="Klass"}
-                                <div {neq name="$Klass->grade_id" value="$Grade->id" } hidden="hidden" {/neq}>
-                                &nbsp&nbsp&nbsp&nbsp&nbsp&nbsp
-                                &nbsp&nbsp&nbsp&nbsp&nbsp&nbsp
-                                {$Klass->name}
-                                <input type="checkbox" id="klass" value="{$Klass->id}" name="ids[{$key}]"  {neq name="$Klass->grade_id" value="$Grade->id" } hidden="hidden" {/neq}>
+                                {volist name="tgrades" id="Grade"}
+                                <div {neq name="$Grade->major_id" value="$Major->id" } hidden="hidden" {/neq}>
+                                    <div class="container">
+                                        {volist name="tklass" id="Klass"}
+                                        <div {neq name="$Klass->grade_id" value="$Grade->id" } hidden="hidden" {/neq} >
+
+                                            <label><input type="checkbox" value="{$Klass->id}" name="ids[{$key}]">{$Klass->name}</label>
+                                        </div>
+                                        {/volist}
+                                    </div>
+                                </div>
+                                {/volist}
                             </div>
-                            {/volist}
                         </div>
+                        {/volist}
                     </div>
                     {/volist}
                 </div>
-            </div>
-            {/volist}
-        </div>
-        {/volist}
-    </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
                     <button type="submit" class="btn btn-primary">确定</button>
                 </div>
             </div>
@@ -236,4 +240,8 @@
     </div>
 </form>
 <script type="text/javascript" src="/labManageSystem/public/login/studentRegister.js"></script>
+<script>
+    yunzhi.getMajor('college', 'major', 'grade', 'klass');
+</script>
 {/block}
+

@@ -14,7 +14,7 @@
         <div class="col-md-2"></div>
         <div class="col-md-8 studentRegister">
             <div class="row header">
-                <div class="col-md-12"><span class="glyphicon glyphicon-plus">|课表系统注册</span>
+                <div class="col-md-12">课表系统注册
                 </div>
             </div>
             <div class="row registerContent">
@@ -45,7 +45,7 @@
                                     <div class="col-md-6 row">
                                         <label class="col-md-4 select_label">学院</label>
                                         <div class="col-md-8">
-                                            <select id="college" class="form-control" onclick="getMajor()">
+                                            <select id="college" class="form-control" onchange="yunzhi.getMajor('college', 'major', 'grade', 'klass')">
                                                 {volist name="colleges" id = "College"}
                                                 <option value="{$College->id}">
                                                     {$College->name}
@@ -57,7 +57,7 @@
                                     <div class="col-md-6 row">
                                         <label class="col-md-4 select_label">专业</label>
                                         <div class="col-md-8">
-                                            <select id="major" class="form-control" onclick="getGrade()">
+                                            <select id="major" class="form-control" onchange="yunzhi.getGrade('major', 'grade', 'klass')">
                                                 <option>
                                                 </option>
                                             </select>
@@ -69,7 +69,7 @@
                                     <div class="col-md-6 row">
                                         <label class="col-md-4 select_label">年级</label>
                                         <div class="col-md-8">
-                                            <select id="grade" class="form-control" onclick="getKlass()">
+                                            <select id="grade" class="form-control" onchange="yunzhi.getKlass('grade', 'klass')">
                                                 <option>
                                                 </option>
                                             </select>
@@ -78,7 +78,7 @@
                                     <div class="col-md-6 row">
                                         <label class="col-md-4 select_label">班级</label>
                                         <div class="col-md-8">
-                                            <select id="aklass" class="form-control" onclick="getKlassId()">
+                                            <select id="klass" class="form-control" onchange="yunzhi.getKlassId('klass')">
                                                 <option>
                                                 </option>
                                             </select>
@@ -100,6 +100,9 @@
     </div>
 </div>
 <script type="text/javascript" src="/labManageSystem/public/login/studentRegister.js"></script>
+<script>
+    yunzhi.getMajor('college', 'major', 'grade', 'klass');
+</script>
 </body>
 </html>
 

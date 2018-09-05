@@ -106,12 +106,10 @@
                         <div>
                             {volist name="tgrades" id="Grade"}
                             <div {neq name="$Grade->major_id" value="$Major->id" } hidden="hidden" {/neq}>
-
                                 <div class="container">
-                                    {volist name="tklasses" id="Klass"}
+                                    {volist name="tklasses" id="Klass" key="key"}
                                     <div {neq name="$Klass->grade_id" value="$Grade->id" } hidden="hidden" {/neq}>
-                                        {$Klass->name}
-                                        <input type="checkbox" id="klass" value="{$Klass->id}" name="klassIds[{$key}]" {neq name="$Klass->grade_id" value="$Grade->id" } hidden="hidden" {/neq}>
+                                        <label> <input type="checkbox" value="{$Klass->id}" name="klassIds[{$key}]" >{$Klass->name}</label>
                                     </div>
                                     {/volist}
                                 </div>
@@ -131,8 +129,8 @@
                         <div class="row col-md-6">
                             {volist name="tcourses" id="Course" key="key"}
                             <div class="col-md-4">
-                                {$Course->name}
-                                <input type="radio" value="{$Course->id}" name="courseId">
+                                <input type="radio" value="{$Course->id}" name="courseId" id="course{$key}">
+                                <label for="course{$key}">{$Course->name}</label>
                             </div>
                             {/volist}
                         </div>

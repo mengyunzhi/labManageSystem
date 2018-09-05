@@ -359,6 +359,8 @@ class TeacherController extends Controller
     public function takeLesson()
     {
 
+        var_dump($_POST);
+        die();
         //接收数据
         $teacherId = Request::instance()->post('teacherId/d');
         $secheduleId = Request::instance()->post('secheduleId/d');
