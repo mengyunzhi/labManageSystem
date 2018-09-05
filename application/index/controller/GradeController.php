@@ -87,6 +87,7 @@ class GradeController extends Controller
 
         //数据更新
         $Grade->name = Request::instance()->post('name');
+        $Grade->major_id = Request::instance()->post('major_id/d');
         $result =  $Grade->save();
         return $result;
 

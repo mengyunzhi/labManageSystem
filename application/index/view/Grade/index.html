@@ -10,7 +10,7 @@
                         <div class="form-group">
                             <label class="sr-only" for="name">年级管理</label>
 
-                            <input name="name" type="text" class="form-control" placeholder="请输入要查询的关键字..." value="">
+                            <input name="name" type="text" class="form-control" placeholder="请输入要搜索的关键字..." value="{:input('get.name')}">
                         </div>
                         <button type="submit" class="btn btn-default"><i class="glyphicon glyphicon-search"></i>&nbsp;查询</button>
                     </form>
@@ -52,39 +52,45 @@
                         </div>
                     </div>
                 </div>
+
+
             </div>
-        </div>
             <hr/>
             <table class="table table-hover table-bordered">
                 <tr class="info">
                     <th width="10%">ID</th>
                     <th width="35%">年级名称</th>
-                    <th width="35%">所属学院</th>
+                    <th width="35%">专业名称</th>
                     <th width="20%">操作</th>
                 </tr>
                 {volist name="grades" id="Grade" key="key"}
                 <tr>
                     <td>{$key}</td>
                     <td>{$Grade->getData('name')}</td>
+                    <td>{$Grade->major->name}</td>
                     <td>
-                        <button type="button" class="btn btn-sm btn-primary" data-toggle="modal"
-                                data-target=".bs-example-modal-lg{$key}"><i class="glyphicon glyphicon-pencil"></i>&nbsp;编辑
-                        </button>
-                        <a class="btn btn-sm btn-danger" href="{:url('delete?id=' . $Grade->getData('id'))}"><i
-                            class="glyphicon glyphicon-trash"></i>&nbsp删除</a>
-                    </td>
-                    <div class="modal" id="editGrade{$key}" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel" aria-hidden="true">
-                        <div class="modal-dialog">
-                            <div class="modal-content">
-                                <div class="modal-header">
-                                    <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only"></span></button>
+                        <button class="btn btn-sm btn-primary" data-toggle="modal" data-target="#editGrade{$key}"><i class="glyphicon glyphicon-pencil"></i>&nbsp;编辑</button>
+                        <a class="btn btn-sm btn-danger" href="{:url('delete?id=' . $Grade->getData('id'))}"><i class="glyphicon glyphicon-trash"></i>&nbsp删除</a>
+
+                        <div class="modal" id="editGrade{$key}" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel" aria-hidden="true">
+                            <div class="modal-dialog">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only"></span></button>
                                         <h4 class="modal-title">编辑年级</h4>
                                     </div>
+
                                     <div class="modal-body">
-                                        <form action="{:url('update')}" method="post">
+                                        <form action="{:url('update')}" method="post" class="form-inline">
                                             <label>年级名称：</label>
                                             <input type="hidden" name="id" value="{$Grade->getData('id')}"/>
-                                            <input type="text" name="name" id="name" value="{$Grade->getData('name')}">
+                                            <input type="text" name="name" id="name" value="{$Grade->getData('name')}"/>
+                                            <label>专业名称：</label>
+                                            <select  class="form-control" name="major_id" id="major" >
+                                                {volist name="majors" id="_major"}
+                                                <option value="{$_major->getData('id')}" {eq name="_major->getData('id')" value="$Grade->getData('major_id')"} selected="selected" {/eq}>{$_major->getData('name')}</option>
+                                                {/volist}
+                                            </select>
                                             <button type="submit" class="btn btn-primary">保存</button>
                                         </form>
                                     </div>
@@ -96,6 +102,7 @@
                 {/volist}
             </table>
             {:$grades->render()}
+        </div>
     </div>
 </div>
 
