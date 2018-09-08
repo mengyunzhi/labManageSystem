@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html>
+
 <head>
     <title>学生注册首页</title>
     <meta charset="utf-8">
@@ -8,6 +9,7 @@
     <script src="http://cdn.bootcss.com/bootstrap/3.3.0/js/bootstrap.min.js"></script>
     <link rel="stylesheet" type="text/css" href="/labManageSystem/public/login/studentRegister.css">
 </head>
+
 <body>
 <div class="container-fluid">
     <div class="row">
@@ -23,19 +25,19 @@
                         <div class="col-md-3"><span>您现在的位置>>学生注册</span></div>
                         <div class="col-md-6">
                             <form class="form-inline" action="{:url('register')}" method="post">
-                                <input type="hidden" name="role" value="学生">
-                                <div class="form-group firstInputGroup">
-                                    <div class="logo">
-                                        <span class="glyphicon glyphicon-pencil"></span></div>
-                                    <input type="text" class="form-control inputBox" placeholder="您的名字" name="name">
-                                </div>
-                                <br>
-                                <div class="form-group inputGroup">
-                                    <div class="logo">
-                                        <span class="glyphicon glyphicon-user"></span></div>
-                                    <input type="text" class="form-control inputBox" placeholder="账号" name="username">
-                                </div>
-                                <br>
+                                 <input type="hidden" name="role" value="学生">
+                                    <div class="form-group firstInputGroup">
+                                        <div class="logo">
+                                            <span class="glyphicon glyphicon-user"></span></div>
+                                        <input type="text" class="form-control inputBox" placeholder="账号" name="username">
+                                    </div>
+                                    <br>
+                                    <div class="form-group inputGroup">
+                                        <div class="logo">
+                                            <span class="glyphicon glyphicon-pencil"></span></div>
+                                        <input type="text" class="form-control inputBox" placeholder="您的名字" name="name">
+                                    </div>
+                                    <br>
                                 <div class="form-group inputGroup">
                                     <div class="logo">
                                         <span class="glyphicon glyphicon-lock"></span></div>
@@ -82,27 +84,38 @@
                                                 <option>
                                                 </option>
                                             </select>
+
+                                        </div>
+                                        <div class="col-md-6 row">
+                                            <label class="col-md-4 select_label">班级</label>
+                                            <div class="col-md-8">
+                                                <select id="aklass" class="form-control" onclick="getKlassId()">
+                                                    <option>
+                                                    </option>
+                                                </select>
+                                            </div>
                                         </div>
                                     </div>
-                                </div>
-                                <br>
-                                <div  id="registerButton">
-                                    <button type="submit" class="btn btn-default btn-info">免费注册</button>
-                                </div>
-                            </form>
+                                    <br>
+                                    <div id="registerButton">
+                                        <button type="submit" class="btn btn-default btn-info">免费注册</button>
+                                    </div>
+                                </form>
+                            </div>
+                            <div class="col-md-3"></div>
                         </div>
-                        <div class="col-md-3"></div>
                     </div>
                 </div>
             </div>
+            <div class="col-md-2"></div>
         </div>
-        <div class="col-md-2"></div>
     </div>
+
 </div>
 <script type="text/javascript" src="/labManageSystem/public/login/studentRegister.js"></script>
 <script>
     yunzhi.getMajor('college', 'major', 'grade', 'klass');
 </script>
 </body>
-</html>
 
+</html>

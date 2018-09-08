@@ -1,6 +1,4 @@
-{extend name="Administrator/nav"}
-{block name="title"}学期管理{/block}
-{block name="content"}
+{extend name="Administrator/nav"} {block name="title"}学期管理{/block} {block name="content"}
 <div class="row">
     <div class="col-md-12">
         <div class="container">
@@ -34,8 +32,8 @@
                                         <hr>
                                         <div class="form-group">
                                             <label>学期开始时间:</label>
-                                            <input type="date" name="begintime" class="form-control" >
-                                             <label>总周次:</label>
+                                            <input type="date" name="begintime" class="form-control">
+                                            <label>总周次:</label>
                                             <input type="number" min="0" max="30" name="totalweek" class="form-control">
                                         </div>
                                         <hr>
@@ -43,20 +41,20 @@
                                             <label>开始抢课时间:</label>
                                             <input type="date" name="starttaketime" class="form-control">
                                             <label>结束抢课时间:</label>
-                                            <input type="date" name="endtaketime" class="form-control">                             
+                                            <input type="date" name="endtaketime" class="form-control">
                                         </div>
                                         <hr>
                                         <div class="form-group">
                                             <label>允许抢课周次(周):</label>
-                                            <input type="number" name="startweekorder" class="form-control" min="0" max="30"> 
+                                            <input type="number" name="startweekorder" class="form-control" min="0" max="30">
                                             <span>~~</span>
                                             <input type="number" name="endweekorder" class="form-control" min="0" max="30">
                                         </div>
                                         <hr>
                                         <div class="form-group">
-                                            <button type="submit" class="btn btn-primary" style="margin-left: 500px;">保存</button> 
+                                            <button type="submit" class="btn btn-primary" style="margin-left: 500px;">保存</button>
                                         </div>
-                                    </form>  
+                                    </form>
                                 </div>
                             </div>
                         </div>
@@ -87,6 +85,7 @@
                     <td>{$semester->endtaketime}</td>
                     <td><span>{$semester->startweekorder}周~{$semester->endweekorder}周</span></td>
                     <td>
+
                          {eq name="$semester->istakesemester" value="true"}
                             <button type="button" class="btn btn-sm btn-info" disabled="disabled"><i class="glyphicon glyphicon-asterisk"></i>&nbsp;当前开放选课学期</button>
                          {else/}
@@ -141,13 +140,12 @@
                                 </div>
                             </div>
                         </div>
-                    </div>
                     </td>
-                </tr>  
-             {/volist}
+                </tr>
+                {/volist}
             </table>
             {:$semesters->render()}
         </div>
-     </div>
+    </div>
 </div>
 {/block}
