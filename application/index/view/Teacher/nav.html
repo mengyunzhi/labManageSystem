@@ -18,31 +18,27 @@
     <!--导航栏-->
     <nav class="navbar navbar-inverse" role="navigation">
         <div class="container-fluid">
-            <div class="navbar-header">
-                <a class="navbar-brand" href="http://www.mengyunzhi.com/"> 梦云智 </a>
-            </div>
-            <div>
+            <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
                 <ul class="nav navbar-nav">
-                    <li><a href="{:url('index')}">首页</a></li>
-                    <li><a href="information.html">个人信息</a></li>
-                    <li><a href="{:url('takelessonInterface')}">抢课换课</a></li>
+                    <li {eq name=":request()->action()" value="index"}class="active"{/eq}><a href ="{:url('index')}">首页</a></li>
+                    <li {eq name=":request()->action()" value="takelessoninterface"}class="active"{/eq}><a href="{:url('takelessonInterface')}">抢课换课</a></li>
                 </ul>
-            </div>
-            <div style="float: right;">
-                <ul class="nav navbar-nav">
+                <ul class="nav navbar-nav navbar-right">
                     <li><a><span class="glyphicon glyphicon-user"></span> 欢迎您,{$teacher->name}老师</a></li>
-                    <li><a href="{:url('message')}" class="nav-link"><i class="glyphicon glyphicon-bell"></i>
+                    <li {eq name=":request()->action()" value="information"}class="active"{/eq}><a href="information.html">个人信息</a></li>
+                    <li  {eq name=":request()->action()" value="message"}class="active"{/eq}><a href="{:url('message')}" class="nav-link"><i class="glyphicon glyphicon-bell"></i>
                         {eq name="$total_number" value="0"}
                         {else/}<div class="nav-counter nav-counter-red">{$total_number}</div>
-                        {/eq}      
-                        </a>
+                        {/eq}</a>
                     </li>
-                    <li><a href="{:url('logout')}">注销</a></li>
+                    <li><a href="{:url('logout')}">注销登录</a></li>
                 </ul>
-            </div>
-        </div>
+            </div><!-- /.navbar-collapse -->
+        </div><!-- /.container-fluid -->
     </nav>
-    {block name="content"} {/block}
+    {block name="content"}
+
+    {/block}
 </body>
 
 </html>

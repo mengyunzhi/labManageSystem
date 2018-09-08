@@ -13,35 +13,32 @@
     <link rel="stylesheet" type="text/css" href="/labManageSystem/public/table/index.css">
 </head>
 <body>
-<nav class="navbar navbar-default ">
-  	<div class="container-fluid">
-    <!-- Brand and toggle get grouped for better mobile display -->
-    	<div class="navbar-header">
-      		<a class="navbar-brand" href="{:url('Administrator/index')}">梦云智</a>
-    	</div>
-
-	    <!-- Collect the nav links, forms, and other content for toggling -->
-	    <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
-	      	<ul class="nav navbar-nav navbar-right">
-	      		<!--<li><a href="{:url('Administrator/personalInformation')}">个人信息</a></li>-->
-		        <!-- <li><a href="{:url('Administrator/changeClasses')}">教师换课调课</a></li> -->
-		        <li><a href="{:url('Classroom/index')}">教室管理</a></li>
-		        <li><a href="{:url('Course/index')}">课程管理</a></li>
-		        <li><a href="{:url('Semester/index')}">学期管理</a></li>
-		        <li><a href="{:url('College/index')}">学院管理</a></li>
-		        <li><a href="{:url('Major/index')}">专业管理</a></li>
-		        <li><a href="{:url('Grade/index')}">年级管理</a></li>
-            	<li><a href="{:url('Klass/index')}">班级管理</a></li>
-		        <li><a href="{:url('Administrator/message')}">换课请求
-						{eq name="$total_number" value="0"}
-                        {else/}<div class="nav-counter nav-counter-red">{$total_number}</div>
-                        {/eq}  
-		        </a></li>                             
-            	<li><a href="{:url('Administrator/logout')}">注销登录</a></li>
-	        </ul>
-	    </div><!-- /.navbar-collapse -->
-  	</div><!-- /.container-fluid -->
-</nav>
+	<nav class="navbar navbar-inverse" role="navigation">
+		<div class="container-fluid">
+			<div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+				<ul class="nav navbar-nav">
+					<!--<li><a href="{:url('Administrator/personalInformation')}">个人信息</a></li>-->
+					<!-- <li><a href="{:url('Administrator/changeClasses')}">教师换课调课</a></li> -->
+					<li {eq name=":request()->controller()" value="Administrator"}class="active"{/eq}><a href ="{:url('Administrator/index')}">首页</a></li>
+					<li {eq name=":request()->controller()" value="Classroom"}class="active"{/eq}><a href="{:url('Classroom/index')}">教室管理</a></li>
+					<li {eq name=":request()->controller()" value="Course"}class="active"{/eq}><a href="{:url('Course/index')}">课程管理</a></li>
+					<li {eq name=":request()->controller()" value="Semester"}class="active"{/eq}><a href="{:url('Semester/index')}">学期管理</a></li>
+					<li {eq name=":request()->controller()" value="College"}class="active"{/eq}><a href="{:url('College/index')}">学院管理</a></li>
+					<li {eq name=":request()->controller()" value="Major"}class="active"{/eq}><a href="{:url('Major/index')}">专业管理</a></li>
+					<li {eq name=":request()->controller()" value="Grade"}class="active"{/eq}><a href="{:url('Grade/index')}">年级管理</a></li>
+					<li {eq name=":request()->controller()" value="Klass"}class="active"{/eq}><a href="{:url('Klass/index')}">班级管理</a></li>
+					<li {eq name=":request()->action()" value="message"}class="active"{/eq}><a href="{:url('Administrator/message')}">换课请求
+							{eq name="$total_number" value="0"}
+							{else/}<div class="nav-counter nav-counter-red">{$total_number}</div>
+							{/eq}
+					</a></li>
+				</ul>
+				<ul class="nav navbar-nav navbar-right">
+					<li><a href="{:url('Administrator/logout')}">注销登录</a></li>
+				</ul>
+			</div><!-- /.navbar-collapse -->
+		</div><!-- /.container-fluid -->
+	</nav>
 {block name="content"}
 
 {/block}
