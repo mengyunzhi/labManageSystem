@@ -98,10 +98,10 @@ class SemesterController extends Controller
     public function update()
     {
         $postData = Request::instance()->post();
-        $validate = new \app\index\validate\Semester;
-        if (!$validate->check($postData)) {
-            return $this->error($validate->getError());
-        }        
+        // $validate = new \app\index\validate\Semester;
+        // if (!$validate->check($postData)) {
+        //     return $this->error($validate->getError());
+        // }        
         $Semester = Semester::get((int)$postData['id']);
         // 为对象的属性赋值
         $oldtotalweek=$Semester->totalweek;

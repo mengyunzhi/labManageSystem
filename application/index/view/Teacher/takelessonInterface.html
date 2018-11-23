@@ -2,7 +2,8 @@
 <div class="container">
     <div class="row">
         <div class="col-md-12">
-            <h3>当前开放抢课学期:{$currentSemester->name}</h3></div>
+            <h3>当前开放抢课学期:{$currentSemester->name}</h3>
+        </div>
     </div>
     <div class="row">
         <div class="col-md-12" style="margin-bottom: 20px;"><span>当前位置:</span><span>{$currentSemester->name}-></span><span>第{$currentWeekorder}周-></span><span>{$currentClassroom->name}</span></div>
@@ -18,20 +19,12 @@
                         <label>周次：</label>
                         <select class="form-control" name="weekorder">
                             {for start="$currentSemester->startweekorder" end="($currentSemester->endweekorder)+1" }
-                            <option value="{$i}" {eq name="$i" value="$currentWeekorder" } selected="selected" {/eq}>第{$i}周</option>
-                            {/for}
-                        </select>
-                    </div>
-                    <div class="col-md-5">
-                        <label>选择教室：</label>
-                        <select class="form-control" name="classroom_id">
-                            {volist name="allClassroom" id="classroom"}
-                            <option value="{$classroom->id}" {eq name="$currentClassroom->id" value="$classroom->id" } selected="selected" {/eq}>{$classroom->name}</option>
-                            {/volist}
-                        </select>
-                    </div>
-                    <div class="col-md-2">
-                        <button type="submit" class="btn btn-default">搜索</button>
+                            <option value="{$i}" {eq name="$i" value="$currentWeekorder" } selected="selected" {/eq}>第{$i}周 </option> {/for} </select> </div> <div class="col-md-5">
+                                <label>选择教室：</label>
+                                <select class="form-control" name="classroom_id">
+                                    {volist name="allClassroom" id="classroom"}
+                                    <option value="{$classroom->id}" {eq name="$currentClassroom->id" value="$classroom->id" } selected="selected" {/eq}>{$classroom->name} </option> {/volist} </select> </div> <div class="col-md-2">
+                                        <button type="submit" class="btn btn-default">搜索</button>
                     </div>
                 </div>
             </form>
@@ -60,23 +53,26 @@
                     <td class="tableTd">
                         {eq name="sechedule->teacher_id" value="$null"}
                         <div>
-                            <span>无课</span>
                             <br> {eq name="sechedule->isChangeLesson" value="1"}
-                            <span>换课中</span> {else/}
-                            <span class="glyphicon glyphicon-hand-right" aria-hidden="true"><a data-toggle="modal" data-target="#TakeLessons" data-whatever="{$sechedule->id}">抢课</a></span> {/eq}
+                            <span class="btn btn-warning disabled">换课中</span> {else/}
+                            <span aria-hidden="true"><a data-toggle="modal" data-target="#TakeLessons" data-whatever="{$sechedule->id}" class="glyphicon glyphicon-hand-right btn btn-primary">&nbsp;抢课</a></span> {/eq}
                         </div>
                         {else/}
-                        <span>教师:{$sechedule->teacher->name}</span>
-                        <br>
-                        <span>课程:{$sechedule->course->name}</span>
-                        <br>
-                        {volist name="Klasses" id="Klass"} {eq name="$sechedule->getKlassesIsChecked($Klass)" value="true"}<span>{$Klass->name}</span>{else/}{/eq} {/volist}
-                        <br> {eq name="sechedule->isChangeLesson" value="1"}
-                        <span style="border-bottom: 1px; text-decoration:underline;color: gray;">换课中</span> {else/} {eq name="$sechedule->teacher_id" value="$teacher->id"}
-                        <div>
-                            <span class="glyphicon glyphicon-circle-arrow-right" aria-hidden="true"></span>
-                            <a data-toggle="modal" data-target="#ChangeLesson" data-whatever="{$sechedule->id}">换课</a>
+                        <div class="panel panel-info">
+                            <span>教师:{$sechedule->teacher->name}</span>
+                            <br>
+                            <span>课程:{$sechedule->course->name}</span>
+                            <br>
+                            {volist name="Klasses" id="Klass"} {eq name="$sechedule->getKlassesIsChecked($Klass)" value="true"}
+                            <span>{$Klass->name}</span>{else/}{/eq} {/volist}
+                            <br> {eq name="sechedule->isChangeLesson" value="1"}
+                            <span class="btn btn-warning disabled">换课中</span> {else/} {eq name="$sechedule->teacher_id" value="$teacher->id"}
+                            <div>
+                                <span aria-hidden="true"></span>
+                                <a data-toggle="modal" data-target="#ChangeLesson" data-whatever="{$sechedule->id}" class="glyphicon glyphicon-circle-arrow-right btn btn-warning">&nbsp;换课</a>
+                            </div>
                         </div>
+                        
                         {/eq} {/eq} {/eq}
                     </td>
                     {/volist}
@@ -100,16 +96,13 @@
                     <div class="container">
                         {volist name="tcolleges" id="College"}
                         <label>{$College->name}:</label>
-                    <div>
-                     {volist name="tmajors" id="Major"}
-                     <div {neq name="$Major->college_id" value="$College->id" } hidden="hidden" {/neq}>
                         <div>
-                            {volist name="tgrades" id="Grade"}
-                            <div {neq name="$Grade->major_id" value="$Major->id" } hidden="hidden" {/neq}>
-                                <div class="container">
+                            {volist name="tmajors" id="Major"}
+                            <div {neq name="$Major->college_id" value="$College->id" } hidden="hidden" {/neq}> <div>
+                                {volist name="tgrades" id="Grade"}
+                                <div {neq name="$Grade.major_id" value="$Major.id" } hidden="hidden" {/neq}> <div class="container">
                                     {volist name="tklasses" id="Klass" key="key"}
-                                    <div {neq name="$Klass->grade_id" value="$Grade->id" } hidden="hidden" {/neq}>
-                                        <label> <input type="checkbox" value="{$Klass->id}" name="klassIds[{$key}]" >{$Klass->name}</label>
+                                    <div {neq name="$Klass.grade_id" value="$Grade.id" } hidden="hidden" {/neq}> <label> <input type="checkbox" value="{$Klass->id}" name="klassIds[{$key}]">{$Klass->name}</label>
                                     </div>
                                     {/volist}
                                 </div>
@@ -118,35 +111,35 @@
                         </div>
                     </div>
                     {/volist}
-                    </div>
-                   {/volist}
-                  </div>
-                    <hr/>
-                <div class="container">
-                    <label>课程名称:</label>
-                    <br>
-                    <div class="container">
-                        <div class="row col-md-6">
-                            {volist name="tcourses" id="Course" key="key"}
-                            <div class="col-md-4">
-                                <input type="radio" value="{$Course->id}" name="courseId" id="course{$key}">
-                                <label for="course{$key}">{$Course->name}</label>
-                            </div>
-                            {/volist}
-                        </div>
-                    </div>
-                    <br />
                 </div>
-                <div class="modal-footer">
-                    <a type="button" class="btn btn-primary " data-toggle="modal" data-target="#addCourse" style="margin-right: 330px">
+                {/volist}
+            </div>
+            <hr />
+            <div class="container">
+                <label>课程名称:</label>
+                <br>
+                <div class="container">
+                    <div class="row col-md-6">
+                        {volist name="tcourses" id="Course" key="key"}
+                        <div class="col-md-4">
+                            <input type="radio" value="{$Course->id}" name="courseId" id="course{$key}">
+                            <label for="course{$key}">{$Course->name}</label>
+                        </div>
+                        {/volist}
+                    </div>
+                </div>
+                <br />
+            </div>
+            <div class="modal-footer">
+                <a type="button" class="btn btn-primary " data-toggle="modal" data-target="#addCourse" style="margin-right: 330px">
                         <span class="glyphicon glyphicon-plus"></span>
                         添加课程</a>
-                    <button type="submit" class="btn btn-primary">
-                        <span class="glyphicon glyphicon-ok" ></span>
-                        保存</button>
-                </div>
-            </div>   
+                <button type="submit" class="btn btn-primary">
+                    <span class="glyphicon glyphicon-ok" ></span>
+                    保存</button>
+            </div>
         </div>
+    </div>
     </div>
     </div>
 </form>
@@ -196,47 +189,39 @@ $('#TakeLessons').on('show.bs.modal', function(event) {
                         <label>周次</label>
                         <select class="form-control" name="weekorder">
                             {for start="$currentSemester->startweekorder" end="($currentSemester->endweekorder)+1" }
-                            <option value="{$i}" {eq name="$i" value="$currentWeekorder" } selected="selected" {/eq}>第{$i}周</option>
-                            {/for}
-                        </select>
-                    </div>
-                    <!-- 选择目标星期 -->
-                    <div class="form-group">
-                        <label for="week">星期</label>
-                        <select name="week" id="week" class="form-control">
-                            <option value="1">星期一</option>
-                            <option value="2">星期二</option>
-                            <option value="3">星期三</option>
-                            <option value="4">星期四</option>
-                            <option value="5">星期五</option>
-                            <option value="6">星期六</option>
-                            <option value="7">星期日</option>
-                        </select>
-                    </div>
-                    <!-- 选择目标节次 -->
-                    <div class="form-group">
-                        <label for="node">节次</label>
-                        <select name="node" id="node" class="form-control">
-                            <option value="1">第一节</option>
-                            <option value="2">第二节</option>
-                            <option value="3">第三节</option>
-                            <option value="4">第四节</option>
-                            <option value="5">第五节</option>
-                        </select>
-                    </div>
-                    <!-- 选择目标教室 -->
-                    <div class="form-group">
-                        <label>选择教室</label>
-                        <select class="form-control" name="classroom_id">
-                            {volist name="allClassroom" id="classroom"}
-                            <option value="{$classroom->id}" {eq name="$currentClassroom->id" value="$classroom->id" } selected="selected" {/eq}>{$classroom->name}</option>
-                            {/volist}
-                        </select>
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
-                        <button type="submit" class="btn btn-primary">确定</button>
-                    </div>
+                            <option value="{$i}" {eq name="$i" value="$currentWeekorder" } selected="selected" {/eq}>第{$i}周 </option> {/for} </select> </div> <!-- 选择目标星期 -->
+                                <div class="form-group">
+                                    <label for="week">星期</label>
+                                    <select name="week" id="week" class="form-control">
+                                        <option value="1">星期一</option>
+                                        <option value="2">星期二</option>
+                                        <option value="3">星期三</option>
+                                        <option value="4">星期四</option>
+                                        <option value="5">星期五</option>
+                                        <option value="6">星期六</option>
+                                        <option value="7">星期日</option>
+                                    </select>
+                                </div>
+                                <!-- 选择目标节次 -->
+                                <div class="form-group">
+                                    <label for="node">节次</label>
+                                    <select name="node" id="node" class="form-control">
+                                        <option value="1">第一节</option>
+                                        <option value="2">第二节</option>
+                                        <option value="3">第三节</option>
+                                        <option value="4">第四节</option>
+                                        <option value="5">第五节</option>
+                                    </select>
+                                </div>
+                                <!-- 选择目标教室 -->
+                                <div class="form-group">
+                                    <label>选择教室</label>
+                                    <select class="form-control" name="classroom_id">
+                                        {volist name="allClassroom" id="classroom"}
+                                        <option value="{$classroom->id}" {eq name="$currentClassroom->id" value="$classroom->id" } selected="selected" {/eq}>{$classroom->name} </option> {/volist} </select> </div> <div class="modal-footer">
+                                            <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+                                            <button type="submit" class="btn btn-primary">确定</button>
+                                </div>
                 </form>
             </div>
         </div>
