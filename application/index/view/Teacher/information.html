@@ -36,13 +36,13 @@
                     <label>{$College->name}:</label>
                         <div>
                             {volist name="tmajors" id="Major"}
-                            <div {neq name="$Major->college_id" value="$College->id" } hidden="hidden" {/neq}>
+                            <div {neq name="$Major.college_id" value="$College.id" } hidden="hidden" {/neq}>
                                 <div>
                                     {volist name="tgrades" id="Grade"}
-                                    <div {neq name="$Grade->major_id" value="$Major->id" } hidden="hidden" {/neq}>
+                                    <div {neq name="$Grade.major_id" value="$Major.id" } hidden="hidden" {/neq}>
                                         <div class="container">
                                             {volist name="tklass" id="Klass"}
-                                            <div {neq name="$Klass->grade_id" value="$Grade->id" } hidden="hidden" {/neq}>
+                                            <div {neq name="$Klass.grade_id" value="$Grade.id" } hidden="hidden" {/neq}>
                                                 {$Klass->name}
                                             </div>
                                             {/volist}
@@ -207,12 +207,12 @@
                         <div {neq name="$Major->college_id" value="$College->id" } hidden="hidden" {/neq}>
                             <div>
                                 {volist name="tgrades" id="Grade"}
-                                <div {neq name="$Grade->major_id" value="$Major->id" } hidden="hidden" {/neq}>
+                                <div {neq name="$Grade.major_id" value="$Major->id" } hidden="hidden" {/neq}>
                                     <div class="container">
                                         {volist name="tklass" id="Klass"}
-                                        <div {neq name="$Klass->grade_id" value="$Grade->id" } hidden="hidden" {/neq} >
+                                        <div {neq name="$Klass->grade_id" value="$Grade.id" } hidden="hidden" {/neq} >
 
-                                            <label><input type="checkbox" value="{$Klass->id}" name="ids[{$key}]">{$Klass->name}</label>
+                                            <label><input type="checkbox" value="{$Klass.id}" name="ids[{$key}]">{$Klass->name}</label>
                                         </div>
                                         {/volist}
                                     </div>
